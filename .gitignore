@@ -6,9 +6,9 @@ bin/
 gen/
 *.class
 
-# built application files
+# do not include application build files
 *.apk
 *.ap_
 
-# files for the dex VM
+# do not inlcude files for the dex VM
 *.dex
