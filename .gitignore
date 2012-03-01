@@ -1,0 +1,14 @@
+# do not include the file with the GOOGLE MAPS API KEY
+res/layout/main.xml
+
+# do not include auto generated files
+bin/
+gen/
+*.class
+
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
