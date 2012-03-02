@@ -1,134 +1,177 @@
+//YelpBusiness.java
+/**
+ * Copyright 2012 Jon Lee
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.mapper.yelp;
 
-public class YelpBusiness {
-	
-	private String name = "";
-	
-	private String imageUrl = "";
-	
-	private String phoneNumber = "";
+public class YelpBusiness
+{
 
-	private String address = "";
+    private String name = "";
 
-	private String city = "";
+    private String imageUrl = "";
 
-	private double latitude = 0.0;
+    private String phoneNumber = "";
 
-	private double longitude = 0.0;
+    private String address = "";
 
-	private int postalCode = 0;
+    private String city = "";
 
-	private String state = "";
+    private double latitude = 0.0;
 
-	private String url = "";
+    private double longitude = 0.0;
 
-	private String ratingUrl = "";
+    private int postalCode = 0;
 
-	private int reviewCount = 0;
+    private String state = "";
 
-	public YelpBusiness() {
-	}
+    private String url = "";
 
-	public int getReviewCount() {
-		return reviewCount;
-	}
+    private String ratingUrl = "";
 
-	public void setReviewCount(int reviewCount) {
-		this.reviewCount = reviewCount;
-	}
+    private int reviewCount = 0;
 
-	public String getRatingUrl() {
-		return ratingUrl;
-	}
+    public YelpBusiness()
+    {
+    }
 
-	public void setRatingUrl(String ratingUrl) {
-		this.ratingUrl = ratingUrl;
-	}
+    public int getReviewCount()
+    {
+        return reviewCount;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public void setReviewCount(int reviewCount)
+    {
+        this.reviewCount = reviewCount;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public String getRatingUrl()
+    {
+        return ratingUrl;
+    }
 
-	public String getState() {
-		return state;
-	}
+    public void setRatingUrl(String ratingUrl)
+    {
+        this.ratingUrl = ratingUrl;
+    }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+    public String getUrl()
+    {
+        return url;
+    }
 
-	public int getPostalCode() {
-		return postalCode;
-	}
+    public void setUrl(String url)
+    {
+        this.url = url;
+    }
 
-	public void setPostalCode(int postalCode) {
-		this.postalCode = postalCode;
-	}
+    public String getState()
+    {
+        return state;
+    }
 
-	public double getLongitude() {
-		return longitude;
-	}
+    public void setState(String state)
+    {
+        this.state = state;
+    }
 
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
+    public int getPostalCode()
+    {
+        return postalCode;
+    }
 
-	public double getLatitude() {
-		return latitude;
-	}
+    public void setPostalCode(int postalCode)
+    {
+        this.postalCode = postalCode;
+    }
 
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
+    public double getLongitude()
+    {
+        return longitude;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public void setLongitude(double longitude)
+    {
+        this.longitude = longitude;
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public double getLatitude()
+    {
+        return latitude;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public void setLatitude(double latitude)
+    {
+        this.latitude = latitude;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public String getCity()
+    {
+        return city;
+    }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+    public void setCity(String city)
+    {
+        this.city = city;
+    }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+    public String getAddress()
+    {
+        return address;
+    }
 
-	public String toString() {
-		return (this.name + " " + this.address + " " + this.city + " " + this.state + " "
-				+ this.postalCode + " " + this.latitude + " " + this.longitude
-				+ " " + this.postalCode + " " + this.url + " " + this.ratingUrl
-				+ " " + this.reviewCount + " " + this.imageUrl);
-	}
+    public void setAddress(String address)
+    {
+        this.address = address;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getPhoneNumber()
+    {
+        return phoneNumber;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setPhoneNumber(String phoneNumber)
+    {
+        this.phoneNumber = phoneNumber;
+    }
 
-	public String getImageUrl() {
-		return imageUrl;
-	}
+    public String toString()
+    {
+        return(this.name + " " + this.address + " " + this.city + " "
+                + this.state + " " + this.postalCode + " " + this.latitude
+                + " " + this.longitude + " " + this.postalCode + " " + this.url
+                + " " + this.ratingUrl + " " + this.reviewCount + " " + this.imageUrl);
+    }
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public String getImageUrl()
+    {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl)
+    {
+        this.imageUrl = imageUrl;
+    }
 }
