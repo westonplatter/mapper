@@ -1,0 +1,5 @@
+DEVELOPER SET-UP
+This project uses Android 2.3.3 with the Google APIs.  When installing the 
+appropriate SDK, please ensure that the Google APIs are installed.
+
+USING ANT build.xml
