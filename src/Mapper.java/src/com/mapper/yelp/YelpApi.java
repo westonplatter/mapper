@@ -26,12 +26,21 @@ import org.scribe.model.Token;
  */
 public class YelpApi extends DefaultApi10a
 {
+    /**
+     * Accesses the token for the endpoint
+     * @return  nothing
+     */
     @Override
     public String getAccessTokenEndpoint()
     {
         return null;
     }
 
+    /**
+     * Gets the authorization.
+     * @param arg0  the token for the authorization.
+     * @return  nothing
+     */
     @Override
     public String getAuthorizationUrl(Token arg0)
     {
