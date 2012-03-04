@@ -2,7 +2,7 @@
 <project name="mapper" default="help">
 
 
-	<target name="compile">
+	<target name="test">
 		<ant antfile="src/Mapper.java/build.xml" target="compile" useNativeBasedir="true">
 			<!--
 			useNativeBasedir="true" pulls in the PROPERTIES and ANDROIDMANIFEST.xml files
@@ -13,12 +13,14 @@
 
 
 	<target name="help">
-		<echo>
-		TOP LEVEL ANT BUILD.XML FILE
-		
-		compile		compiles android mapper applicaiton
-		help 		help
-		</echo>
+<echo>Root Directory Ant Build. Available targets:
+
+test    Compiles /src/Mapper.java/* Android application. 
+        "test" argument will be reassigned to run JUnit
+        tests once JUnits are added.
+
+help    Ouputs this "help" message
+</echo>
 	</target>
 	
 
