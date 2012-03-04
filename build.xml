@@ -2,7 +2,7 @@
 <project name="mapper" default="help">
 
 
-	<target name="test">
+	<target name="compile">
 		<ant antfile="src/Mapper.java/build.xml" target="compile" useNativeBasedir="true">
 			<!--
 			useNativeBasedir="true" pulls in the PROPERTIES and ANDROIDMANIFEST.xml files
