@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="mapper-root.dir" default="help">
+
+
+	
+	<ant antfile="src/Mapper.java/build.xml"  >
+		<property file="src/Mapper.java/default.properties"	/>
+		<property file="src/Mapper.java/local.properties" />
+		<property file="src/Mapper.java/build.properties" />
+		<property file="src/Mapper.java/AndroidManifest.xml" />
+	</ant>
+
+</project>
