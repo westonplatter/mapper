@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="mapper-root.dir" default="help">
+<project name="mapper" default="help">
 
 
+	<target name="compile">
+		<ant antfile="src/Mapper.java/build.xml" target="compile" useNativeBasedir="true">
+			<!--
+			useNativeBasedir="true" pulls in the PROPERTIES and ANDROIDMANIFEST.xml files
+			-->
+		</ant>
+	</target>
+
+
+
+	<target name="help">
+		<echo>
+		TOP LEVEL ANT BUILD.XML FILE
+		
+		compile		compiles android mapper applicaiton
+		help 		help
+		</echo>
+	</target>
 	
-	<ant antfile="src/Mapper.java/build.xml"  >
-		<property file="src/Mapper.java/default.properties"	/>
-		<property file="src/Mapper.java/local.properties" />
-		<property file="src/Mapper.java/build.properties" />
-		<property file="src/Mapper.java/AndroidManifest.xml" />
-	</ant>
 
 </project>
