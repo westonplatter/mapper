@@ -3,8 +3,10 @@
 
 
 	<target name="compile">
+		<echo>compiling Android Application.
+		</echo>
 		<ant antfile="src/Mapper.java/build.xml" target="compile" useNativeBasedir="true">
-			<!--
+						<!--
 			useNativeBasedir="true" pulls in the PROPERTIES and ANDROIDMANIFEST.xml files
 			-->
 		</ant>
