@@ -2,4 +2,4 @@ language: java
 before_install:
    - "wget http://dl.google.com/android/android-sdk_r16-linux.tgz"
    - "tar xzvf android-sdk_r16-linux.tgz"
-script: "ant help"
+script: "ant compile"
