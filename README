@@ -4,5 +4,3 @@ appropriate SDK, please ensure that the Google APIs are installed.
 
 USING ANT build.xml
 To build and test MAPPER via command line, you need to rename the DEFAULT.PROPERTIES and LOCAL.PROPERTIES files specific to your own system.
-
-TEST CHANGE ON INDIGO!!!
