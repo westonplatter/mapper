@@ -23,7 +23,7 @@ Installing Application on Emulator
 
 <ol>
 	
-	<li> Open the 'Android Virtual Device Manager', which can be started via the command line within the
+		<li> Open the 'Android Virtual Device Manager', which can be started via the command line within the
 		Android SDK tools subdirectory. IE, on a Macbook,
 		<code>/android-sdk-mac_x86/tools</code>
 		'Android Virtual Device Manager' can also be opened from Eclipse if you have installed
@@ -38,7 +38,7 @@ Installing Application on Emulator
 		Make sure virtual device / emulator has fully initialized before run the 'ant install' command.
 		My virtual device took 4 minutes to boot up.</li>  
   
-	</li>Once device is ready, go to main menu and find 'Mapper' application. Click on it, and you have
-	successfully built and temporarily installed the app on the virtual device.</li>  
+		</li>Once device is ready, go to main menu and find 'Mapper' application. Click on it, and you have
+		successfully built and temporarily installed the app on the virtual device.</li>  
 	
 </ol>
