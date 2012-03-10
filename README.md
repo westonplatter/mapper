@@ -12,9 +12,8 @@ Environment
 Building Application
 --------------------  
 * Mapper uses Apache Ant to build the project at the moment. In order to compile project,
-navigate to the /mapper directory, and enter  
-<code>ant help</code>  
-to see a list of options available via the native Google ant build scripts.  
+navigate to the /mapper directory, and enter <code>ant help</code> to see a list of options
+available via the native Google ant build scripts.  
   
   
 Installing Application on Emulator
