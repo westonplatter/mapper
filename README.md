@@ -38,7 +38,8 @@ Installing Application on Emulator
 		Make sure virtual device / emulator has fully initialized before run the 'ant install' command.
 		My virtual device took 4 minutes to boot up.</li>  
   
-		</li>Once device is ready, go to main menu and find 'Mapper' application. Click on it, and you have
-		successfully built and temporarily installed the app on the virtual device.</li>  
+		<li>Once Emulator shows device home screen, it is ready. Go to main menu and find 'Mapper'
+		application. Click on it, and you have successfully built and temporarily installed
+		the app on the virtual device.</li>  
 	
 </ol>
