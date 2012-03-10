@@ -2,26 +2,69 @@
 <project name="mapper" default="help">
 
 
-	<target name="compile">
-		<echo>compiling Android Application.
-		</echo>
-		<ant antfile="src/Mapper.java/build.xml" target="compile" useNativeBasedir="true">
-						<!--
-			useNativeBasedir="true" pulls in the PROPERTIES and ANDROIDMANIFEST.xml files
-			-->
-		</ant>
+	<!--
+		
+		make sure to set, useNativeBasedir="true". This pulls the properties files in the
+		subdirectory where the Android application resides. The needed properties files include,
+
+		AndroidManifest.xml
+		build.properties
+		default.properties
+		local.properties
+		
+		They are found the the ./src/Mapper.java/ folder
+		
+	-->
+	
+
+	<target name="clean">
+		<echo> ... Clean Android application using native Google ant clean methods ... </echo>
+		<echo> </echo>
+		<ant antfile="src/Mapper.java/build.xml" target="clean" useNativeBasedir="true"/>
 	</target>
 
+	<target name="compile">
+		<echo> ... Compile Android application using the native Google ant compile methods ... </echo>
+		<echo> </echo>
+		<ant antfile="src/Mapper.java/build.xml" target="compile" useNativeBasedir="true"/>
+	</target>
+
+	<target name="debug">
+		<echo> ... Debug Android application using the native Google ant debug methods ... </echo>
+		<echo> </echo>
+		<ant antfile="src/Mapper.java/build.xml" target="debug" useNativeBasedir="true"/>
+	</target>
+	
+	<target name="release">
+		<echo> ... Sign Android application for Release using the native Google ant release methods ... </echo>
+		<echo> </echo>
+		<ant antfile="src/Mapper.java/build.xml" target="release" useNativeBasedir="true"/>
+	</target>
+	
+	<target name="install">
+		<echo> ... Install Android application using the native Google ant install methods ... </echo>
+		<echo> </echo>
+		<echo> ... NOTE - Build will fail if physical Android device does not receive install ... </echo>
+		<echo> </echo>
+		<ant antfile="src/Mapper.java/build.xml" target="install" useNativeBasedir="true"/>
+	</target>
+
+	<target name="uninstall">
+		<echo> ... Uninstall Android application using the native Google ant uninstall methods ... </echo>
+		<echo> </echo>
+		<ant antfile="src/Mapper.java/build.xml" target="uninstall" useNativeBasedir="true"/>
+	</target>
 
 
 	<target name="help">
 <echo>Root Directory Ant Build. Available targets:
+	
+compile 	Compiles /src/Mapper.java/* Android application. 
 
-test    Compiles /src/Mapper.java/* Android application. 
-        "test" argument will be reassigned to run JUnit
-        tests once JUnits are added.
+test    	Not yet configured. "test" argument will be reassigned
+		to run JUnit tests once JUnits are added.
 
-help    Ouputs this "help" message
+help    	Ouputs list of available targets
 </echo>
 	</target>
 	
