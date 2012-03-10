@@ -27,7 +27,7 @@ Installing Application on Emulator
 		Android SDK tools subdirectory. IE, on a Macbook,
 		<code>/android-sdk-mac_x86/tools</code>
 		'Android Virtual Device Manager' can also be opened from Eclipse if you have installed
-		the (http://developer.android.com/sdk/eclipse-adt.html "Android ADT plugin").</li>  
+		the [Android ADT plugin](http://developer.android.com/sdk/eclipse-adt.html "Android ADT plugin").</li>  
    
 		<li>Create an Android Virtual Device with the Google APIs v.10 OS if you have not already.</li>  
   
