@@ -37,13 +37,13 @@
     <!-- Required pre-setup import -->
 	<!--
 	
-	---------------------------------------------------------------------------
+	
 	NOTE SPECIFIC TO THE MAPPER PROJECT
 	
 	The same ANT build system is used whether the build occurs locally or remote.
 	The properties files are different (see files containing, *remote-server*),
 	but the ANT scripts are the same.
-	---------------------------------------------------------------------------
+	
 		
 	-->
     <import file="ant/pre_setup.xml" />
