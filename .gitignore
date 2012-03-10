@@ -1,0 +1,21 @@
+# OS environment specific params
+# TODO configure shell/ant script to pickup
+# - android sdk location
+# - android os user is launching app with
+#
+src/Mapper.java/default.properties
+src/Mapper.java/local.properties
+
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
