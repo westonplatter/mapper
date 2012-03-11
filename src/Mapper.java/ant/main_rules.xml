@@ -375,7 +375,7 @@
                         else="${jar.libs.dir}">
                     <isset property="tested.project.absolute.dir" />
                 </condition>
-                <javac encoding="${java.encoding}"
+                <javac encoding="${java.encoding}" includeantruntime="false"
                         source="${java.source}" target="${java.target}"
                         debug="true" extdirs=""
                         destdir="${out.classes.absolute.dir}"
