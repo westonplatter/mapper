@@ -1,0 +1,1 @@
+echo "sdk.dir=../../../android-sdk-linux" > ./src/Mapper.java/local.properties
