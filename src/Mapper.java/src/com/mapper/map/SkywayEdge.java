@@ -123,4 +123,27 @@ public class SkywayEdge
     {
         this.uniqueID = uniqueID;
     }
+    
+    @Override
+    public boolean equals(Object anObject)
+    {
+        //Is this slower than getting the class and comparing those (using 
+        //  reflection)?
+        if(!(anObject instanceof SkywayEdge))
+            return false;
+        
+        SkywayEdge that = (SkywayEdge) anObject;
+        
+        if(!this.point1.equals(that.point1))
+            return false;
+        if(!this.point2.equals(that.point2))
+            return false;
+        if(this.uniqueID != that.uniqueID)
+            return false;
+        if(this.distanceInMeters != that.distanceInMeters)
+            return false;
+        
+        return true;
+        
+    }
 }

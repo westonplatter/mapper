@@ -106,13 +106,13 @@ public class SkywayNodeTest extends AndroidTestCase
     public void testAddAdjacentSkywayEdge()
     {
         GeoPoint rapsonHall = new GeoPoint(ARCH_LAT, ARCH_LONG);
-        SkywayEdge edge = new SkywayEdge(5, this.nodePoint, rapsonHall);
-        node.addAdjacentSkywayEdge(edge);
+        SkywayEdge gopherEdge = new SkywayEdge(5, this.nodePoint, rapsonHall);
+        node.addAdjacentSkywayEdge(gopherEdge);
         
         List<SkywayEdge> edges = node.getAdjacentSkywayEdges();
         Assert.assertNotNull(edges);
         Assert.assertEquals(1, edges.size());
-        Assert.assertEquals(rapsonHall, edges.get(0));
+        Assert.assertEquals(gopherEdge, edges.get(0));
     }
 
     /**
@@ -120,7 +120,8 @@ public class SkywayNodeTest extends AndroidTestCase
      */
     public void testGetNodeLocation()
     {
-        fail("Not yet implemented");
+        //Tests constructor.
+        Assert.assertEquals(this.nodePoint, this.node.getNodeLocation());
     }
 
     /**
@@ -128,23 +129,58 @@ public class SkywayNodeTest extends AndroidTestCase
      */
     public void testSetNodeLocation()
     {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link com.mapper.map.SkywayNode#compareTo(com.mapper.map.SkywayNode)}.
-     */
-    public void testCompareTo()
-    {
-        fail("Not yet implemented");
+        GeoPoint rapsonHall = new GeoPoint(ARCH_LAT, ARCH_LONG);
+        this.node.setNodeLocation(rapsonHall);
+        Assert.assertEquals(rapsonHall, this.node.getNodeLocation());
     }
 
     /**
      * Test method for {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
      */
-    public void testEqualsObject()
+    public void testEqualsObject_different()
     {
-        fail("Not yet implemented");
+        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID + 1,
+                                            new GeoPoint(ARCH_LAT, ARCH_LONG));
+        Assert.assertFalse(this.node.equals(rapsonHallNode));
+    }
+    
+    /**
+     * Test method for {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     */
+    public void testEqualsObject_differentLoc()
+    {
+        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID,
+                                            new GeoPoint(ARCH_LAT, ARCH_LONG));
+        Assert.assertFalse(this.node.equals(rapsonHallNode));
+    }
+    
+    /**
+     * Test method for {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     */
+    public void testEqualsObject_differentId()
+    {
+        //TODO -- Is this a correct assumption that it will fail if the nodes 
+        //          have different IDs?
+        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID+1,
+                                         new GeoPoint(KELLER_LAT, KELLER_LONG));
+        Assert.assertFalse(this.node.equals(rapsonHallNode));
+    }
+    
+    /**
+     * Test method for {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     */
+    public void testEqualsObject_sameData()
+    {
+        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID,
+                                         new GeoPoint(KELLER_LAT, KELLER_LONG));
+        Assert.assertTrue(this.node.equals(rapsonHallNode));
     }
 
+    /**
+     * Test method for {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     */
+    public void testEqualsObject_identical()
+    {
+        Assert.assertTrue(this.node.equals(this.node));
+    }
 }

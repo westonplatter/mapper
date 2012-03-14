@@ -99,18 +99,21 @@ public class SkywayNode
         this.nodeLocation = nodeLocation;
     }
 
-    /**
-     * Compares this skyway node with another.
-     * @param node  the other skyway node to compare with.
-     * @return
-     */
-    public boolean compareTo(SkywayNode node)
-    {
-        if(this.getNodeLocation().equals(node.getNodeLocation()))
-            return true;
-        else
-            return false;
-    }
+    //This could be an issue in the future since this is the method name used by
+    //      Comparable.  I don't see where it is used, so commented it out for
+    //      now.
+//    /**
+//     * Compares this skyway node with another.
+//     * @param node  the other skyway node to compare with.
+//     * @return
+//     */
+//    public boolean compareTo(SkywayNode node)
+//    {
+//        if(this.getNodeLocation().equals(node.getNodeLocation()))
+//            return true;
+//        else
+//            return false;
+//    }
 
     /**
      * Compares this skyway node with another to determine if the locations of 
