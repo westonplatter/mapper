@@ -1,0 +1,13 @@
+<project name="setUpTest" default="setup">
+
+<property file="sdk.loc.properties" />
+
+<target name="setup">
+    <exec executable="${sdk.dir}/tools/android">
+        <arg value="update" />
+        <arg value="project" />
+        <arg value="." />
+    </exec>
+</target>
+
+</project>

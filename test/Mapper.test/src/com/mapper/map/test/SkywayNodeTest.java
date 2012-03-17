@@ -1,18 +1,18 @@
-//SkywayNodeTest.java
+// SkywayNodeTest.java
 /**
  * Copyright 2012 desilva
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- *    
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.mapper.map.test;
 
@@ -23,31 +23,39 @@ import junit.framework.Assert;
 import com.google.android.maps.GeoPoint;
 import com.mapper.map.SkywayEdge;
 import com.mapper.map.SkywayNode;
+import com.mapper.util.MapUtilities;
 
 import android.test.AndroidTestCase;
 
 /**
  * @author desilva
- *
+ * 
  */
 public class SkywayNodeTest extends AndroidTestCase
 {
-    //CONSTANTS
-    private static final int KELLER_LAT  = (int)(-93.232016 * 1E6);
-    private static final int KELLER_LONG = (int)(44.974686 * 1E6);
-    
-    private static final int ARCH_LAT  = (int)(-93.23321 * 1E6);
-    private static final int ARCH_LONG = (int)(44.97629 * 1E6);
-    
+    // CONSTANTS
+    // These are the E6 Latitude and Longitudes for Keller Hall at the
+    // University
+    // of Minnesota and the Architecture Building (Rapson Hall).
+    public static final int KELLER_LAT = 
+                                MapUtilities.convertToE6Coordinate(-93.232016);
+    public static final int KELLER_LONG = 
+                                MapUtilities.convertToE6Coordinate(44.974686);
+
+    public static final int ARCH_LAT = 
+                                MapUtilities.convertToE6Coordinate(-93.23321);
+    public static final int ARCH_LONG = 
+                                MapUtilities.convertToE6Coordinate(44.97629);
+
     private static final int INIT_NODE_ID = 0;
-    
-    
-    //PRIVATE DATA MEMBERS
+
+    // PRIVATE DATA MEMBERS
     private GeoPoint nodePoint;
     private SkywayNode node;
-    
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.test.AndroidTestCase#setUp()
      */
     @Override
@@ -58,7 +66,9 @@ public class SkywayNodeTest extends AndroidTestCase
         node = new SkywayNode(INIT_NODE_ID, nodePoint);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see android.test.AndroidTestCase#tearDown()
      */
     @Override
@@ -70,8 +80,8 @@ public class SkywayNodeTest extends AndroidTestCase
     }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#getNodeId()}.  Tests
-     * the constructor and getter.
+     * Test method for {@link com.mapper.map.SkywayNode#getNodeId()}. Tests the
+     * constructor and getter.
      */
     public void testGetNodeId()
     {
@@ -89,7 +99,8 @@ public class SkywayNodeTest extends AndroidTestCase
     }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#getAdjacentSkywayEdges()}.
+     * Test method for
+     * {@link com.mapper.map.SkywayNode#getAdjacentSkywayEdges()}.
      * 
      * Verifies that the skyway edge list, after node initialization, is empty.
      */
@@ -101,14 +112,16 @@ public class SkywayNodeTest extends AndroidTestCase
     }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#addAdjacentSkywayEdge(com.mapper.map.SkywayEdge)}.
+     * Test method for
+     * {@link com.mapper.map.SkywayNode#addAdjacentSkywayEdge(com.mapper.map.SkywayEdge)}
+     * .
      */
     public void testAddAdjacentSkywayEdge()
     {
         GeoPoint rapsonHall = new GeoPoint(ARCH_LAT, ARCH_LONG);
         SkywayEdge gopherEdge = new SkywayEdge(5, this.nodePoint, rapsonHall);
         node.addAdjacentSkywayEdge(gopherEdge);
-        
+
         List<SkywayEdge> edges = node.getAdjacentSkywayEdges();
         Assert.assertNotNull(edges);
         Assert.assertEquals(1, edges.size());
@@ -120,12 +133,14 @@ public class SkywayNodeTest extends AndroidTestCase
      */
     public void testGetNodeLocation()
     {
-        //Tests constructor.
+        // Tests constructor.
         Assert.assertEquals(this.nodePoint, this.node.getNodeLocation());
     }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#setNodeLocation(com.google.android.maps.GeoPoint)}.
+     * Test method for
+     * {@link com.mapper.map.SkywayNode#setNodeLocation(com.google.android.maps.GeoPoint)}
+     * .
      */
     public void testSetNodeLocation()
     {
@@ -135,49 +150,54 @@ public class SkywayNodeTest extends AndroidTestCase
     }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     * Test method for
+     * {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
      */
     public void testEqualsObject_different()
     {
         SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID + 1,
-                                            new GeoPoint(ARCH_LAT, ARCH_LONG));
+                new GeoPoint(ARCH_LAT, ARCH_LONG));
         Assert.assertFalse(this.node.equals(rapsonHallNode));
     }
-    
+
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     * Test method for
+     * {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
      */
     public void testEqualsObject_differentLoc()
     {
-        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID,
-                                            new GeoPoint(ARCH_LAT, ARCH_LONG));
+        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID, new GeoPoint(
+                ARCH_LAT, ARCH_LONG));
         Assert.assertFalse(this.node.equals(rapsonHallNode));
     }
-    
+
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     * Test method for
+     * {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
      */
     public void testEqualsObject_differentId()
     {
-        //TODO -- Is this a correct assumption that it will fail if the nodes 
-        //          have different IDs?
-        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID+1,
-                                         new GeoPoint(KELLER_LAT, KELLER_LONG));
+        // TODO -- Is this a correct assumption that it will fail if the nodes
+        // have different IDs?
+        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID + 1,
+                new GeoPoint(KELLER_LAT, KELLER_LONG));
         Assert.assertFalse(this.node.equals(rapsonHallNode));
     }
-    
+
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     * Test method for
+     * {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
      */
     public void testEqualsObject_sameData()
     {
-        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID,
-                                         new GeoPoint(KELLER_LAT, KELLER_LONG));
+        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID, new GeoPoint(
+                KELLER_LAT, KELLER_LONG));
         Assert.assertTrue(this.node.equals(rapsonHallNode));
     }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     * Test method for
+     * {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
      */
     public void testEqualsObject_identical()
     {
