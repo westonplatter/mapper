@@ -1,4 +1,4 @@
-// SkywayNode.java
+// MapNode.java
 /**
  * Copyright 2012 Jon Lee
  * 
@@ -25,21 +25,21 @@ import com.google.android.maps.GeoPoint;
  * @author jonlee
  *
  */
-public class SkywayNode
+public class MapNode
 {
 
     private int nodeId;
 
     private GeoPoint nodeLocation;
 
-    private ArrayList<SkywayEdge> adjacentSkywayEdges = new ArrayList<SkywayEdge>();
+    private ArrayList<MapEdge> adjacentSkywayEdges = new ArrayList<MapEdge>();
 
     /**
-     * Constructs a node in the skyway
+     * Constructs a node
      * @param nodeId
      * @param nodeLocation
      */
-    public SkywayNode(int nodeId, GeoPoint nodeLocation)
+    public MapNode(int nodeId, GeoPoint nodeLocation)
     {
         this.nodeId = nodeId;
         this.setNodeLocation(nodeLocation);
@@ -67,18 +67,18 @@ public class SkywayNode
      * Gets the skyway edges that connect to this node.
      * @return
      */
-    public ArrayList<SkywayEdge> getAdjacentSkywayEdges()
+    public ArrayList<MapEdge> getAdjacentEdges()
     {
         return adjacentSkywayEdges;
     }
 
     /**
-     * Adds a skyway edge that connects to this node.
-     * @param adjacentSkywayEdge
+     * Adds an edge that connects to this node.
+     * @param adjacentEdge
      */
-    public void addAdjacentSkywayEdge(SkywayEdge adjacentSkywayEdge)
+    public void addAdjacentSkywayEdge(MapEdge adjacentEdge)
     {
-        this.adjacentSkywayEdges.add(adjacentSkywayEdge);
+        this.adjacentSkywayEdges.add(adjacentEdge);
     }
 
     /**
@@ -116,7 +116,7 @@ public class SkywayNode
 //    }
 
     /**
-     * Compares this skyway node with another to determine if the locations of 
+     * Compares this node with another to determine if the locations of 
      * the nodes are the same.
      */
     @Override
@@ -124,7 +124,7 @@ public class SkywayNode
     {
         if(this.getClass() == other.getClass())
         {
-            SkywayNode otherNode = (SkywayNode) other;
+            MapNode otherNode = (MapNode) other;
             if(this.getNodeLocation().equals(otherNode.getNodeLocation()))
             {
                 return true;

@@ -1,6 +1,6 @@
-// MplsSkywayMapActivity.java
+// CampusMapActivity.java
 /**
- * Copyright 2012 Jon Lee
+ * Copyright 2012 Kristin Mead
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,13 +14,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.mapper.mpls;
+package com.mapper.activities;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -44,55 +43,54 @@ import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-import com.mapper.map.SkywayDB;
-import com.mapper.map.SkywayEdge;
-import com.mapper.map.SkywayNode;
-import com.mapper.map.SkywayOverlay;
-import com.mapper.mpls.MyLocation.LocationResult;
-import com.mapper.yelp.YelpQueryManager;
+import com.mapper.map.MapEdge;
+import com.mapper.map.MapNode;
+import com.mapper.map.MapOverlay;
+import com.mapper.map.MyLocation;
+import com.mapper.map.MyLocation.LocationResult;
+import com.mapper.map.NodeDB;
 
-public class MplsSkywayMapActivity extends MapActivity
+public class CampusMapActivity extends MapActivity
 {
-
-    private static SkywayDB skywayDB;
+    private static NodeDB campusDB;
     private MapController mc;
     private LocationManager lm;
     private LocationListener ll;
     GeoPoint p = null;
 
-    private static double MapCenterLatitude = 44.975667;
-    private static double MapCenterLongitude = -93.270793;
+    private static double MapCenterLatitude = 44.973785;
+    private static double MapCenterLongitude = -93.232191;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.map);
+
+        // Create map view
         MapView mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mapView.setSatellite(false);
 
-        // get MapOverlap Object List
+        // Get MapOverlap Object List
         List<Overlay> mapOverlays = mapView.getOverlays();
 
-        // get skyway from adaptation
-        skywayDB = new SkywayDB(readSkywayAdaptation());
+        // Get campus from adaptation
+        campusDB = new NodeDB(readCampusAdaptation());
 
-        // skywayDB.printSkywayDB();
+        ArrayList<MapNode> campusNodeList = campusDB.getNodeList();
+        ArrayList<Integer> alreadyDrawnEdge = new ArrayList<Integer>();
 
-        ArrayList<SkywayNode> skyway = skywayDB.getSkyway();
-        ArrayList<Integer> alreadyDrawnSkyways = new ArrayList<Integer>();
-
-        for(SkywayNode node : skyway)
+        for(MapNode node : campusNodeList)
         {
-            for(SkywayEdge edge : node.getAdjacentSkywayEdges())
+            for(MapEdge edge : node.getAdjacentEdges())
             {
-                if(!alreadyDrawnSkyways.contains(edge.getUniqueID()))
+                if(!alreadyDrawnEdge.contains(edge.getUniqueID()))
                 {
-                    mapOverlays.add(new SkywayOverlay(edge.getFirstNode(), edge
+                    mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge
                             .getSecondNode()));
-                    alreadyDrawnSkyways.add(edge.getUniqueID());
+                    alreadyDrawnEdge.add(edge.getUniqueID());
                 }
             }
         }
@@ -100,48 +98,22 @@ public class MplsSkywayMapActivity extends MapActivity
         // get Map Controller to set location and zoom
         mc = mapView.getController();
 
-        try
-        {
-            new YelpQueryManager();
-        }
-        catch(IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch(JSONException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
         // Center Map
         p = new GeoPoint((int) (MapCenterLatitude * 1000000),
                 (int) (MapCenterLongitude * 1000000));
         mc.animateTo(p);
-        mc.setZoom(15);
+        mc.setZoom(17);
 
         MyLocationOverlay myLocationOverlay = new MyLocationOverlay();
         List<Overlay> list = mapView.getOverlays();
         list.add(myLocationOverlay);
 
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         ll = new MyLocationListener();
-
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
-        // lm.requestLocationUpdates(LocationManager.KEY_LOCATION_CHANGED, 0, 0,
-        // ll);
-        // lm.requestLocationUpdates(LocationManager.KEY_PROVIDER_ENABLED, 0, 0,
-        // ll);
     }
 
     MyLocation myLocation = new MyLocation();
-
-    private void locationClick()
-    {
-        myLocation.getLocation(this, locationResult);
-    }
 
     public LocationResult locationResult = new LocationResult()
     {
@@ -154,14 +126,7 @@ public class MplsSkywayMapActivity extends MapActivity
         };
     };
 
-    @Override
-    protected boolean isRouteDisplayed()
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    private ArrayList<Pair<GeoPoint, GeoPoint>> readSkywayAdaptation()
+    private ArrayList<Pair<GeoPoint, GeoPoint>> readCampusAdaptation()
     {
         // TextView myXmlContent = (TextView) findViewById(R.id.my_xml);
         ArrayList<String> stringXmlContent = null;
@@ -197,17 +162,17 @@ public class MplsSkywayMapActivity extends MapActivity
         }
 
         return returnList;
-
     }
 
-    private ArrayList<String> getEventsFromAnXML(Activity activity)
-            throws XmlPullParserException, IOException
+    private ArrayList<String> getEventsFromAnXML(Activity activity) throws XmlPullParserException, IOException
     {
         ArrayList<String> coordinateList = new ArrayList<String>();
         Resources res = activity.getResources();
-        XmlResourceParser xpp = res.getXml(R.xml.myxml);
+        XmlResourceParser xpp = res.getXml(R.xml.campusxml);
         xpp.next();
+        
         int eventType = xpp.getEventType();
+        
         while(eventType != XmlPullParser.END_DOCUMENT)
         {
             if(eventType == XmlPullParser.TEXT)
@@ -222,7 +187,6 @@ public class MplsSkywayMapActivity extends MapActivity
 
     private class MyLocationListener implements LocationListener
     {
-
         public void onLocationChanged(Location argLocation)
         {
             // TODO Auto-generated method stub
@@ -239,7 +203,6 @@ public class MplsSkywayMapActivity extends MapActivity
              */
 
             mc.animateTo(myGeoPoint);
-
         }
 
         public void onProviderDisabled(String provider)
@@ -260,32 +223,34 @@ public class MplsSkywayMapActivity extends MapActivity
 
     protected class MyLocationOverlay extends com.google.android.maps.Overlay
     {
-
         @Override
-        public boolean draw(Canvas canvas, MapView mapView, boolean shadow,
-                long when)
+        public boolean draw(Canvas canvas, MapView mapView, boolean shadow, long when)
         {
-            System.out.println("My Location Overlay: " + p.getLatitudeE6()
-                    + " " + p.getLongitudeE6());
-            Paint paint = new Paint();
-
             super.draw(canvas, mapView, shadow);
+            
             // Converts lat/lng-Point to OUR coordinates on the screen.
             Point myScreenCoords = new Point();
-
             mapView.getProjection().toPixels(p, myScreenCoords);
 
+            Paint paint = new Paint();
             paint.setStrokeWidth(1);
             paint.setARGB(255, 255, 255, 255);
             paint.setStyle(Paint.Style.STROKE);
 
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.ic_launcher);
-
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher);
             canvas.drawBitmap(bmp, myScreenCoords.x, myScreenCoords.y, paint);
-            canvas.drawText("I am here...", myScreenCoords.x, myScreenCoords.y,
-                    paint);
+
             return true;
         }
+    }
+
+    /* (non-Javadoc)
+     * @see com.google.android.maps.MapActivity#isRouteDisplayed()
+     */
+    @Override
+    protected boolean isRouteDisplayed()
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 }

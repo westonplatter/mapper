@@ -1,4 +1,4 @@
-// SkywayEdge.java
+// MapEdge.java
 /**
  * Copyright 2012 Jon Lee
  * 
@@ -29,7 +29,7 @@ import com.mapper.util.MapUtilities;
  * @author jonlee
  *
  */
-public class SkywayEdge
+public class MapEdge
 {
     private int uniqueID;
     private GeoPoint point1;
@@ -45,7 +45,7 @@ public class SkywayEdge
      * @param lat2  latitude for point 2
      * @param lon2  longitude for point 2
      */
-    public SkywayEdge(int lat1, int lon1, int lat2, int lon2)
+    public MapEdge(int lat1, int lon1, int lat2, int lon2)
     {
         point1 = new GeoPoint(MapUtilities.convertToE6Coordinate(lat1), 
                               MapUtilities.convertToE6Coordinate(lon1));
@@ -69,7 +69,7 @@ public class SkywayEdge
      * @param point1  the first point on the map making the edge
      * @param point2  the second point making up the edge.
      */
-    public SkywayEdge(int uniqueId, GeoPoint point1, GeoPoint point2)
+    public MapEdge(int uniqueId, GeoPoint point1, GeoPoint point2)
     {
         this.uniqueID = uniqueId;
         this.point1 = point1;
@@ -154,10 +154,10 @@ public class SkywayEdge
     {
         //Is this slower than getting the class and comparing those (using 
         //  reflection)?
-        if(!(anObject instanceof SkywayEdge))
+        if(!(anObject instanceof MapEdge))
             return false;
         
-        SkywayEdge that = (SkywayEdge) anObject;
+        MapEdge that = (MapEdge) anObject;
         
         if(!this.point1.equals(that.point1))
             return false;

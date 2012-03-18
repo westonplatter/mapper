@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.mapper.mpls;
+package com.mapper.map;
 
 import java.util.Timer;
 import java.util.TimerTask;
