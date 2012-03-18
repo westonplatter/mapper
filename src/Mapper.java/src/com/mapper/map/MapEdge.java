@@ -16,12 +16,9 @@
  */
 package com.mapper.map;
 
-import org.scribe.utils.MapUtils;
-
 import android.location.Location;
 
 import com.google.android.maps.GeoPoint;
-import com.mapper.util.MapUtilities;
 
 /**
  * Edge in the skyway graph.
@@ -34,8 +31,6 @@ public class MapEdge
     private int uniqueID;
     private GeoPoint point1;
     private GeoPoint point2;
-    
-    //If this name changes, update SkywayEdgeTest.
     private double distanceInMeters;
 
     /**
@@ -47,10 +42,8 @@ public class MapEdge
      */
     public MapEdge(int lat1, int lon1, int lat2, int lon2)
     {
-        point1 = new GeoPoint(MapUtilities.convertToE6Coordinate(lat1), 
-                              MapUtilities.convertToE6Coordinate(lon1));
-        point2 = new GeoPoint(MapUtilities.convertToE6Coordinate(lat2), 
-                              MapUtilities.convertToE6Coordinate(lon2));
+        point1 = new GeoPoint(lat1 * 1000000, lon1 * 1000000);
+        point2 = new GeoPoint(lat2 * 1000000, lon2 * 1000000);
 
         Location location = new Location("");
         location.setLatitude(lat1);
@@ -84,18 +77,6 @@ public class MapEdge
         location2.setLongitude(point2.getLongitudeE6() / 1000000);
 
         distanceInMeters = location.distanceTo(location2);
-    }
-    
-    /**
-     * Copy constructor (used for testing)
-     * @param that  the other SkywayEdge object to copy into a new object.
-     */
-    public SkywayEdge(SkywayEdge that)
-    {
-        this.uniqueID = that.uniqueID;
-        this.point1 = that.point1;
-        this.point2 = that.point2;
-        this.distanceInMeters = that.distanceInMeters;
     }
 
     /**
@@ -143,12 +124,6 @@ public class MapEdge
         this.uniqueID = uniqueID;
     }
     
-    /**
-     * Compares another object with this object to determine if they are equal.
-     * @param anObject  the other object to compare with.
-     * @return  true if the objects are of the same type and have the same
-     *          private data members, false otherwise.
-     */
     @Override
     public boolean equals(Object anObject)
     {
