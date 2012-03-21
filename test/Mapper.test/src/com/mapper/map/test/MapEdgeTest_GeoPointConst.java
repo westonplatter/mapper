@@ -1,4 +1,4 @@
-//SkywayEdgeTest_GeoPointConst.java
+//MapEdgeTest_GeoPointConst.java
 /**
  * Copyright 2012 desilva
  * 
@@ -17,14 +17,13 @@
 package com.mapper.map.test;
 
 import com.google.android.maps.GeoPoint;
-import com.mapper.map.SkywayEdge;
-import com.mapper.util.MapUtilities;
+import com.mapper.map.MapEdge;
 
 /**
  * @author desilva
  *
  */
-public class SkywayEdgeTest_LatLongConst extends SkywayEdgeTest
+public class MapEdgeTest_GeoPointConst extends MapEdgeTest
 {
 
      /* (non-Javadoc)
@@ -34,21 +33,17 @@ public class SkywayEdgeTest_LatLongConst extends SkywayEdgeTest
      {
          super.setUp();
          
-         this.edgePoint1 = new GeoPoint(SkywayNodeTest.KELLER_LAT, 
-                                        SkywayNodeTest.KELLER_LONG);
+         this.edgePoint1 = new GeoPoint(MapNodeTest.KELLER_LAT, 
+                                        MapNodeTest.KELLER_LONG);
          
-         this.edgePoint2 = new GeoPoint(SkywayNodeTest.ARCH_LAT, 
-                                        SkywayNodeTest.ARCH_LONG);
+         this.edgePoint2 = new GeoPoint(MapNodeTest.ARCH_LAT, 
+                                        MapNodeTest.ARCH_LONG);
          
-         //TODO -- Fix this.  I don't know what it initializes to.
          this.edgeUniqueId = 10;
          
-         //TODO -- Not sure why it takes in an int.  It should take in a double.
-         this.edgeUnderTest = new SkywayEdge(
-                 (int) MapUtilities.convertToStdCoordinate(SkywayNodeTest.KELLER_LAT),
-                 (int) MapUtilities.convertToStdCoordinate(SkywayNodeTest.KELLER_LONG),
-                 (int) MapUtilities.convertToStdCoordinate(SkywayNodeTest.ARCH_LAT),
-                 (int) MapUtilities.convertToStdCoordinate(SkywayNodeTest.ARCH_LONG));
+         this.edgeUnderTest = new MapEdge(this.edgeUniqueId, 
+                                             this.edgePoint1, 
+                                             this.edgePoint2);
      }
     
      /* (non-Javadoc)
