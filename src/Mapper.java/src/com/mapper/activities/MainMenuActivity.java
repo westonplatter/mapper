@@ -26,45 +26,57 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainMenuActivity extends ListActivity {
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-	  super.onCreate(savedInstanceState);
-      
-	  // Create a menu of items
-      String[] menuItems = getResources().getStringArray(R.array.menu_array);
-      setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menuItems));
-      
-      // Create the list view
-	  ListView lv = getListView();
-	  lv.setTextFilterEnabled(true);
+public class MainMenuActivity extends ListActivity
+{
 
-	  // Add a click listener
-	  lv.setOnItemClickListener(new OnItemClickListener() {
-	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
-	    {    
-	        Intent myIntent = null;
-	        
-	        if(((TextView) view).getText().equals("Skyway Map")){
-	         myIntent = new Intent(view.getContext(), MplsSkywayMapActivity.class);
-	        }
-	         
-	        if(((TextView) view).getText().equals("Campus Map")){
-	         myIntent = new Intent(view.getContext(), CampusMapActivity.class);
-	        }
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
 
-	        if(((TextView) view).getText().equals("Favorites")){
-	         myIntent = new Intent(view.getContext(), FavoritesActivity.class);
-	        }
+        // Create a menu of items
+        String[] menuItems = getResources().getStringArray(R.array.menu_array);
+        setListAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, menuItems));
 
-	        if(((TextView) view).getText().equals("Help")){
-	          myIntent = new Intent(view.getContext(), HelpActivity.class);
-	        }
+        // Create the list view
+        ListView lv = getListView();
+        lv.setTextFilterEnabled(true);
 
-	        // Start the user-selected activity
-	        startActivity(myIntent);
-	    }
-	  });
-	}
+        // Add a click listener
+        lv.setOnItemClickListener(new OnItemClickListener()
+        {
+            public void onItemClick(AdapterView<?> parent, View view,
+                    int position, long id)
+            {
+                Intent myIntent = null;
+
+                if(((TextView) view).getText().equals("Skyway Map"))
+                {
+                    myIntent = new Intent(view.getContext(),
+                            MplsSkywayMapActivity.class);
+                }
+
+                if(((TextView) view).getText().equals("Campus Map"))
+                {
+                    myIntent = new Intent(view.getContext(),
+                            CampusMapActivity.class);
+                }
+
+                if(((TextView) view).getText().equals("Favorites"))
+                {
+                    myIntent = new Intent(view.getContext(),
+                            FavoritesActivity.class);
+                }
+
+                if(((TextView) view).getText().equals("Help"))
+                {
+                    myIntent = new Intent(view.getContext(), HelpActivity.class);
+                }
+
+                // Start the user-selected activity
+                startActivity(myIntent);
+            }
+        });
+    }
 }

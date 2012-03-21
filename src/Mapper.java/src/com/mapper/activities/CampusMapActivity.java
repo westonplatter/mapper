@@ -64,7 +64,10 @@ public class CampusMapActivity extends MapActivity
     private static double MapCenterLatitude = 44.973785;
     private static double MapCenterLongitude = -93.232191;
 
-    /** Called when the activity is first created. */
+    /** 
+     * Called when the activity is first created. 
+     * @parm savedInstanceState  
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -115,21 +118,23 @@ public class CampusMapActivity extends MapActivity
         ll = new MyLocationListener();
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
     }
-    
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) 
+    public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.layout.campus_options_menu, menu);
         return true;
     }
-    
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle item selection
-        switch (item.getItemId()) {
+        switch(item.getItemId())
+        {
             case R.id.get_directions:
-                //newGame();
+                // newGame();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -187,15 +192,16 @@ public class CampusMapActivity extends MapActivity
         return returnList;
     }
 
-    private ArrayList<String> getEventsFromAnXML(Activity activity) throws XmlPullParserException, IOException
+    private ArrayList<String> getEventsFromAnXML(Activity activity)
+            throws XmlPullParserException, IOException
     {
         ArrayList<String> coordinateList = new ArrayList<String>();
         Resources res = activity.getResources();
         XmlResourceParser xpp = res.getXml(R.xml.campusxml);
         xpp.next();
-        
+
         int eventType = xpp.getEventType();
-        
+
         while(eventType != XmlPullParser.END_DOCUMENT)
         {
             if(eventType == XmlPullParser.TEXT)
@@ -247,10 +253,11 @@ public class CampusMapActivity extends MapActivity
     protected class MyLocationOverlay extends com.google.android.maps.Overlay
     {
         @Override
-        public boolean draw(Canvas canvas, MapView mapView, boolean shadow, long when)
+        public boolean draw(Canvas canvas, MapView mapView, boolean shadow,
+                long when)
         {
             super.draw(canvas, mapView, shadow);
-            
+
             // Converts lat/lng-Point to OUR coordinates on the screen.
             Point myScreenCoords = new Point();
             mapView.getProjection().toPixels(p, myScreenCoords);
@@ -260,14 +267,17 @@ public class CampusMapActivity extends MapActivity
             paint.setARGB(255, 255, 255, 255);
             paint.setStyle(Paint.Style.STROKE);
 
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher);
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.ic_launcher);
             canvas.drawBitmap(bmp, myScreenCoords.x, myScreenCoords.y, paint);
 
             return true;
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.google.android.maps.MapActivity#isRouteDisplayed()
      */
     @Override

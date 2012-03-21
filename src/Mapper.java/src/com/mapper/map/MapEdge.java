@@ -78,6 +78,17 @@ public class MapEdge
 
         distanceInMeters = location.distanceTo(location2);
     }
+    
+    /**
+     * Copy constructor
+     * @param that  the {@link MapEdge} object to copy.
+     */
+    public MapEdge(MapEdge that)
+    {
+        this.uniqueID = that.uniqueID;
+        this.point1 = that.point1;
+        this.point2 = that.point2;
+    }
 
     /**
      * Gets the first node of the edge
