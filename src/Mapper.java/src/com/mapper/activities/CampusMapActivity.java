@@ -37,6 +37,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -111,6 +114,26 @@ public class CampusMapActivity extends MapActivity
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         ll = new MyLocationListener();
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) 
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.layout.campus_options_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.get_directions:
+                //newGame();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     MyLocation myLocation = new MyLocation();

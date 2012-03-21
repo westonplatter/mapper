@@ -6,6 +6,8 @@
     <string name="help_name">Help</string>
 
     <string name="help">This is our help text.</string>
+    <string name="get_directions">Get Directions</string>
+    <string name="business_directory">Business Directory</string>
     
     <string-array name="menu_array">
         <item>Skyway Map</item>

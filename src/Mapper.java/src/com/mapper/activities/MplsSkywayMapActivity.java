@@ -38,6 +38,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -150,6 +153,28 @@ public class MplsSkywayMapActivity extends MapActivity
         // ll);
     }
     
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) 
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.layout.skyway_options_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.get_directions:
+                //newGame();
+                return true;
+            case R.id.business_directory:
+                //newGame();
+                return true;    
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     MyLocation myLocation = new MyLocation();
 
