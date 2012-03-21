@@ -1,4 +1,4 @@
-// SkywayDB.java
+// NodeDB.java
 /**
  * Copyright 2012 Jon Lee
  * 
@@ -29,7 +29,7 @@ import com.google.android.maps.GeoPoint;
  * @author jonlee
  *
  */
-public class SkywayDB
+public class NodeDB
 {
 
     private int currentNodeCount = 0;
@@ -37,13 +37,13 @@ public class SkywayDB
 
     private static final String LOG_TAG = "JonLee";
 
-    private ArrayList<SkywayNode> skywayNodeList = new ArrayList<SkywayNode>();
+    private ArrayList<MapNode> nodeList = new ArrayList<MapNode>();
 
     /**
      * Constructor
      * @param arrayList
      */
-    public SkywayDB(ArrayList<Pair<GeoPoint, GeoPoint>> arrayList)
+    public NodeDB(ArrayList<Pair<GeoPoint, GeoPoint>> arrayList)
     {
         for(Pair<GeoPoint, GeoPoint> pair : arrayList)
         {
@@ -51,34 +51,34 @@ public class SkywayDB
             GeoPoint point1 = (GeoPoint) pair.first;
             GeoPoint point2 = (GeoPoint) pair.second;
 
-            SkywayEdge skywayEdge = new SkywayEdge(currentEdgeCount, point1,
+            MapEdge mapEdge = new MapEdge(currentEdgeCount, point1,
                     point2);
 
-            SkywayNode skywayNode = null;
+            MapNode mapNode = null;
 
-            if(skywayNodeList.contains(point1))
+            if(nodeList.contains(point1))
             {
-                skywayNode = skywayNodeList.get(skywayNodeList.indexOf(point1));
-                skywayNode.addAdjacentSkywayEdge(skywayEdge);
+                mapNode = nodeList.get(nodeList.indexOf(point1));
+                mapNode.addAdjacentSkywayEdge(mapEdge);
             }
             else
             {
-                skywayNode = new SkywayNode(currentNodeCount, point1);
-                skywayNode.addAdjacentSkywayEdge(skywayEdge);
-                skywayNodeList.add(skywayNode);
+                mapNode = new MapNode(currentNodeCount, point1);
+                mapNode.addAdjacentSkywayEdge(mapEdge);
+                nodeList.add(mapNode);
                 ++currentNodeCount;
             }
 
-            if(skywayNodeList.contains(point2))
+            if(nodeList.contains(point2))
             {
-                skywayNode = skywayNodeList.get(skywayNodeList.indexOf(point2));
-                skywayNode.addAdjacentSkywayEdge(skywayEdge);
+                mapNode = nodeList.get(nodeList.indexOf(point2));
+                mapNode.addAdjacentSkywayEdge(mapEdge);
             }
             else
             {
-                skywayNode = new SkywayNode(currentNodeCount, point2);
-                skywayNode.addAdjacentSkywayEdge(skywayEdge);
-                skywayNodeList.add(skywayNode);
+                mapNode = new MapNode(currentNodeCount, point2);
+                mapNode.addAdjacentSkywayEdge(mapEdge);
+                nodeList.add(mapNode);
                 ++currentNodeCount;
             }
 
@@ -87,23 +87,23 @@ public class SkywayDB
     }
 
     /**
-     * Gets the list of skyway nodes.
-     * @return  the list of nodes in the skyway
+     * Gets the list of nodes.
+     * @return  the list of nodes
      */
-    public ArrayList<SkywayNode> getSkyway()
+    public ArrayList<MapNode> getNodeList()
     {
-        return this.skywayNodeList;
+        return this.nodeList;
     }
 
     /**
      * 
      */
-    public void printSkywayDB()
+    public void printNodeDB()
     {
-        for(SkywayNode node : skywayNodeList)
+        for(MapNode node : nodeList)
         {
             Log.v(LOG_TAG, String.valueOf(node.getNodeId()));
-            for(SkywayEdge edge : node.getAdjacentSkywayEdges())
+            for(MapEdge edge : node.getAdjacentEdges())
             {
                 Log.v(LOG_TAG,
                         "  "
