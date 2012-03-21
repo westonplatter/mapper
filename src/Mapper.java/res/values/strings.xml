@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="hello">Hello World, MapperActivity!</string>
     <string name="app_name">Mapper</string>
+    <string name="map_name">Map</string>
+    <string name="favorites_name">Favorites</string>
+    <string name="help_name">Help</string>
+
+    <string name="help">This is our help text.</string>
+    <string name="get_directions">Get Directions</string>
+    <string name="business_directory">Business Directory</string>
+    
+    <string-array name="menu_array">
+        <item>Skyway Map</item>
+        <item>Campus Map</item>
+        <item>Favorites</item>
+        <item>Help</item>
+    </string-array>
+    
+    <string-array name="user_favorites">
+        <item>Favorite 1</item>
+        <item>Favorite 2</item>
+        <item>Favorite 3</item>
+        <item>Favorite 4</item>
+    </string-array>
 
 </resources>
