@@ -31,8 +31,27 @@
             android:id="@+id/curLoc"
             android:layout_width="60px"
             android:layout_height="60px"
-            android:background="@drawable/location"
-            android:layout_marginLeft="10px"/>
+            android:layout_marginLeft="10px"
+            android:background="@drawable/location" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#554E4848"
+        android:orientation="horizontal"
+        android:padding="2px" >
+
+        <TextView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/mapTitle"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="10px"
+            android:text="@string/title"
+            android:textColor="#4D1E00" />
     </LinearLayout>
 
 </RelativeLayout>
