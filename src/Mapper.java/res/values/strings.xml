@@ -11,6 +11,11 @@
 	<string name="quit">Quit</string>
 	<string name="title">Mapping System</string>
 	
+	
+	<string name="skyway_map">Skyway Map</string>
+	<string name="campus_map">Campus Map</string>
+	<string name="favorites_menu">Favorites</string>
+	<string name="help_menu">Help</string>
 
 	<string-array name="menu_array">
 		<item>Skyway Map</item>
