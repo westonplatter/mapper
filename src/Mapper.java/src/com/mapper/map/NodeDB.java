@@ -96,7 +96,7 @@ public class NodeDB
     }
 
     /**
-     * 
+     * Prints out a list of all nodes in this database to the log file.
      */
     public void printNodeDB()
     {
