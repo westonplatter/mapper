@@ -1,18 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/menubackground"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/selection"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-    
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="fill_parent" 
-        android:layout_height="fill_parent"
-        android:drawSelectorOnTop="false" />
+        android:layout_height="wrap_content"
+        android:text="@string/app_name" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/skywayMapMenuButton"
+        style="@android:style/Animation"
+        android:layout_width="225px"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/selection"
+        android:layout_centerHorizontal="true"
+        android:text="@string/skyway_map" />
+
+    <Button
+        android:id="@+id/campusMapMenuButton"
+        android:layout_width="225px"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/skywayMapMenuButton"
+        android:layout_below="@+id/skywayMapMenuButton"
+        android:layout_marginTop="50dp"
+        android:text="@string/campus_map" />
+
+    <Button
+        android:id="@+id/favoritesMenuButton"
+        android:layout_width="225px"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/campusMapMenuButton"
+        android:layout_below="@+id/campusMapMenuButton"
+        android:layout_marginTop="50dp"
+        android:text="@string/favorites_menu" />
+
+    <Button
+        android:id="@+id/helpMenuButton"
+        android:layout_width="225px"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/favoritesMenuButton"
+        android:layout_below="@+id/favoritesMenuButton"
+        android:layout_marginTop="50dp"
+        android:text="@string/help_menu" />
+
+</RelativeLayout>
