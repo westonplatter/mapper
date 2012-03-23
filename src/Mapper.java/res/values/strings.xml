@@ -9,6 +9,8 @@
 	<string name="get_directions">Get Directions</string>
 	<string name="business_directory">Business Directory</string>
 	<string name="quit">Quit</string>
+	<string name="title">Mapping System</string>
+	
 
 	<string-array name="menu_array">
 		<item>Skyway Map</item>
