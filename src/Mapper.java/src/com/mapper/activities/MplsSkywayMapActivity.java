@@ -26,13 +26,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -41,283 +37,292 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
+import android.view.Window;
+import android.widget.Button;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.mapper.map.MapEdge;
 import com.mapper.map.MapNode;
 import com.mapper.map.MapOverlay;
-import com.mapper.map.MyLocation;
-import com.mapper.map.MyLocation.LocationResult;
 import com.mapper.map.NodeDB;
 import com.mapper.yelp.YelpQueryManager;
 
-public class MplsSkywayMapActivity extends MapActivity
-{
+public class MplsSkywayMapActivity extends MapActivity {
 
-    private static NodeDB skywayDB;
-    private MapController mc;
-    private LocationManager lm;
-    private LocationListener ll;
-    GeoPoint p = null;
+	private static NodeDB skywayDB;
+	private MapController mc;
+	private LocationManager lm;
+	private LocationListener ll;
+	GeoPoint p = null;
+	String gps_provider = LocationManager.GPS_PROVIDER;
+	String network_provider = LocationManager.NETWORK_PROVIDER;
+	Location loc;
+	boolean enableCurrentLocation = false;
+	MyLocationOverlay myLocationOverlay;
+	MapView mapView;
 
-    private static double MapCenterLatitude = 44.975667;
-    private static double MapCenterLongitude = -93.270793;
+	private static double MapCenterLatitude = 44.975667;
+	private static double MapCenterLongitude = -93.270793;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.android.maps.MapActivity#isRouteDisplayed()
-     */
-    @Override
-    protected boolean isRouteDisplayed()
-    {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.android.maps.MapActivity#isRouteDisplayed()
+	 */
+	@Override
+	protected boolean isRouteDisplayed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    /** Called when the activity is first created. */
-    // @Override
+	/** Called when the activity is first created. */
+	// @Override
 
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.map);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        // Create map view
-        MapView mapView = (MapView) findViewById(R.id.mapview);
-        mapView.setBuiltInZoomControls(true);
-        mapView.setSatellite(false);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.map);
 
-        // get MapOverlap Object List
-        List<Overlay> mapOverlays = mapView.getOverlays();
+		// Create map view
+		mapView = (MapView) findViewById(R.id.mapview);
+		mapView.setBuiltInZoomControls(true);
+		mapView.setSatellite(false);
 
-        // get skyway from adaptation
-        skywayDB = new NodeDB(readSkywayAdaptation());
+		// get MapOverlap Object List
+		List<Overlay> mapOverlays = mapView.getOverlays();
 
-        // skywayDB.printSkywayDB();
+		// get skyway from adaptation
+		skywayDB = new NodeDB(readSkywayAdaptation());
 
-        ArrayList<MapNode> skyway = skywayDB.getNodeList();
-        ArrayList<Integer> alreadyDrawnSkyways = new ArrayList<Integer>();
+		// skywayDB.printSkywayDB();
 
-        for(MapNode node : skyway)
-        {
-            for(MapEdge edge : node.getAdjacentEdges())
-            {
-                if(!alreadyDrawnSkyways.contains(edge.getUniqueID()))
-                {
-                    mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge
-                            .getSecondNode()));
-                    alreadyDrawnSkyways.add(edge.getUniqueID());
-                }
-            }
-        }
+		ArrayList<MapNode> skyway = skywayDB.getNodeList();
+		ArrayList<Integer> alreadyDrawnSkyways = new ArrayList<Integer>();
 
-        // get Map Controller to set location and zoom
-        mc = mapView.getController();
+		for (MapNode node : skyway) {
+			for (MapEdge edge : node.getAdjacentEdges()) {
+				if (!alreadyDrawnSkyways.contains(edge.getUniqueID())) {
+					mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge
+							.getSecondNode()));
+					alreadyDrawnSkyways.add(edge.getUniqueID());
+				}
+			}
+		}
 
-        try
-        {
-            new YelpQueryManager();
-        }
-        catch(IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch(JSONException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+		// get Map Controller to set location and zoom
+		mc = mapView.getController();
 
-        // Center Map
-        p = new GeoPoint((int) (MapCenterLatitude * 1000000),
-                (int) (MapCenterLongitude * 1000000));
-        mc.animateTo(p);
-        mc.setZoom(15);
+		try {
+			new YelpQueryManager();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-        MyLocationOverlay myLocationOverlay = new MyLocationOverlay();
-        List<Overlay> list = mapView.getOverlays();
-        list.add(myLocationOverlay);
+		// Center Map
+		p = new GeoPoint((int) (MapCenterLatitude * 1000000),
+				(int) (MapCenterLongitude * 1000000));
+		mc.animateTo(p);
+		mc.setZoom(15);
 
-        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		myLocationOverlay = new MyLocationOverlay(this, mapView);
+		myLocationOverlay.enableMyLocation();
+		myLocationOverlay.enableCompass();
 
-        ll = new MyLocationListener();
+		List<Overlay> list = mapView.getOverlays();
+		list.add(myLocationOverlay);
 
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
-        // lm.requestLocationUpdates(LocationManager.KEY_LOCATION_CHANGED, 0, 0,
-        // ll);
-        // lm.requestLocationUpdates(LocationManager.KEY_PROVIDER_ENABLED, 0, 0,
-        // ll);
-    }
+		lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		ll = new MyLocationListener();
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.layout.skyway_options_menu, menu);
-        return true;
-    }
+		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+		lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ll);
+		lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, ll);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        // Handle item selection
-        switch(item.getItemId())
-        {
-            case R.id.get_directions:
-                // newGame();
-                return true;
-            case R.id.business_directory:
-                // newGame();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+		Button currentlocationButton = (Button) findViewById(R.id.curLoc);
+		currentlocationButton.setOnTouchListener(new OnTouchListener() {
 
-    MyLocation myLocation = new MyLocation();
+			public boolean onTouch(View v, MotionEvent event) {
+				lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+						ll);
+				lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
+						0, ll);
+				lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0,
+						0, ll);
 
-    private void locationClick()
-    {
-        myLocation.getLocation(this, locationResult);
-    }
+				enableCurrentLocation = true;
+				centerOnLocation();
 
-    public LocationResult locationResult = new LocationResult()
-    {
-        @Override
-        public void gotLocation(Location location)
-        {
-            // TODO Auto-generated method stub
-            System.out.println("Location Received - " + location.getLatitude()
-                    + " " + location.getLongitude());
-        };
-    };
+				return true;
+			}
+		});
 
-    private ArrayList<Pair<GeoPoint, GeoPoint>> readSkywayAdaptation()
-    {
-        // TextView myXmlContent = (TextView) findViewById(R.id.my_xml);
-        ArrayList<String> stringXmlContent = null;
-        ArrayList<Pair<GeoPoint, GeoPoint>> returnList = new ArrayList<Pair<GeoPoint, GeoPoint>>();
-        try
-        {
-            stringXmlContent = getEventsFromAnXML(this);
-        }
-        catch(XmlPullParserException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch(IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+		mapView.setOnLongClickListener(new OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View arg0) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
 
-        for(String line : stringXmlContent)
-        {
-            String coordinate = line.replaceAll("\n", ",");
-            coordinate = coordinate.replaceAll(" ", "");
-            String[] coordinates = coordinate.split(",");
+		mapView.setOnTouchListener(new OnTouchListener() {
 
-            returnList.add(new Pair<GeoPoint, GeoPoint>(new GeoPoint(
-                    (int) (Double.valueOf(coordinates[1]) * 1000000),
-                    (int) (Double.valueOf(coordinates[0]) * 1000000)),
-                    new GeoPoint(
-                            (int) (Double.valueOf(coordinates[4]) * 1000000),
-                            (int) (Double.valueOf(coordinates[3]) * 1000000))));
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					// do your thing
+					enableCurrentLocation = false;
+					lm.removeUpdates(ll);
+				}
+				return false;
+			}
+		});
 
-        }
+	}
 
-        return returnList;
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.layout.skyway_options_menu, menu);
+		return true;
+	}
 
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.get_directions:
+			// newGame();
+			return true;
+		case R.id.business_directory:
+			// newGame();
+			return true;
+		case R.id.quit:
+			// newGame();
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+			return true;
 
-    private ArrayList<String> getEventsFromAnXML(Activity activity)
-            throws XmlPullParserException, IOException
-    {
-        ArrayList<String> coordinateList = new ArrayList<String>();
-        Resources res = activity.getResources();
-        XmlResourceParser xpp = res.getXml(R.xml.skywayxml);
-        xpp.next();
-        int eventType = xpp.getEventType();
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	private ArrayList<Pair<GeoPoint, GeoPoint>> readSkywayAdaptation() {
+		// TextView myXmlContent = (TextView) findViewById(R.id.my_xml);
+		ArrayList<String> stringXmlContent = null;
+		ArrayList<Pair<GeoPoint, GeoPoint>> returnList = new ArrayList<Pair<GeoPoint, GeoPoint>>();
+		try {
+			stringXmlContent = getEventsFromAnXML(this);
+		} catch (XmlPullParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-        while(eventType != XmlPullParser.END_DOCUMENT)
-        {
-            if(eventType == XmlPullParser.TEXT)
-            {
-                coordinateList.add(xpp.getText());
-            }
-            eventType = xpp.next();
-        }
+		for (String line : stringXmlContent) {
+			String coordinate = line.replaceAll("\n", ",");
+			coordinate = coordinate.replaceAll(" ", "");
+			String[] coordinates = coordinate.split(",");
 
-        return coordinateList;
-    }
+			returnList.add(new Pair<GeoPoint, GeoPoint>(new GeoPoint(
+					(int) (Double.valueOf(coordinates[1]) * 1000000),
+					(int) (Double.valueOf(coordinates[0]) * 1000000)),
+					new GeoPoint(
+							(int) (Double.valueOf(coordinates[4]) * 1000000),
+							(int) (Double.valueOf(coordinates[3]) * 1000000))));
 
-    private class MyLocationListener implements LocationListener
-    {
+		}
 
-        public void onLocationChanged(Location argLocation)
-        {
-            // TODO Auto-generated method stub
-            GeoPoint myGeoPoint = new GeoPoint(
-                    (int) (argLocation.getLatitude() * 1000000),
-                    (int) (argLocation.getLongitude() * 1000000));
+		return returnList;
 
-            p = myGeoPoint;
-            /*
-             * it will show a message on location change
-             * Toast.makeText(getBaseContext(), "New location latitude ["
-             * +argLocation.getLatitude() + "] longitude [" +
-             * argLocation.getLongitude()+"]", Toast.LENGTH_SHORT).show();
-             */
+	}
 
-            mc.animateTo(myGeoPoint);
+	private ArrayList<String> getEventsFromAnXML(Activity activity)
+			throws XmlPullParserException, IOException {
+		ArrayList<String> coordinateList = new ArrayList<String>();
+		Resources res = activity.getResources();
+		XmlResourceParser xpp = res.getXml(R.xml.skywayxml);
+		xpp.next();
+		int eventType = xpp.getEventType();
 
-        }
+		while (eventType != XmlPullParser.END_DOCUMENT) {
+			if (eventType == XmlPullParser.TEXT) {
+				coordinateList.add(xpp.getText());
+			}
+			eventType = xpp.next();
+		}
 
-        public void onProviderDisabled(String provider)
-        {
-            // TODO Auto-generated method stub
-        }
+		return coordinateList;
+	}
 
-        public void onProviderEnabled(String provider)
-        {
-            // TODO Auto-generated method stub
-        }
+	private void centerOnLocation() {
+		if (loc != null) {
+			double lat = loc.getLatitude();
+			double lon = loc.getLongitude();
+			GeoPoint newPoint = new GeoPoint((int) (lat * 1e6),
+					(int) (lon * 1e6));
 
-        public void onStatusChanged(String provider, int status, Bundle extras)
-        {
-            // TODO Auto-generated method stub
-        }
-    }
+			mc.animateTo(newPoint);
+			mapView.invalidate();
 
-    protected class MyLocationOverlay extends com.google.android.maps.Overlay
-    {
-        @Override
-        public boolean draw(Canvas canvas, MapView mapView, boolean shadow,
-                long when)
-        {
-            super.draw(canvas, mapView, shadow);
+		} else if ((loc = lm.getLastKnownLocation(gps_provider)) != null) {
 
-            // Converts lat/lng-Point to OUR coordinates on the screen.
-            Point myScreenCoords = new Point();
-            mapView.getProjection().toPixels(p, myScreenCoords);
+			double lat = loc.getLatitude();
+			double lon = loc.getLongitude();
+			GeoPoint newPoint = new GeoPoint((int) (lat * 1e6),
+					(int) (lon * 1e6));
+			mc.animateTo(newPoint);
+			mapView.invalidate();
 
-            Paint paint = new Paint();
-            paint.setStrokeWidth(1);
-            paint.setARGB(255, 255, 255, 255);
-            paint.setStyle(Paint.Style.STROKE);
+		}
+	}
 
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.ic_launcher);
-            canvas.drawBitmap(bmp, myScreenCoords.x, myScreenCoords.y, paint);
+	private class MyLocationListener implements LocationListener {
 
-            return true;
-        }
-    }
+		public void onLocationChanged(Location argLocation) {
+			// TODO Auto-generated method stub
+			GeoPoint myGeoPoint = new GeoPoint(
+					(int) (argLocation.getLatitude() * 1000000),
+					(int) (argLocation.getLongitude() * 1000000));
+
+			loc = argLocation;
+
+			if (enableCurrentLocation) {
+				myLocationOverlay.enableMyLocation();
+				mc.animateTo(myGeoPoint);
+				mapView.invalidate();
+			}
+		}
+
+		public void onProviderDisabled(String provider) {
+			// TODO Auto-generated method stub
+		}
+
+		public void onProviderEnabled(String provider) {
+			// TODO Auto-generated method stub
+		}
+
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			// TODO Auto-generated method stub
+
+		}
+	}
 }
