@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -9,7 +9,7 @@
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:apiKey="0MDsY_uTBlljiSm-V5auoRXDmlCG4MLP98Bs9Jg"
+        android:apiKey="0G1U8k52u7j0vqjMd-rZ8ECqVD8cRFLbso-4TZA"
         android:clickable="true" >
     </com.google.android.maps.MapView>
 
@@ -18,4 +18,21 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
-</LinearLayout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#554E4848"
+        android:orientation="horizontal"
+        android:padding="2px" >
+
+        <Button
+            android:id="@+id/curLoc"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:background="@drawable/location"
+            android:layout_marginLeft="10px"/>
+    </LinearLayout>
+
+</RelativeLayout>
