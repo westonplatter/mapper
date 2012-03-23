@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/selection"
         android:layout_centerHorizontal="true"
+        android:background="@layout/buttonshape"
         android:text="@string/skyway_map" />
 
     <Button
@@ -27,6 +28,7 @@
         android:layout_alignLeft="@+id/skywayMapMenuButton"
         android:layout_below="@+id/skywayMapMenuButton"
         android:layout_marginTop="50dp"
+        android:background="@layout/buttonshape"
         android:text="@string/campus_map" />
 
     <Button
@@ -36,6 +38,7 @@
         android:layout_alignLeft="@+id/campusMapMenuButton"
         android:layout_below="@+id/campusMapMenuButton"
         android:layout_marginTop="50dp"
+        android:background="@layout/buttonshape"
         android:text="@string/favorites_menu" />
 
     <Button
@@ -45,6 +48,7 @@
         android:layout_alignLeft="@+id/favoritesMenuButton"
         android:layout_below="@+id/favoritesMenuButton"
         android:layout_marginTop="50dp"
+        android:background="@layout/buttonshape"
         android:text="@string/help_menu" />
 
 </RelativeLayout>
