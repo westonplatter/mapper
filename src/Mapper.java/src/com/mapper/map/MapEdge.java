@@ -45,15 +45,15 @@ public class MapEdge
         point1 = new GeoPoint(lat1 * 1000000, lon1 * 1000000);
         point2 = new GeoPoint(lat2 * 1000000, lon2 * 1000000);
 
-        Location location = new Location("");
-        location.setLatitude(lat1);
-        location.setLongitude(lon1);
+//        Location location = new Location("");
+//        location.setLatitude(lat1);
+//        location.setLongitude(lon1);
+//
+//        Location location2 = new Location("");
+//        location2.setLatitude(lat2);
+//        location2.setLongitude(lon2);
 
-        Location location2 = new Location("");
-        location2.setLatitude(lat2);
-        location2.setLongitude(lon2);
-
-        distanceInMeters = location.distanceTo(location2);
+        distanceInMeters = this.calculateLength();
     }
 
     /**
@@ -68,15 +68,22 @@ public class MapEdge
         this.point1 = point1;
         this.point2 = point2;
 
-        Location location = new Location("");
-        location.setLatitude(point1.getLatitudeE6() / 1000000);
-        location.setLongitude(point1.getLongitudeE6() / 1000000);
+        distanceInMeters = this.calculateLength();
+    }
+    
+    /**
+     * Constructor (used for testing)
+     * @param uniqueId
+     * @param point1  the first node on the map making the edge
+     * @param point2  the second node making up the edge.
+     */
+    public MapEdge(int uniqueId, MapNode point1, MapNode point2)
+    {
+        this.uniqueID = uniqueId;
+        this.point1 = point1.getNodeLocation();
+        this.point2 = point2.getNodeLocation();
 
-        Location location2 = new Location("");
-        location2.setLatitude(point2.getLatitudeE6() / 1000000);
-        location2.setLongitude(point2.getLongitudeE6() / 1000000);
-
-        distanceInMeters = location.distanceTo(location2);
+        distanceInMeters = this.calculateLength();
     }
     
     /**
@@ -88,6 +95,7 @@ public class MapEdge
         this.uniqueID = that.uniqueID;
         this.point1 = that.point1;
         this.point2 = that.point2;
+        this.distanceInMeters = that.distanceInMeters;
     }
 
     /**
@@ -156,5 +164,23 @@ public class MapEdge
         
         return true;
         
+    }
+    
+    //Private methods.
+    /**
+     * Calculates the distance between the nodes at either end of the edge.
+     * @return  the length of the edge.
+     */
+    private double calculateLength()
+    {
+        Location location = new Location("");
+        location.setLatitude(this.point1.getLatitudeE6() / 1000000);
+        location.setLongitude(this.point1.getLongitudeE6() / 1000000);
+
+        Location location2 = new Location("");
+        location2.setLatitude(this.point2.getLatitudeE6() / 1000000);
+        location2.setLongitude(this.point2.getLongitudeE6() / 1000000);
+
+        return location.distanceTo(location2);
     }
 }
