@@ -50,7 +50,6 @@ import com.google.android.maps.Overlay;
 import com.mapper.map.MapEdge;
 import com.mapper.map.MapNode;
 import com.mapper.map.MapOverlay;
-import com.mapper.map.MyLocation;
 import com.mapper.map.MyLocation.LocationResult;
 import com.mapper.map.NodeDB;
 import com.mapper.yelp.YelpQueryManager;
@@ -66,6 +65,7 @@ public class MplsSkywayMapActivity extends MapActivity
 
     private static double MapCenterLatitude = 44.975667;
     private static double MapCenterLongitude = -93.270793;
+    
     /* (non-Javadoc)
      * @see com.google.android.maps.MapActivity#isRouteDisplayed()
      */
@@ -75,10 +75,6 @@ public class MplsSkywayMapActivity extends MapActivity
         // TODO Auto-generated method stub
         return false;
     }
-
-    /** Called when the activity is first created. */
-    //@Override
-    
 
     public void onCreate(Bundle savedInstanceState)
     {
@@ -95,8 +91,6 @@ public class MplsSkywayMapActivity extends MapActivity
 
         // get skyway from adaptation
         skywayDB = new NodeDB(readSkywayAdaptation());
-
-        // skywayDB.printSkywayDB();
 
         ArrayList<MapNode> skyway = skywayDB.getNodeList();
         ArrayList<Integer> alreadyDrawnSkyways = new ArrayList<Integer>();
@@ -133,8 +127,7 @@ public class MplsSkywayMapActivity extends MapActivity
         }
 
         // Center Map
-        p = new GeoPoint((int) (MapCenterLatitude * 1000000),
-                (int) (MapCenterLongitude * 1000000));
+        p = new GeoPoint((int) (MapCenterLatitude * 1000000), (int) (MapCenterLongitude * 1000000));
         mc.animateTo(p);
         mc.setZoom(15);
 
@@ -143,14 +136,8 @@ public class MplsSkywayMapActivity extends MapActivity
         list.add(myLocationOverlay);
 
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         ll = new MyLocationListener();
-
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
-        // lm.requestLocationUpdates(LocationManager.KEY_LOCATION_CHANGED, 0, 0,
-        // ll);
-        // lm.requestLocationUpdates(LocationManager.KEY_PROVIDER_ENABLED, 0, 0,
-        // ll);
     }
     
     @Override
@@ -165,22 +152,15 @@ public class MplsSkywayMapActivity extends MapActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.get_directions:
-                //newGame();
+            case R.id.search:
+                onSearchRequested();
                 return true;
             case R.id.business_directory:
-                //newGame();
+                // Do something here
                 return true;    
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    MyLocation myLocation = new MyLocation();
-
-    private void locationClick()
-    {
-        myLocation.getLocation(this, locationResult);
     }
 
     public LocationResult locationResult = new LocationResult()
@@ -230,11 +210,9 @@ public class MplsSkywayMapActivity extends MapActivity
         }
 
         return returnList;
-
     }
 
-    private ArrayList<String> getEventsFromAnXML(Activity activity)
-            throws XmlPullParserException, IOException
+    private ArrayList<String> getEventsFromAnXML(Activity activity) throws XmlPullParserException, IOException
     {
         ArrayList<String> coordinateList = new ArrayList<String>();
         Resources res = activity.getResources();
@@ -265,15 +243,7 @@ public class MplsSkywayMapActivity extends MapActivity
                     (int) (argLocation.getLongitude() * 1000000));
 
             p = myGeoPoint;
-            /*
-             * it will show a message on location change
-             * Toast.makeText(getBaseContext(), "New location latitude ["
-             * +argLocation.getLatitude() + "] longitude [" +
-             * argLocation.getLongitude()+"]", Toast.LENGTH_SHORT).show();
-             */
-
             mc.animateTo(myGeoPoint);
-
         }
 
         public void onProviderDisabled(String provider)

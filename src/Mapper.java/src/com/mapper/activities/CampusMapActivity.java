@@ -49,8 +49,6 @@ import com.google.android.maps.Overlay;
 import com.mapper.map.MapEdge;
 import com.mapper.map.MapNode;
 import com.mapper.map.MapOverlay;
-import com.mapper.map.MyLocation;
-import com.mapper.map.MyLocation.LocationResult;
 import com.mapper.map.NodeDB;
 
 public class CampusMapActivity extends MapActivity
@@ -64,7 +62,6 @@ public class CampusMapActivity extends MapActivity
     private static double MapCenterLatitude = 44.973785;
     private static double MapCenterLongitude = -93.232191;
 
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -91,19 +88,17 @@ public class CampusMapActivity extends MapActivity
             {
                 if(!alreadyDrawnEdge.contains(edge.getUniqueID()))
                 {
-                    mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge
-                            .getSecondNode()));
+                    mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge.getSecondNode()));
                     alreadyDrawnEdge.add(edge.getUniqueID());
                 }
             }
         }
 
-        // get Map Controller to set location and zoom
+        // Get Map Controller to set location and zoom
         mc = mapView.getController();
 
         // Center Map
-        p = new GeoPoint((int) (MapCenterLatitude * 1000000),
-                (int) (MapCenterLongitude * 1000000));
+        p = new GeoPoint((int) (MapCenterLatitude * 1000000), (int) (MapCenterLongitude * 1000000));
         mc.animateTo(p);
         mc.setZoom(17);
 
@@ -115,43 +110,31 @@ public class CampusMapActivity extends MapActivity
         ll = new MyLocationListener();
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
     }
-    
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) 
+    public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.layout.campus_options_menu, menu);
         return true;
     }
-    
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.get_directions:
-                //newGame();
+        switch(item.getItemId())
+        {
+            case R.id.search:
+                onSearchRequested();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    MyLocation myLocation = new MyLocation();
-
-    public LocationResult locationResult = new LocationResult()
-    {
-        @Override
-        public void gotLocation(Location location)
-        {
-            // TODO Auto-generated method stub
-            System.out.println("Location Received - " + location.getLatitude()
-                    + " " + location.getLongitude());
-        };
-    };
-
     private ArrayList<Pair<GeoPoint, GeoPoint>> readCampusAdaptation()
     {
-        // TextView myXmlContent = (TextView) findViewById(R.id.my_xml);
         ArrayList<String> stringXmlContent = null;
         ArrayList<Pair<GeoPoint, GeoPoint>> returnList = new ArrayList<Pair<GeoPoint, GeoPoint>>();
         try
@@ -181,7 +164,6 @@ public class CampusMapActivity extends MapActivity
                     new GeoPoint(
                             (int) (Double.valueOf(coordinates[4]) * 1000000),
                             (int) (Double.valueOf(coordinates[3]) * 1000000))));
-
         }
 
         return returnList;
@@ -193,9 +175,9 @@ public class CampusMapActivity extends MapActivity
         Resources res = activity.getResources();
         XmlResourceParser xpp = res.getXml(R.xml.campusxml);
         xpp.next();
-        
+
         int eventType = xpp.getEventType();
-        
+
         while(eventType != XmlPullParser.END_DOCUMENT)
         {
             if(eventType == XmlPullParser.TEXT)
@@ -218,13 +200,6 @@ public class CampusMapActivity extends MapActivity
                     (int) (argLocation.getLongitude() * 1000000));
 
             p = myGeoPoint;
-            /*
-             * it will show a message on location change
-             * Toast.makeText(getBaseContext(), "New location latitude ["
-             * +argLocation.getLatitude() + "] longitude [" +
-             * argLocation.getLongitude()+"]", Toast.LENGTH_SHORT).show();
-             */
-
             mc.animateTo(myGeoPoint);
         }
 
@@ -250,7 +225,7 @@ public class CampusMapActivity extends MapActivity
         public boolean draw(Canvas canvas, MapView mapView, boolean shadow, long when)
         {
             super.draw(canvas, mapView, shadow);
-            
+
             // Converts lat/lng-Point to OUR coordinates on the screen.
             Point myScreenCoords = new Point();
             mapView.getProjection().toPixels(p, myScreenCoords);
@@ -260,14 +235,16 @@ public class CampusMapActivity extends MapActivity
             paint.setARGB(255, 255, 255, 255);
             paint.setStyle(Paint.Style.STROKE);
 
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher);
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
             canvas.drawBitmap(bmp, myScreenCoords.x, myScreenCoords.y, paint);
 
             return true;
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.google.android.maps.MapActivity#isRouteDisplayed()
      */
     @Override
