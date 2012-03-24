@@ -28,17 +28,14 @@ import android.widget.Toast;
 
 public class FavoritesActivity extends ListActivity
 {
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
         // Create a menu of items
-        String[] menuItems = getResources().getStringArray(
-                R.array.user_favorites);
-        setListAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, menuItems));
+        String[] menuItems = getResources().getStringArray(R.array.user_favorites);
+        setListAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, menuItems));
 
         // Create the list view
         ListView lv = getListView();
@@ -47,10 +44,8 @@ public class FavoritesActivity extends ListActivity
         // Add a click listener
         lv.setOnItemClickListener(new OnItemClickListener()
         {
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id)
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-
                 // When clicked, show a toast with the TextView text
                 Toast.makeText(getApplicationContext(),
                         ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
