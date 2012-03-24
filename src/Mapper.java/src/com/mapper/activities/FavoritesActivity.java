@@ -28,18 +28,6 @@ import android.widget.Toast;
 
 public class FavoritesActivity extends ListActivity
 {
-
-<<<<<<< HEAD
-	  // Add a click listener
-	  lv.setOnItemClickListener(new OnItemClickListener() {
-	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	        
-	        // When clicked, show a toast with the TextView text
-	        Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
-	    }
-	  });
-	}
-=======
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -58,15 +46,12 @@ public class FavoritesActivity extends ListActivity
         // Add a click listener
         lv.setOnItemClickListener(new OnItemClickListener()
         {
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id)
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-
                 // When clicked, show a toast with the TextView text
                 Toast.makeText(getApplicationContext(),
                         ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
             }
         });
     }
->>>>>>> cd4de3b12902a3bc145ca536559af9c23e2c2406
 }
