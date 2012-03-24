@@ -19,13 +19,8 @@ package com.mapper.activities;
 import android.app.Activity;
 import android.os.Bundle;
 
-<<<<<<< HEAD
-public class HelpActivity extends Activity {
-=======
 public class HelpActivity extends Activity
 {
-    /** Called when the activity is first created. */
->>>>>>> cd4de3b12902a3bc145ca536559af9c23e2c2406
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
