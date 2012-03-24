@@ -1,4 +1,4 @@
-// SkywayNodeTest.java
+// MapNodeTest.java
 /**
  * Copyright 2012 desilva
  * 
@@ -21,8 +21,8 @@ import java.util.List;
 import junit.framework.Assert;
 
 import com.google.android.maps.GeoPoint;
-import com.mapper.map.SkywayEdge;
-import com.mapper.map.SkywayNode;
+import com.mapper.map.MapEdge;
+import com.mapper.map.MapNode;
 import com.mapper.util.MapUtilities;
 
 import android.test.AndroidTestCase;
@@ -31,7 +31,7 @@ import android.test.AndroidTestCase;
  * @author desilva
  * 
  */
-public class SkywayNodeTest extends AndroidTestCase
+public class MapNodeTest extends AndroidTestCase
 {
     // CONSTANTS
     // These are the E6 Latitude and Longitudes for Keller Hall at the
@@ -51,7 +51,7 @@ public class SkywayNodeTest extends AndroidTestCase
 
     // PRIVATE DATA MEMBERS
     private GeoPoint nodePoint;
-    private SkywayNode node;
+    private MapNode node;
 
     /*
      * (non-Javadoc)
@@ -63,7 +63,7 @@ public class SkywayNodeTest extends AndroidTestCase
     {
         super.setUp();
         nodePoint = new GeoPoint(KELLER_LAT, KELLER_LONG);
-        node = new SkywayNode(INIT_NODE_ID, nodePoint);
+        node = new MapNode(INIT_NODE_ID, nodePoint);
     }
 
     /*
@@ -80,7 +80,7 @@ public class SkywayNodeTest extends AndroidTestCase
     }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#getNodeId()}. Tests the
+     * Test method for {@link com.mapper.map.MapNode#getNodeId()}. Tests the
      * constructor and getter.
      */
     public void testGetNodeId()
@@ -89,7 +89,7 @@ public class SkywayNodeTest extends AndroidTestCase
     }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#setNodeId(int)}.
+     * Test method for {@link com.mapper.map.MapNode#setNodeId(int)}.
      */
     public void testSetNodeId()
     {
@@ -100,36 +100,36 @@ public class SkywayNodeTest extends AndroidTestCase
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayNode#getAdjacentSkywayEdges()}.
+     * {@link com.mapper.map.MapNode#getAdjacentMapEdges()}.
      * 
      * Verifies that the skyway edge list, after node initialization, is empty.
      */
-    public void testGetAdjacentSkywayEdges_initialized()
+    public void testGetAdjacentMapEdges_initialized()
     {
-        List<SkywayEdge> edges = node.getAdjacentSkywayEdges();
+        List<MapEdge> edges = node.getAdjacentEdges();
         Assert.assertNotNull(edges);
         Assert.assertEquals(0, edges.size());
     }
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayNode#addAdjacentSkywayEdge(com.mapper.map.SkywayEdge)}
+     * {@link com.mapper.map.MapNode#addAdjacentMapEdge(com.mapper.map.MapEdge)}
      * .
      */
-    public void testAddAdjacentSkywayEdge()
+    public void testAddAdjacentEdge()
     {
         GeoPoint rapsonHall = new GeoPoint(ARCH_LAT, ARCH_LONG);
-        SkywayEdge gopherEdge = new SkywayEdge(5, this.nodePoint, rapsonHall);
+        MapEdge gopherEdge = new MapEdge(5, this.nodePoint, rapsonHall);
         node.addAdjacentSkywayEdge(gopherEdge);
 
-        List<SkywayEdge> edges = node.getAdjacentSkywayEdges();
+        List<MapEdge> edges = node.getAdjacentEdges();
         Assert.assertNotNull(edges);
         Assert.assertEquals(1, edges.size());
         Assert.assertEquals(gopherEdge, edges.get(0));
     }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayNode#getNodeLocation()}.
+     * Test method for {@link com.mapper.map.MapNode#getNodeLocation()}.
      */
     public void testGetNodeLocation()
     {
@@ -139,7 +139,7 @@ public class SkywayNodeTest extends AndroidTestCase
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayNode#setNodeLocation(com.google.android.maps.GeoPoint)}
+     * {@link com.mapper.map.MapNode#setNodeLocation(com.google.android.maps.GeoPoint)}
      * .
      */
     public void testSetNodeLocation()
@@ -151,53 +151,53 @@ public class SkywayNodeTest extends AndroidTestCase
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     * {@link com.mapper.map.MapNode#equals(java.lang.Object)}.
      */
     public void testEqualsObject_different()
     {
-        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID + 1,
+        MapNode rapsonHallNode = new MapNode(INIT_NODE_ID + 1,
                 new GeoPoint(ARCH_LAT, ARCH_LONG));
         Assert.assertFalse(this.node.equals(rapsonHallNode));
     }
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     * {@link com.mapper.map.MapNode#equals(java.lang.Object)}.
      */
     public void testEqualsObject_differentLoc()
     {
-        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID, new GeoPoint(
+        MapNode rapsonHallNode = new MapNode(INIT_NODE_ID, new GeoPoint(
                 ARCH_LAT, ARCH_LONG));
         Assert.assertFalse(this.node.equals(rapsonHallNode));
     }
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     * {@link com.mapper.map.MapNode#equals(java.lang.Object)}.
      */
     public void testEqualsObject_differentId()
     {
         // TODO -- Is this a correct assumption that it will fail if the nodes
         // have different IDs?
-        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID + 1,
+        MapNode rapsonHallNode = new MapNode(INIT_NODE_ID + 1,
                 new GeoPoint(KELLER_LAT, KELLER_LONG));
         Assert.assertFalse(this.node.equals(rapsonHallNode));
     }
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     * {@link com.mapper.map.MapNode#equals(java.lang.Object)}.
      */
     public void testEqualsObject_sameData()
     {
-        SkywayNode rapsonHallNode = new SkywayNode(INIT_NODE_ID, new GeoPoint(
+        MapNode rapsonHallNode = new MapNode(INIT_NODE_ID, new GeoPoint(
                 KELLER_LAT, KELLER_LONG));
         Assert.assertTrue(this.node.equals(rapsonHallNode));
     }
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayNode#equals(java.lang.Object)}.
+     * {@link com.mapper.map.MapNode#equals(java.lang.Object)}.
      */
     public void testEqualsObject_identical()
     {

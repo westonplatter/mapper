@@ -1,4 +1,4 @@
-// SkywayEdgeTest.java
+// MapEdgeTest.java
 /**
  * Copyright 2012 desilva
  * 
@@ -17,7 +17,7 @@
 package com.mapper.map.test;
 
 import com.google.android.maps.GeoPoint;
-import com.mapper.map.SkywayEdge;
+import com.mapper.map.MapEdge;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -26,9 +26,9 @@ import junit.framework.TestCase;
  * @author desilva
  * 
  */
-public abstract class SkywayEdgeTest extends TestCase
+public abstract class MapEdgeTest extends TestCase
 {
-    protected SkywayEdge edgeUnderTest;
+    protected MapEdge edgeUnderTest;
 
     protected GeoPoint edgePoint1;
     protected GeoPoint edgePoint2;
@@ -53,7 +53,7 @@ public abstract class SkywayEdgeTest extends TestCase
     // }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayEdge#getFirstNode()}.
+     * Test method for {@link com.mapper.map.MapEdge#getFirstNode()}.
      */
     public void testGetFirstNode()
     {
@@ -62,7 +62,7 @@ public abstract class SkywayEdgeTest extends TestCase
     }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayEdge#getSecondNode()}.
+     * Test method for {@link com.mapper.map.MapEdge#getSecondNode()}.
      */
     public void testGetSecondNode()
     {
@@ -71,7 +71,7 @@ public abstract class SkywayEdgeTest extends TestCase
     }
 
 //    /**
-//     * Test method for {@link com.mapper.map.SkywayEdge#getDistance()}.
+//     * Test method for {@link com.mapper.map.MapEdge#getDistance()}.
 //     */
 //    public void testGetDistance()
 //    {
@@ -79,7 +79,7 @@ public abstract class SkywayEdgeTest extends TestCase
 //    }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayEdge#getUniqueID()}.
+     * Test method for {@link com.mapper.map.MapEdge#getUniqueID()}.
      */
     public void testGetUniqueID()
     {
@@ -87,7 +87,7 @@ public abstract class SkywayEdgeTest extends TestCase
     }
 
     /**
-     * Test method for {@link com.mapper.map.SkywayEdge#setUniqueID(int)}.
+     * Test method for {@link com.mapper.map.MapEdge#setUniqueID(int)}.
      */
     public void testSetUniqueID()
     {
@@ -99,7 +99,7 @@ public abstract class SkywayEdgeTest extends TestCase
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayEdge#equals(java.lang.Object)}.  Ensures that
+     * {@link com.mapper.map.MapEdge#equals(java.lang.Object)}.  Ensures that
      * the equality check works if the object to be compared is the exact same
      * object as the one we are comparing against.
      */
@@ -110,32 +110,32 @@ public abstract class SkywayEdgeTest extends TestCase
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayEdge#equals(java.lang.Object)}.  Ensures that
+     * {@link com.mapper.map.MapEdge#equals(java.lang.Object)}.  Ensures that
      * the equality check works if the object to be compared has the exact same
      * data as that of the original.
      */
     public void testEqualsObject_Identical()
     {
-        SkywayEdge edgeCopy = new SkywayEdge(this.edgeUnderTest);
+        MapEdge edgeCopy = new MapEdge(this.edgeUnderTest);
         Assert.assertTrue(this.edgeUnderTest.equals(edgeCopy));
     }
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayEdge#equals(java.lang.Object)}.  Ensures that
+     * {@link com.mapper.map.MapEdge#equals(java.lang.Object)}.  Ensures that
      * the equality check fails if the object to be compared has a different 
      * unique id. 
      */
     public void testEqualsObject_DiffUniqueId()
     {
-        SkywayEdge edgeCopy = new SkywayEdge(this.edgeUnderTest);
+        MapEdge edgeCopy = new MapEdge(this.edgeUnderTest);
         edgeCopy.setUniqueID(edgeCopy.getUniqueID() + 1);
         Assert.assertFalse(this.edgeUnderTest.equals(edgeCopy));
     }
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayEdge#equals(java.lang.Object)}.  Ensures that
+     * {@link com.mapper.map.MapEdge#equals(java.lang.Object)}.  Ensures that
      * the equality check fails if the object to be compared is a different 
      * object. 
      */
@@ -147,7 +147,7 @@ public abstract class SkywayEdgeTest extends TestCase
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayEdge#equals(java.lang.Object)}.  Ensures that
+     * {@link com.mapper.map.MapEdge#equals(java.lang.Object)}.  Ensures that
      * the equality check fails if the object to be compared has a different
      * GeoPoint for the first node. 
      */
@@ -159,13 +159,13 @@ public abstract class SkywayEdgeTest extends TestCase
 
         GeoPoint newNode1 = new GeoPoint(node1.getLatitudeE6() + 1,
                 node1.getLongitudeE6());
-        SkywayEdge edgeCopy = new SkywayEdge(uniqueId, newNode1, node2);
+        MapEdge edgeCopy = new MapEdge(uniqueId, newNode1, node2);
         Assert.assertFalse(this.edgeUnderTest.equals(edgeCopy));
     }
 
     /**
      * Test method for
-     * {@link com.mapper.map.SkywayEdge#equals(java.lang.Object)}.  Ensures that
+     * {@link com.mapper.map.MapEdge#equals(java.lang.Object)}.  Ensures that
      * the equality check fails if the object to be compared has a different 
      * GeoPoint for the second node. 
      */
@@ -177,13 +177,13 @@ public abstract class SkywayEdgeTest extends TestCase
 
         GeoPoint newNode2 = new GeoPoint(node2.getLatitudeE6() + 1,
                 node2.getLongitudeE6());
-        SkywayEdge edgeCopy = new SkywayEdge(uniqueId, node1, newNode2);
+        MapEdge edgeCopy = new MapEdge(uniqueId, node1, newNode2);
         Assert.assertFalse(this.edgeUnderTest.equals(edgeCopy));
     }
 
 //    /**
 //     * Test method for
-//     * {@link com.mapper.map.SkywayEdge#equals(java.lang.Object)}.  Ensures that
+//     * {@link com.mapper.map.MapEdge#equals(java.lang.Object)}.  Ensures that
 //     * the equality check fails if the object to be compared has a different 
 //     * distance between nodes (GeoPoint1 and GeoPoint2), even though the 
 //     * GeoPoints are identical.  It does this using Java reflection.
@@ -197,7 +197,7 @@ public abstract class SkywayEdgeTest extends TestCase
 //            NoSuchFieldException, IllegalArgumentException,
 //            IllegalAccessException
 //    {
-//        SkywayEdge edgeCopy = new SkywayEdge(this.edgeUnderTest);
+//        MapEdge edgeCopy = new MapEdge(this.edgeUnderTest);
 //
 //        double edgeLength = edgeCopy.getDistance();
 //        
@@ -205,7 +205,7 @@ public abstract class SkywayEdgeTest extends TestCase
 //        //  skyway edge so we can test that the check works in the .equals 
 //        //  method.  If this field gets changed, the string in getField() needs
 //        //  to be updated.
-//        Class<? extends SkywayEdge> edgeClass = edgeCopy.getClass();
+//        Class<? extends MapEdge> edgeClass = edgeCopy.getClass();
 //        edgeClass.getField("distanceInMeters").setDouble(edgeCopy,
 //                edgeLength - 1);
 //

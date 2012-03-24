@@ -62,6 +62,13 @@ public class CampusMapActivity extends MapActivity
     private static double MapCenterLatitude = 44.973785;
     private static double MapCenterLongitude = -93.232191;
 
+<<<<<<< HEAD
+=======
+    /** 
+     * Called when the activity is first created. 
+     * @parm savedInstanceState  
+     */
+>>>>>>> cd4de3b12902a3bc145ca536559af9c23e2c2406
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -125,8 +132,13 @@ public class CampusMapActivity extends MapActivity
         // Handle item selection
         switch(item.getItemId())
         {
+<<<<<<< HEAD
             case R.id.search:
                 onSearchRequested();
+=======
+            case R.id.get_directions:
+                // newGame();
+>>>>>>> cd4de3b12902a3bc145ca536559af9c23e2c2406
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -169,7 +181,8 @@ public class CampusMapActivity extends MapActivity
         return returnList;
     }
 
-    private ArrayList<String> getEventsFromAnXML(Activity activity) throws XmlPullParserException, IOException
+    private ArrayList<String> getEventsFromAnXML(Activity activity)
+            throws XmlPullParserException, IOException
     {
         ArrayList<String> coordinateList = new ArrayList<String>();
         Resources res = activity.getResources();
@@ -222,7 +235,8 @@ public class CampusMapActivity extends MapActivity
     protected class MyLocationOverlay extends com.google.android.maps.Overlay
     {
         @Override
-        public boolean draw(Canvas canvas, MapView mapView, boolean shadow, long when)
+        public boolean draw(Canvas canvas, MapView mapView, boolean shadow,
+                long when)
         {
             super.draw(canvas, mapView, shadow);
 
@@ -235,7 +249,12 @@ public class CampusMapActivity extends MapActivity
             paint.setARGB(255, 255, 255, 255);
             paint.setStyle(Paint.Style.STROKE);
 
+<<<<<<< HEAD
             Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+=======
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.ic_launcher);
+>>>>>>> cd4de3b12902a3bc145ca536559af9c23e2c2406
             canvas.drawBitmap(bmp, myScreenCoords.x, myScreenCoords.y, paint);
 
             return true;
