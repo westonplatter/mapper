@@ -25,6 +25,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.graphics.Bitmap;
@@ -127,6 +128,12 @@ public class CampusMapActivity extends MapActivity
         {
             case R.id.search:
                 onSearchRequested();
+            case R.id.quit:
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -142,12 +149,10 @@ public class CampusMapActivity extends MapActivity
         }
         catch(XmlPullParserException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch(IOException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -168,9 +173,7 @@ public class CampusMapActivity extends MapActivity
         return returnList;
     }
 
-    private ArrayList<String> getEventsFromAnXML(Activity activity)
-            throws XmlPullParserException, IOException
-    {
+    private ArrayList<String> getEventsFromAnXML(Activity activity) throws XmlPullParserException, IOException {
         ArrayList<String> coordinateList = new ArrayList<String>();
         Resources res = activity.getResources();
         XmlResourceParser xpp = res.getXml(R.xml.campusxml);
@@ -194,7 +197,6 @@ public class CampusMapActivity extends MapActivity
     {
         public void onLocationChanged(Location argLocation)
         {
-            // TODO Auto-generated method stub
             GeoPoint myGeoPoint = new GeoPoint(
                     (int) (argLocation.getLatitude() * 1000000),
                     (int) (argLocation.getLongitude() * 1000000));

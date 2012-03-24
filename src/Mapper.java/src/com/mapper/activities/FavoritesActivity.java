@@ -34,10 +34,8 @@ public class FavoritesActivity extends ListActivity
         super.onCreate(savedInstanceState);
 
         // Create a menu of items
-        String[] menuItems = getResources().getStringArray(
-                R.array.user_favorites);
-        setListAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, menuItems));
+        String[] menuItems = getResources().getStringArray(R.array.user_favorites);
+        setListAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, menuItems));
 
         // Create the list view
         ListView lv = getListView();

@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/search"
-          android:title="@string/search"/>
-    
-    <item android:id="@+id/business_directory"
-          android:title="@string/business_directory"/>
-=======
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/get_directions"
-        android:title="@string/get_directions"/>
+    <item 
+        android:id="@+id/search"
+        android:title="@string/search"/>
 
     <item
         android:id="@+id/business_directory"
@@ -20,6 +11,4 @@
     <item
         android:id="@+id/quit"
         android:title="@string/quit"/>
-
->>>>>>> cd4de3b12902a3bc145ca536559af9c23e2c2406
 </menu>
