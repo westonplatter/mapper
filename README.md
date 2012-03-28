@@ -27,7 +27,7 @@ Installing Application on Emulator
 <ol>
 		<li>Install the Eclipse ADT plugin.</li> 
 
-		<li> Open the 'Android Virtual Device Manager'.<li>
+		<li>Open the 'Android Virtual Device Manager'.</li>  
 		
 		<li>Create an Android Virtual Device with the Google APIs v.10 OS if none is pressent.</li>  
   
