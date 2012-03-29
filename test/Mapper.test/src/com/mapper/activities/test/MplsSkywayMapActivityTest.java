@@ -163,7 +163,7 @@ public class MplsSkywayMapActivityTest extends
         //  node list we just created.
         AndroidMock.expect(nodeDBMock.getNodeList()).andReturn(nodeListValue);
         
-        getActivity().onCreate(null);
+        //getActivity().onCreate(null);
         
         fail("Not yet implemented");
     }
