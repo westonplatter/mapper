@@ -33,28 +33,28 @@ public class MapEdge
     private GeoPoint point2;
     private double distanceInMeters;
 
-    /**
-     * Constructor
-     * @param lat1  latitude for point 1
-     * @param lon1  longitude for point 1
-     * @param lat2  latitude for point 2
-     * @param lon2  longitude for point 2
-     */
-    public MapEdge(int lat1, int lon1, int lat2, int lon2)
-    {
-        point1 = new GeoPoint(lat1 * 1000000, lon1 * 1000000);
-        point2 = new GeoPoint(lat2 * 1000000, lon2 * 1000000);
-
-//        Location location = new Location("");
-//        location.setLatitude(lat1);
-//        location.setLongitude(lon1);
+//    /**
+//     * Constructor
+//     * @param lat1  latitude for point 1
+//     * @param lon1  longitude for point 1
+//     * @param lat2  latitude for point 2
+//     * @param lon2  longitude for point 2
+//     */
+//    public MapEdge(int lat1, int lon1, int lat2, int lon2)
+//    {
+//        point1 = new GeoPoint(lat1 * 1000000, lon1 * 1000000);
+//        point2 = new GeoPoint(lat2 * 1000000, lon2 * 1000000);
 //
-//        Location location2 = new Location("");
-//        location2.setLatitude(lat2);
-//        location2.setLongitude(lon2);
-
-        distanceInMeters = this.calculateLength();
-    }
+////        Location location = new Location("");
+////        location.setLatitude(lat1);
+////        location.setLongitude(lon1);
+////
+////        Location location2 = new Location("");
+////        location2.setLatitude(lat2);
+////        location2.setLongitude(lon2);
+//
+//        distanceInMeters = this.calculateLength();
+//    }
 
     /**
      * Constructor

@@ -19,3 +19,5 @@ src/Mapper.java/local.properties
 # generated files
 bin/
 gen/
+
+/test/Mapper.test/log/AnnotationProcessor.log
