@@ -1,6 +1,6 @@
 // FavoritesActivity.java
 /**
- * Copyright 2012 Kristin Mead, Usha Kumar
+ * Copyright 2012 Usha Kumar
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -45,16 +45,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FavoritesActivity extends PreferenceActivity
-{
-    Button settingsButton;
-    TextView displayText;
-    public static final String PREFERENCES_NAME = "MyFavorites";    
+// This gets called to automatically save the destinations visited.
+// This keeps track of the last 25 destinations visited
+public class SaveActivity extends PreferenceActivity
+{ 
+   
+    public static final String PREFERENCES_NAME = "SavedPrefs";    
     public static final int PREFERENCES_MODE = MODE_PRIVATE; 
     
     
     private static int incrementedValue = 0;
-    private SharedPreferences m_pref;
+    private SharedPreferences saved_pref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -62,14 +63,13 @@ public class FavoritesActivity extends PreferenceActivity
         try
         {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.favorites);    
-
+            setContentView(R.layout.favorites); 
             PreferenceManager.setDefaultValues(this, PREFERENCES_NAME, PREFERENCES_MODE, R.xml.settings, false);
-            m_pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()); 
-            ArrayList<String> pref_list = getPreferences();
+            saved_pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()); 
+            ArrayList<String> pref_list = getSavedPreferences();
             if (pref_list.isEmpty())
             {
-                Log.v("INFO:", "No Preferences available");
+                Log.v("INFO:", "No Saved Preferences available");
                 return;
             }
             // Now display the preferences
@@ -97,11 +97,11 @@ public class FavoritesActivity extends PreferenceActivity
         }
     }
     
-    public ArrayList<String> getPreferences()
+    public ArrayList<String> getSavedPreferences()
     {
         // Read all the preferences from the file       
         ArrayList<String> fav_list= null;        
-        Map<String, String> str_map = (Map<String, String>) m_pref.getAll(); 
+        Map<String, String> str_map = (Map<String, String>) saved_pref.getAll(); 
         Set s=str_map.entrySet();
         Iterator it=s.iterator();        
         while(it.hasNext())
@@ -117,8 +117,8 @@ public class FavoritesActivity extends PreferenceActivity
     
     public void savePreference (String new_pref)
     {           
-        SharedPreferences.Editor editor = m_pref.edit(); 
-        editor.putString("favourite" + incrementedValue, new_pref); 
+        SharedPreferences.Editor editor = saved_pref.edit(); 
+        editor.putString("location" + incrementedValue, new_pref); 
         editor.commit();  
         Log.i("INFO","Favourite saved!");                     
         incrementedValue++; 
@@ -126,7 +126,7 @@ public class FavoritesActivity extends PreferenceActivity
     }
     public  SharedPreferences getSharedPreferences() 
     {        
-        return m_pref;   
+        return saved_pref;   
     }    
 
 }
