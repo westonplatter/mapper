@@ -2,5 +2,7 @@
     <factorypathentry kind="VARJAR" id="MAPPER_HOME/bin/classes" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="WKSPJAR" id="/Mapper.test/libs/AndroidMockGenerator.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="ANDROID_RUNTIME" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="VARJAR" id="ANDROID_MOCK/android_framework_mocks.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="WKSPJAR" id="/Mapper.test/libs/android_framework_mocks.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="GOOGLE_API_DIR/libs/maps.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="GOOGLE_API_DIR/libs/usb.jar" enabled="true" runInBatchMode="false"/>
 </factorypath>

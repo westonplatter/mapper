@@ -117,25 +117,32 @@ public class MplsSkywayMapActivityTest extends
     @UsesMocks(NodeDB.class)
     public void testOnCreateBundle()
     {
+        ArrayList<Pair<GeoPoint,GeoPoint>> pointPairsList = 
+                        new ArrayList<Pair<GeoPoint,GeoPoint>>();
+        
+        //Create the GeoPoints for the constructors
+        GeoPoint point1 = new GeoPoint(MapUtilities.convertToE6Coordinate(-93.275681),
+                MapUtilities.convertToE6Coordinate(44.976124));
+        
+        GeoPoint point2 = new GeoPoint(MapUtilities.convertToE6Coordinate(-93.275940),
+                        MapUtilities.convertToE6Coordinate(44.975780));
+        
+        GeoPoint point3 = new GeoPoint(MapUtilities.convertToE6Coordinate(-93.276100),
+                        MapUtilities.convertToE6Coordinate(44.975845));
+        
+        pointPairsList.add(new Pair<GeoPoint, GeoPoint>(point1, point2));
+        pointPairsList.add(new Pair<GeoPoint, GeoPoint>(point2, point3));
+        
         //Create the mock object
-        NodeDB nodeDBMock = AndroidMock.createMock(NodeDB.class);
+        NodeDB nodeDBMock = AndroidMock.createMock(NodeDB.class, pointPairsList);
         
-        
-        ArrayList<MapNode> nodeListValue = new ArrayList<MapNode>();
 
-        //Create the nodes.
-        MapNode node1 = new MapNode(1, 
-                new GeoPoint(MapUtilities.convertToE6Coordinate(-93.275681),
-                        MapUtilities.convertToE6Coordinate(44.976124)));
+        //Create the nodes list
+        ArrayList<MapNode> nodeListValue = new ArrayList<MapNode>();
+        MapNode node1 = new MapNode(1, point1);
+        MapNode node2 = new MapNode(2, point2);
+        MapNode node3 = new MapNode(3, point3);
         
-        MapNode node2 = new MapNode(2, 
-                new GeoPoint(MapUtilities.convertToE6Coordinate(-93.275940),
-                        MapUtilities.convertToE6Coordinate(44.975780)));
-        
-        MapNode node3 = new MapNode(3,
-                new GeoPoint(MapUtilities.convertToE6Coordinate(-93.276100),
-                        MapUtilities.convertToE6Coordinate(44.975845)));
-                       
         //Create the edges
         MapEdge edge1_2 = new MapEdge(12, node1, node2);
         MapEdge edge2_3 = new MapEdge(23, node2, node3);
@@ -151,9 +158,13 @@ public class MplsSkywayMapActivityTest extends
         nodeListValue.add(node2);
         nodeListValue.add(node3);
         
+        
         //Add the getNodeList() mock method to the NodeDB so it returns the 
         //  node list we just created.
         AndroidMock.expect(nodeDBMock.getNodeList()).andReturn(nodeListValue);
+        
+        //getActivity().onCreate(null);
+        
         fail("Not yet implemented");
     }
 
