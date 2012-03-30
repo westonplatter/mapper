@@ -79,6 +79,14 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+        
+        <activity
+            android:name=".SingleSearchResultView"
+            android:label="@string/single_search_results" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
 
     </application>
 </manifest>
