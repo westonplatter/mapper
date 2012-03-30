@@ -29,6 +29,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -45,14 +46,17 @@ import android.view.Window;
 import android.widget.Button;
 
 import com.google.android.maps.GeoPoint;
+import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
 import com.mapper.map.MapEdge;
+import com.mapper.map.MapItemizedOverlay;
 import com.mapper.map.MapNode;
 import com.mapper.map.MapOverlay;
+import com.mapper.map.MapOverlayItem;
 
 import com.mapper.map.NodeDB;
 import com.mapper.yelp.YelpQueryManager;
@@ -110,6 +114,30 @@ public class MplsSkywayMapActivity extends MapActivity {
             }
         }
 
+        ///////////////////////////////////////////////////////////////////////
+        
+        // Manual Insertion of Pin
+        
+        // instantiate the picture for the location
+        Drawable marker = getResources().getDrawable(R.drawable.pin);
+        int markerHeight = marker.getIntrinsicHeight();
+        int markerWidth = marker.getIntrinsicWidth();
+        marker.setBounds(0, markerHeight, markerWidth, 0);
+        
+        // instantiate the ItemizedOverlay (collection of items within connected to overaly)
+        MapItemizedOverlay itemizedOverlay = new MapItemizedOverlay(marker);
+        mapOverlays.add(itemizedOverlay);
+        
+        // instantiate OverlayItem
+        GeoPoint point_1 = new GeoPoint((int) (MapCenterLatitude*1000000), (int) (MapCenterLongitude*1000000));
+        MapOverlayItem item = new MapOverlayItem(point_1, "title", "snippet");
+        
+        // add pin to the map
+        itemizedOverlay.addItem(item);
+        
+        ///////////////////////////////////////////////////////////////////////
+        
+        
         // get Map Controller to set location and zoom
         mc = mapView.getController();
 
