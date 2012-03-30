@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -141,14 +140,6 @@ public class MplsSkywayMapActivity extends MapActivity {
         // get Map Controller to set location and zoom
         mc = mapView.getController();
 
-        try {
-            new YelpQueryManager();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         // Center Map
         p = new GeoPoint((int) (MapCenterLatitude * 1000000), (int) (MapCenterLongitude * 1000000));
         mc.animateTo(p);
@@ -217,9 +208,6 @@ public class MplsSkywayMapActivity extends MapActivity {
         switch (item.getItemId()) {
             case R.id.search:
                 onSearchRequested();
-                return true;
-            case R.id.business_directory:
-                // Do something here
                 return true;
             case R.id.quit:
                 Intent intent = new Intent(Intent.ACTION_MAIN);
