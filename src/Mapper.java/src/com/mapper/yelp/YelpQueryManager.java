@@ -1,4 +1,4 @@
-//YelpQueryManager.java
+// YelpQueryManager.java
 /**
  * Copyright 2012 Jon Lee
  * 
@@ -18,254 +18,190 @@ package com.mapper.yelp;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.util.Map.Entry;
-
-import org.json.JSONException;
-import org.scribe.builder.ServiceBuilder;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
-import org.scribe.model.Token;
-import org.scribe.model.Verb;
-import org.scribe.oauth.OAuthService;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-/**
- * 
- * @author jonlee
- *
- */
 public class YelpQueryManager
 {
+    static private double MapCenterLatitude  = 44.975667;
+    static private double MapCenterLongitude = -93.270793;
 
-    private double MapCenterLatitude = 44.975667;
-    private double MapCenterLongitude = -93.270793;
+    static private final String ConsumerKey    = "7vt3-VYr6iTT2h8UP1I_TQ";
+    static private final String ConsumerSecret = "0NE2zJcCekassEx8vneMqPHCGrE";
+    static private final String Token          = "8FbokVwPFOOn5UmnvZXe1ZQgPLJAxYAg";
+    static private final String TokenSecret    = "6t3zlSabL5VkVIN9CNEDkbD_vNc";
 
-    final String LOG_TAG = "JonLee";
+    static private final String REGION_TAG        = "region";
+    static private final String CENTER_TAG        = "center";
+    static private final String LATITUDE_TAG      = "latitude";
+    static private final String LONGITUDE_TAG     = "longitude";
+    static private final String DISPLAY_PHONE_TAG = "display_phone";
+    static private final String LOCATION_TAG      = "location";
+    static private final String BUSINESS_TAG      = "businesses";
+    static private final String ADDRESS_TAG       = "address";
+    static private final String COORDINATE_TAG    = "coordinate";
+    static private final String CITY_TAG          = "city";
+    static private final String POSTAL_CODE_TAG   = "postal_code";
+    static private final String STATE_TAG         = "state_code";
+    static private final String RATING_IMG_TAG    = "rating_img_url";
+    static private final String REVIEW_TAG        = "review_count";
+    static private final String URL_TAG           = "url";
+    static private final String NAME_TAG          = "name";
+    static private final String IMAGE_URL_TAG     = "image_url";
 
-    final String REGION_TAG = "region";
-    final String CENTER_TAG = "center";
-    final String LATITUDE_TAG = "latitude";
-    final String LONGITUDE_TAG = "longitude";
-    final String TOTAL_TAG = "total";
-    final String DISPLAY_PHONE_TAG = "display_phone";
-    final String LOCATION_TAG = "location";
-    final String BUSINESS_TAG = "businesses";
-    final String ADDRESS_TAG = "address";
-    final String COORDINATE_TAG = "coordinate";
-    final String CITY_TAG = "city";
-    final String POSTAL_CODE_TAG = "postal_code";
-    final String STATE_TAG = "state_code";
-    final String RATING_IMG_TAG = "rating_img_url";
-    final String REVIEW_TAG = "review_count";
-    final String URL_TAG = "url";
-    final String NAME_TAG = "name";
-    final String IMAGE_URL_TAG = "image_url";
-
-    private YelpResultsResponse currentResult;
+    static private YelpService yelpService;
+    static private YelpResultsResponse responseObject;; 
 
     public YelpQueryManager()
-            throws IOException,
-                UnsupportedEncodingException,
-                JSONException
     {
-        String consumerKey = "7vt3-VYr6iTT2h8UP1I_TQ";
-        String consumerSecret = "0NE2zJcCekassEx8vneMqPHCGrE";
-        String token = "8FbokVwPFOOn5UmnvZXe1ZQgPLJAxYAg";
-        String tokenSecret = "6t3zlSabL5VkVIN9CNEDkbD_vNc";
-
-        YelpService yelp = new YelpService(consumerKey, consumerSecret, token,
-                tokenSecret);
-        String response = yelp.search("burritos", MapCenterLatitude,
-                MapCenterLongitude);
-
-        YelpResultsResponse resp = new YelpResultsResponse();
-
-        parseResults(resp, response);
-
-        setCurrentResult(resp);
+        // Connect to yelp and create a response object
+        yelpService = new YelpService(ConsumerKey, ConsumerSecret, Token, TokenSecret);
+        responseObject = new YelpResultsResponse(); 
     }
 
-    private void parseResults(YelpResultsResponse resp, String reader)
-            throws IOException, JSONException
+    public YelpResultsResponse search(String currentQuery)
     {
+        // Clear the response object
+        responseObject.getBusinesses().clear();
 
-        if(reader.isEmpty())
-        {
-            System.out.println("ERROR - YELP Returned invalid results");
-            return;
-        }
+        // Parse the results
+        String responseString = yelpService.search(currentQuery, MapCenterLatitude, MapCenterLongitude);
+        parseResults(responseString);
+        return responseObject;
+    }
 
-        JsonElement jse = null;
-        BufferedReader in;
-        try
-        {
-            in = new BufferedReader(new InputStreamReader(
-                    new ByteArrayInputStream(reader.getBytes()), "UTF-8"));
-            jse = new JsonParser().parse(in);
+    private void parseResults(String responseString)
+    {
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(responseString.getBytes()), "UTF-8"));
+            JsonElement jse = new JsonParser().parse(in);
             in.close();
 
-            for(final Entry<String, JsonElement> entry : jse.getAsJsonObject()
-                    .entrySet())
+            // Iterate through each entry in the response string
+            for (final Entry<String, JsonElement> entry : jse.getAsJsonObject().entrySet())
             {
-
-                final String key = entry.getKey();
-                final JsonElement value = entry.getValue();
-
-                if(key.contains(REGION_TAG))
+                if (entry.getKey().contains(REGION_TAG))
                 {
-
-                    for(final Entry<String, JsonElement> centry : value
-                            .getAsJsonObject().entrySet())
-                    {
-                        final String k = centry.getKey();
-                        final JsonElement v = centry.getValue();
-
-                        if(k.contains(CENTER_TAG))
-                        {
-
-                            for(final Entry<String, JsonElement> loc : v
-                                    .getAsJsonObject().entrySet())
-                            {
-
-                                if(loc.getKey().contains(LATITUDE_TAG))
-                                    resp.setLatitude(loc.getValue()
-                                            .getAsDouble());
-                                else if(loc.getKey().contains(LONGITUDE_TAG))
-                                    resp.setLongitude(loc.getValue()
-                                            .getAsDouble());
-                            }
-
-                        }
-
-                    }
-                }
-                else if(key.contains(TOTAL_TAG))
-                {
-                    resp.setTotalResults(value.getAsDouble());
+                    parseRegionTag(entry.getValue());
                 }
             }
 
+            // Create an array of business entries
             JsonArray jsa = jse.getAsJsonObject().getAsJsonArray(BUSINESS_TAG);
-            for(int i = 0; i < jsa.size(); i++)
+
+            // Iterate through each entry
+            for (int i = 0; i < jsa.size(); i++)
             {
-
-                final JsonElement element = jsa.get(i);
-
+                // Parse BUSINESS_TAG
                 YelpBusiness business = new YelpBusiness();
+                parseBusinessTag(business, jsa.get(i));
+                responseObject.addBusinesses(business);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-                for(final Entry<String, JsonElement> entry : element
-                        .getAsJsonObject().entrySet())
+    public void parseBusinessTag(YelpBusiness business, JsonElement element)
+    {
+        for (final Entry<String, JsonElement> entry : element.getAsJsonObject().entrySet())
+        {
+            final String key = entry.getKey();
+            final JsonElement value = entry.getValue();
+
+            if (key.contains(DISPLAY_PHONE_TAG))
+            {
+                business.setPhoneNumber(value.getAsString());
+            }
+            else if (key.contains(LOCATION_TAG))
+            {
+                // Location
+                for (final Entry<String, JsonElement> centry : value.getAsJsonObject().entrySet())
                 {
+                    final String k1 = centry.getKey();
+                    final JsonElement v1 = centry.getValue();
 
-                    final String key = entry.getKey();
-                    final JsonElement v = entry.getValue();
-
-                    if(key.contains(DISPLAY_PHONE_TAG))
+                    if (k1.contains(ADDRESS_TAG))
                     {
-                        business.setPhoneNumber(v.getAsString());
-
-                    }
-                    else if(key.contains(LOCATION_TAG))
-                    {
-                        // Location
-                        for(final Entry<String, JsonElement> centry : v
-                                .getAsJsonObject().entrySet())
+                        String address = "";
+                        for (final JsonElement e2 : v1.getAsJsonArray())
                         {
-                            final String k1 = centry.getKey();
-                            final JsonElement v1 = centry.getValue();
+                            address += e2.getAsString() + " ";
+                        }
 
-                            if(k1.contains(ADDRESS_TAG))
-                            {
-                                String address = "";
-                                for(final JsonElement e2 : v1.getAsJsonArray())
-                                {
-                                    address += e2.getAsString() + " ";
-                                }
-
-                                business.setAddress(address);
-
-                            }
-                            else if(k1.contains(COORDINATE_TAG))
-                            {
-                                for(final Entry<String, JsonElement> loc : v1
-                                        .getAsJsonObject().entrySet())
-                                {
-                                    if(loc.getKey().contains(LATITUDE_TAG))
-                                        business.setLatitude(loc.getValue()
-                                                .getAsDouble());
-                                    else if(loc.getKey()
-                                            .contains(LONGITUDE_TAG))
-                                        business.setLongitude(loc.getValue()
-                                                .getAsDouble());
-                                }
-                            }
-                            else if(k1.contains(CITY_TAG))
-                            {
-                                business.setCity(v1.getAsString());
-                            }
-                            else if(k1.contains(POSTAL_CODE_TAG))
-                            {
-                                business.setPostalCode(v1.getAsInt());
-                            }
-                            else if(k1.contains(STATE_TAG))
-                            {
-                                business.setState(v1.getAsString());
-                            }
+                        business.setAddress(address);
+                    }
+                    else if (k1.contains(COORDINATE_TAG))
+                    {
+                        for (final Entry<String, JsonElement> loc : v1.getAsJsonObject().entrySet())
+                        {
+                            if (loc.getKey().contains(LATITUDE_TAG))
+                                business.setLatitude(loc.getValue().getAsDouble());
+                            else if (loc.getKey().contains(LONGITUDE_TAG))
+                                business.setLongitude(loc.getValue().getAsDouble());
                         }
                     }
-                    else if(key.contains(RATING_IMG_TAG))
+                    else if (k1.contains(CITY_TAG))
                     {
-                        business.setRatingUrl(v.getAsString());
+                        business.setCity(v1.getAsString());
                     }
-                    else if(key.contains(REVIEW_TAG))
+                    else if (k1.contains(POSTAL_CODE_TAG))
                     {
-                        business.setReviewCount(v.getAsInt());
+                        business.setPostalCode(v1.getAsInt());
                     }
-                    else if(key.contains(URL_TAG))
+                    else if (k1.contains(STATE_TAG))
                     {
-                        business.setUrl(v.getAsString());
-                    }
-                    else if(key.contains(NAME_TAG))
-                    {
-                        business.setName(v.getAsString());
-                    }
-                    else if(key.contains(IMAGE_URL_TAG))
-                    {
-                        business.setImageUrl(v.getAsString());
+                        business.setState(v1.getAsString());
                     }
                 }
-
-                System.out.println(business.toString());
+            }
+            else if (key.contains(RATING_IMG_TAG))
+            {
+                business.setRatingUrl(value.getAsString());
+            }
+            else if (key.contains(REVIEW_TAG))
+            {
+                business.setReviewCount(value.getAsInt());
+            }
+            else if (key.contains(URL_TAG))
+            {
+                business.setUrl(value.getAsString());
+            }
+            else if (key.contains(NAME_TAG))
+            {
+                business.setName(value.getAsString());
+            }
+            else if (key.contains(IMAGE_URL_TAG))
+            {
+                business.setImageUrl(value.getAsString());
             }
         }
-        catch(MalformedURLException e)
-        {
-            e.printStackTrace();
-        }
-        catch(UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        }
     }
 
-    public YelpResultsResponse getCurrentResult()
+    public void parseRegionTag(JsonElement element)
     {
-        return currentResult;
-    }
+        for (final Entry<String, JsonElement> centry : element.getAsJsonObject().entrySet())
+        {
+            final JsonElement value = centry.getValue();
 
-    public void setCurrentResult(YelpResultsResponse currentResult)
-    {
-        this.currentResult = currentResult;
+            if (centry.getKey().contains(CENTER_TAG))
+            {
+                for (final Entry<String, JsonElement> loc : value.getAsJsonObject().entrySet())
+                {
+                    if (loc.getKey().contains(LATITUDE_TAG))
+                    {
+                        responseObject.setLatitude(loc.getValue().getAsDouble());
+                    }
+                    else if (loc.getKey().contains(LONGITUDE_TAG))
+                    {
+                        responseObject.setLongitude(loc.getValue().getAsDouble());
+                    }
+                }
+            }
+        }
     }
 }
