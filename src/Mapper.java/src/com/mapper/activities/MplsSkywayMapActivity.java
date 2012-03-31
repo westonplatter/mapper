@@ -112,8 +112,7 @@ public class MplsSkywayMapActivity extends MapActivity
             {
                 if(!alreadyDrawnSkyways.contains(edge.getUniqueID()))
                 {
-                    mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge
-                            .getSecondNode()));
+                    mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge.getSecondNode()));
                     alreadyDrawnSkyways.add(edge.getUniqueID());
                 }
             }
@@ -126,7 +125,7 @@ public class MplsSkywayMapActivity extends MapActivity
         p = new GeoPoint((int) (MapperConstants.SKYWAY_MAP_CENTER_LATITUDE  * 1000000), 
                          (int) (MapperConstants.SKYWAY_MAP_CENTER_LONGITUDE * 1000000));
         mc.animateTo(p);
-        mc.setZoom(15);
+        mc.setZoom(16);
 
         myLocationOverlay = new MyLocationOverlay(this, mapView);
         myLocationOverlay.enableMyLocation();
@@ -178,6 +177,26 @@ public class MplsSkywayMapActivity extends MapActivity
             double latitude = getIntent().getDoubleExtra("latitude", 0);
             double longitude = getIntent().getDoubleExtra("longitude", 0);
             dropPin(latitude, longitude);
+        }
+        else if (inputCode == MapperConstants.GET_DIRECTIONS_SELECTION) {
+            double end_latitude = getIntent().getDoubleExtra("latitude", 0);
+            double end_longitude = getIntent().getDoubleExtra("longitude", 0);
+            
+            double start_latitude = MapperConstants.SKYWAY_MAP_CENTER_LATITUDE;
+            double start_longitude = MapperConstants.SKYWAY_MAP_CENTER_LONGITUDE;
+            
+            if(loc != null)
+            {
+                start_latitude = loc.getLatitude();
+                start_longitude = loc.getLongitude();
+            }
+            else if((loc = lm.getLastKnownLocation(gps_provider)) != null)
+            {
+                start_latitude = loc.getLatitude();
+                start_longitude = loc.getLongitude();
+            }
+            
+            DrawDirections(start_latitude, start_longitude, end_latitude, end_longitude);
         }
     }
 

@@ -100,7 +100,7 @@ public class CampusMapActivity extends MapActivity
         p = new GeoPoint((int) (MapperConstants.CAMPUS_MAP_CENTER_LATITUDE  * 1000000), 
                          (int) (MapperConstants.CAMPUS_MAP_CENTER_LONGITUDE * 1000000));
         mc.animateTo(p);
-        mc.setZoom(17);
+        mc.setZoom(16);
 
         MyLocationOverlay myLocationOverlay = new MyLocationOverlay();
         List<Overlay> list = mapView.getOverlays();

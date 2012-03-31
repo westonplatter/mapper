@@ -1,4 +1,4 @@
-//MapOverlayItem.java
+// MapOverlayItem.java
 /**
  * Copyright 2012 Weston Platter
  * 
@@ -18,23 +18,13 @@ package com.mapper.map;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
-/**
- * @author Weston Platter
- *
- */
+
 public class MapOverlayItem extends OverlayItem
 {
-
     private GeoPoint    geoPoint;
     private String      point;
     private String      snippet;
-    
-    /**
-     * Default constructor of superclass.
-     * @param point
-     * @param title
-     * @param snippet
-     */
+
     public MapOverlayItem(GeoPoint point, String title, String snippet)
     {
         super(point, title, snippet);

@@ -81,7 +81,17 @@ public class SingleSearchResultView extends Activity implements OnClickListener
             startActivity(newActivity);
         }
 
-        else if (((TextView) view).getText().equals("Get Directions")) {
+        else if (((TextView) view).getText().equals("Get Directions")) 
+        {
+            double latitude = SearchableActivity.userSelection.getLatitude();
+            double longitude = SearchableActivity.userSelection.getLongitude();
+
+            Intent newActivity = new Intent(this, MplsSkywayMapActivity.class);
+            newActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            newActivity.putExtra("selection", MapperConstants.GET_DIRECTIONS_SELECTION);
+            newActivity.putExtra("latitude", latitude);
+            newActivity.putExtra("longitude", longitude);
+            startActivity(newActivity);
         }
 
         else if (((TextView) view).getText().equals("Add To Favorites")) {
