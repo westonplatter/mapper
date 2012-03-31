@@ -18,6 +18,7 @@ package com.mapper.activities;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -28,6 +29,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -51,6 +53,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
+import com.mapper.map.MapDirections;
 import com.mapper.map.MapEdge;
 import com.mapper.map.MapItemizedOverlay;
 import com.mapper.map.MapNode;
@@ -60,7 +63,8 @@ import com.mapper.map.MapOverlayItem;
 import com.mapper.map.NodeDB;
 import com.mapper.yelp.YelpQueryManager;
 
-public class MplsSkywayMapActivity extends MapActivity {
+public class MplsSkywayMapActivity extends MapActivity
+{
 
     private static NodeDB skywayDB;
     private MapController mc;
@@ -70,21 +74,24 @@ public class MplsSkywayMapActivity extends MapActivity {
     String gps_provider = LocationManager.GPS_PROVIDER;
     String network_provider = LocationManager.NETWORK_PROVIDER;
     Location loc;
-    boolean enableCurrentLocation = false;
     MyLocationOverlay myLocationOverlay;
     MapView mapView;
+
+    public static boolean followLocation = false;
 
     private static double MapCenterLatitude = 44.975667;
     private static double MapCenterLongitude = -93.270793;
 
     @Override
-    protected boolean isRouteDisplayed() {
+    protected boolean isRouteDisplayed()
+    {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -104,44 +111,50 @@ public class MplsSkywayMapActivity extends MapActivity {
         ArrayList<MapNode> skyway = skywayDB.getNodeList();
         ArrayList<Integer> alreadyDrawnSkyways = new ArrayList<Integer>();
 
-        for (MapNode node : skyway) {
-            for (MapEdge edge : node.getAdjacentEdges()) {
-                if (!alreadyDrawnSkyways.contains(edge.getUniqueID())) {
-                    mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge.getSecondNode()));
+        for(MapNode node : skyway)
+        {
+            for(MapEdge edge : node.getAdjacentEdges())
+            {
+                if(!alreadyDrawnSkyways.contains(edge.getUniqueID()))
+                {
+                    mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge
+                            .getSecondNode()));
                     alreadyDrawnSkyways.add(edge.getUniqueID());
                 }
             }
         }
 
-        ///////////////////////////////////////////////////////////////////////
-        
+        // /////////////////////////////////////////////////////////////////////
+
         // Manual Insertion of Pin
-        
+
         // instantiate the picture for the location
         Drawable marker = getResources().getDrawable(R.drawable.pin);
         int markerHeight = marker.getIntrinsicHeight();
         int markerWidth = marker.getIntrinsicWidth();
         marker.setBounds(0, markerHeight, markerWidth, 0);
-        
-        // instantiate the ItemizedOverlay (collection of items within connected to overaly)
+
+        // instantiate the ItemizedOverlay (collection of items within connected
+        // to overaly)
         MapItemizedOverlay itemizedOverlay = new MapItemizedOverlay(marker);
         mapOverlays.add(itemizedOverlay);
-        
+
         // instantiate OverlayItem
-        GeoPoint point_1 = new GeoPoint((int) (MapCenterLatitude*1000000), (int) (MapCenterLongitude*1000000));
+        GeoPoint point_1 = new GeoPoint((int) (MapCenterLatitude * 1000000),
+                (int) (MapCenterLongitude * 1000000));
         MapOverlayItem item = new MapOverlayItem(point_1, "title", "snippet");
-        
+
         // add pin to the map
         itemizedOverlay.addItem(item);
-        
-        ///////////////////////////////////////////////////////////////////////
-        
-        
+
+        // /////////////////////////////////////////////////////////////////////
+
         // get Map Controller to set location and zoom
         mc = mapView.getController();
 
         // Center Map
-        p = new GeoPoint((int) (MapCenterLatitude * 1000000), (int) (MapCenterLongitude * 1000000));
+        p = new GeoPoint((int) (MapCenterLatitude * 1000000),
+                (int) (MapCenterLongitude * 1000000));
         mc.animateTo(p);
         mc.setZoom(15);
 
@@ -159,53 +172,52 @@ public class MplsSkywayMapActivity extends MapActivity {
         lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, ll);
 
         Button currentlocationButton = (Button) findViewById(R.id.curLoc);
-        currentlocationButton.setOnTouchListener(new OnTouchListener() {
+        currentlocationButton.setOnTouchListener(new OnTouchListener()
+        {
 
-            public boolean onTouch(View v, MotionEvent event) 
+            public boolean onTouch(View v, MotionEvent event)
             {
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
-                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ll);
-                lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, ll);
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+                        ll);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
+                        0, ll);
+                lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0,
+                        0, ll);
 
-                enableCurrentLocation = true;
+                followLocation = true;
                 centerOnLocation();
+
+                DrawDirections(44.969595, -93.274012, 44.977231, -93.268068);
 
                 return true;
             }
         });
 
-        mapView.setOnLongClickListener(new OnLongClickListener() {
+        mapView.setOnLongClickListener(new OnLongClickListener()
+        {
             @Override
-            public boolean onLongClick(View arg0) {
+            public boolean onLongClick(View arg0)
+            {
                 // TODO Auto-generated method stub
-                return false;
-            }
-        });
-
-        mapView.setOnTouchListener(new OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    // do your thing
-                    enableCurrentLocation = false;
-                    lm.removeUpdates(ll);
-                }
                 return false;
             }
         });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.layout.skyway_options_menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle item selection
-        switch (item.getItemId()) {
+        switch(item.getItemId())
+        {
             case R.id.search:
                 onSearchRequested();
                 return true;
@@ -220,19 +232,26 @@ public class MplsSkywayMapActivity extends MapActivity {
         }
     }
 
-    private ArrayList<Pair<GeoPoint, GeoPoint>> readSkywayAdaptation() {
+    private ArrayList<Pair<GeoPoint, GeoPoint>> readSkywayAdaptation()
+    {
         ArrayList<String> stringXmlContent = null;
         ArrayList<Pair<GeoPoint, GeoPoint>> returnList = new ArrayList<Pair<GeoPoint, GeoPoint>>();
 
-        try {
+        try
+        {
             stringXmlContent = getEventsFromAnXML(this);
-        } catch (XmlPullParserException e) {
+        }
+        catch(XmlPullParserException e)
+        {
             e.printStackTrace();
-        } catch (IOException e) {
+        }
+        catch(IOException e)
+        {
             e.printStackTrace();
         }
 
-        for (String line : stringXmlContent) {
+        for(String line : stringXmlContent)
+        {
             String coordinate = line.replaceAll("\n", ",");
             coordinate = coordinate.replaceAll(" ", "");
             String[] coordinates = coordinate.split(",");
@@ -247,15 +266,19 @@ public class MplsSkywayMapActivity extends MapActivity {
         return returnList;
     }
 
-    private ArrayList<String> getEventsFromAnXML(Activity activity) throws XmlPullParserException, IOException {
+    private ArrayList<String> getEventsFromAnXML(Activity activity)
+            throws XmlPullParserException, IOException
+    {
         ArrayList<String> coordinateList = new ArrayList<String>();
         Resources res = activity.getResources();
         XmlResourceParser xpp = res.getXml(R.xml.skywayxml);
         xpp.next();
         int eventType = xpp.getEventType();
 
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            if (eventType == XmlPullParser.TEXT) {
+        while(eventType != XmlPullParser.END_DOCUMENT)
+        {
+            if(eventType == XmlPullParser.TEXT)
+            {
                 coordinateList.add(xpp.getText());
             }
             eventType = xpp.next();
@@ -263,51 +286,277 @@ public class MplsSkywayMapActivity extends MapActivity {
         return coordinateList;
     }
 
-    private void centerOnLocation() {
-        if (loc != null) {
+    private void centerOnLocation()
+    {
+        if(loc != null)
+        {
             double lat = loc.getLatitude();
             double lon = loc.getLongitude();
-            GeoPoint newPoint = new GeoPoint((int) (lat * 1e6), (int) (lon * 1e6));
+            GeoPoint newPoint = new GeoPoint((int) (lat * 1e6),
+                    (int) (lon * 1e6));
 
             mc.animateTo(newPoint);
             mapView.invalidate();
 
-        } else if ((loc = lm.getLastKnownLocation(gps_provider)) != null) {
+        }
+        else if((loc = lm.getLastKnownLocation(gps_provider)) != null)
+        {
             double lat = loc.getLatitude();
             double lon = loc.getLongitude();
-            GeoPoint newPoint = new GeoPoint((int) (lat * 1e6), (int) (lon * 1e6));
+            GeoPoint newPoint = new GeoPoint((int) (lat * 1e6),
+                    (int) (lon * 1e6));
 
             mc.animateTo(newPoint);
             mapView.invalidate();
         }
     }
 
-    private class MyLocationListener implements LocationListener {
+    private class MyLocationListener implements LocationListener
+    {
 
-        public void onLocationChanged(Location argLocation) {
+        public void onLocationChanged(Location argLocation)
+        {
             GeoPoint myGeoPoint = new GeoPoint(
                     (int) (argLocation.getLatitude() * 1000000),
                     (int) (argLocation.getLongitude() * 1000000));
 
             loc = argLocation;
 
-            if (enableCurrentLocation) {
+            if(followLocation)
+            {
                 myLocationOverlay.enableMyLocation();
                 mc.animateTo(myGeoPoint);
                 mapView.invalidate();
+                centerOnLocation();
+            }
+
+        }
+
+        public void onProviderDisabled(String provider)
+        {
+            // TODO Auto-generated method stub
+        }
+
+        public void onProviderEnabled(String provider)
+        {
+            // TODO Auto-generated method stub
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras)
+        {
+            // TODO Auto-generated method stub
+        }
+    }
+
+    public void DrawDirections(double latitude1, double longitude1,
+            double latitude2, double longitude2)
+    {
+        ArrayList<MapNode> skyway = skywayDB.getNodeList();
+        MapView mapView = (MapView) findViewById(R.id.mapview);
+
+        // get MapOverlap Object List
+        List<Overlay> mapOverlays = mapView.getOverlays();
+
+        // get shortest path from 0 to 7
+        MapDirections directions = new MapDirections(skywayDB);
+        System.out.println("Break1");
+        // clear the overlays
+        mapOverlays.clear();
+        System.out.println("Break2");
+        // get the Start edge and start lat long point
+        Pair<GeoPoint, MapEdge> startEdge = getClosestPointOnLineSegment(
+                latitude1, longitude1);
+        System.out.println("Break3");
+        // get the End edge and end lat long point
+        Pair<GeoPoint, MapEdge> endEdge = getClosestPointOnLineSegment(
+                latitude2, longitude2);
+        System.out.println("Break4");
+        // get the closest node on the edge from where you are
+        MapNode startNode = getClosestNode(
+                startEdge.first.getLatitudeE6() / 1E6,
+                startEdge.first.getLongitudeE6() / 1E6, startEdge.second);
+        System.out.println("Break5");
+        // get the closest node on the edge from the destination is
+        MapNode endNode = getClosestNode(endEdge.first.getLatitudeE6() / 1E6,
+                endEdge.first.getLongitudeE6() / 1E6, endEdge.second);
+        System.out.println("Break6");
+        // initiate the graph with closest paths from current location
+        directions.execute(startNode);
+        System.out.println("Break7");
+        // get the shortest path
+        LinkedList<MapNode> path = directions.getPath(endNode);
+        System.out.println("Break8");
+        // Draw path. connect current location to starting node then append the
+        // end location to the finish location
+        MapOverlay mo = new MapOverlay(startEdge.first,
+                startNode.getNodeLocation());
+        mo.setLineColor(Color.DKGRAY);
+        mo.setLineWidth(5);
+        mapOverlays.add(mo);
+        System.out.println("Break9 ");
+        System.out.println("Break  .   " + (path == null) + " " + (skywayDB == null));
+        System.out.println("Break  .   " + path.size());
+
+        int i;
+        for(i = 0; i < path.size() - 1; ++i)
+        {
+
+            mo = new MapOverlay(path.get(i).getNodeLocation(), path.get(i + 1)
+                    .getNodeLocation());
+            System.out.println("Break9.1" + i + " " + path.size());
+
+            mo.setLineColor(Color.DKGRAY);
+
+            mo.setLineWidth(5);
+            System.out.println("Break9.2");
+            mapOverlays.add(mo);
+            System.out.println("Break9.3");
+        }
+
+        System.out.println("Break9.4");
+        mo = new MapOverlay(path.get(i).getNodeLocation(), endEdge.first);
+        mo.setLineColor(Color.DKGRAY);
+        System.out.println("Break9.5");
+        mo.setLineWidth(5);
+        System.out.println("Break9.6");
+        mapOverlays.add(mo);
+        System.out.println("Break10");
+        // Redraw the skyways
+        ArrayList<Integer> alreadyDrawnSkyways = new ArrayList<Integer>();
+
+        for(MapNode node : skyway)
+        {
+            for(MapEdge edge : node.getAdjacentEdges())
+            {
+                if(!alreadyDrawnSkyways.contains(edge.getUniqueID()))
+                {
+                    mapOverlays.add(new MapOverlay(edge.getSourceNode()
+                            .getNodeLocation(), edge.getTargetNode()
+                            .getNodeLocation()));
+                    alreadyDrawnSkyways.add(edge.getUniqueID());
+                }
+            }
+        }
+        System.out.println("Break111");
+        mapView.invalidate();
+        System.out.println("Break12");
+    }
+
+    public MapNode getClosestNode(double latitude, double longitude,
+            MapEdge edge)
+    {
+
+        // get the closest node based on a location on the line
+
+        double distanceToNode1 = Math.sqrt(Math.pow(latitude
+                - edge.getSourceNode().getNodeLocation().getLatitudeE6() / 1E6,
+                2)
+                + Math.pow(longitude
+                        - edge.getSourceNode().getNodeLocation()
+                                .getLongitudeE6() / 1E6, 2));
+        double distanceToNode2 = Math.sqrt(Math.pow(latitude
+                - edge.getTargetNode().getNodeLocation().getLatitudeE6() / 1E6,
+                2)
+                + Math.pow(longitude
+                        - edge.getTargetNode().getNodeLocation()
+                                .getLongitudeE6() / 1E6, 2));
+
+        return (distanceToNode1 < distanceToNode2) ? edge.getSourceNode()
+                : edge.getTargetNode();
+    }
+
+    public Pair<GeoPoint, MapEdge> getClosestPointOnLineSegment(
+            double latitude, double longitude)
+    {
+
+        // gets the closest point on a line segment
+        MapEdge closestEdge = null;
+        double closestDistance = Double.POSITIVE_INFINITY;
+        for(MapEdge e : skywayDB.getEdgeList())
+        {
+
+            float x = (float) latitude;
+            float y = (float) longitude;
+            float edgeX1 = (float) ((float) e.getSourceNode().getNodeLocation()
+                    .getLatitudeE6() / 1E6);
+            float edgeY1 = (float) ((float) e.getSourceNode().getNodeLocation()
+                    .getLongitudeE6() / 1E6);
+
+            float edgeX2 = (float) ((float) e.getTargetNode().getNodeLocation()
+                    .getLatitudeE6() / 1E6);
+            float edgeY2 = (float) ((float) e.getTargetNode().getNodeLocation()
+                    .getLongitudeE6() / 1E6);
+
+            float A = x - edgeX1;
+            float B = y - edgeY1;
+            float C = edgeX2 - edgeX1;
+            float D = edgeY2 - edgeY1;
+
+            float dot = A * C + B * D;
+            float len_sq = C * C + D * D;
+            float param = dot / len_sq;
+
+            float xx, yy;
+
+            if(param < 0)
+            {
+                xx = edgeX1;
+                yy = edgeY1;
+            }
+            else if(param > 1)
+            {
+                xx = edgeX2;
+                yy = edgeY2;
+            }
+            else
+            {
+                xx = edgeX1 + param * C;
+                yy = edgeY1 + param * D;
+            }
+
+            float dist = (float) Math.sqrt((Math.abs(x - xx) * (Math
+                    .abs(x - xx))) + (Math.abs(y - yy) * (Math.abs(y - yy))));
+
+            if(closestDistance > dist)
+            {
+                closestDistance = dist;
+                closestEdge = e;
             }
         }
 
-        public void onProviderDisabled(String provider) {
-            // TODO Auto-generated method stub
-        }
+        float nodeAtoPointX = (float) Math.abs(latitude
+                - closestEdge.getSourceNode().getNodeLocation().getLatitudeE6()
+                / 1E6);
+        float nodeAtoPointY = (float) Math.abs(longitude
+                - closestEdge.getSourceNode().getNodeLocation()
+                        .getLongitudeE6() / 1E6);
 
-        public void onProviderEnabled(String provider) {
-            // TODO Auto-generated method stub
-        }
+        float nodeAtoNodeBX = (float) Math.abs(closestEdge.getSourceNode()
+                .getNodeLocation().getLatitudeE6()
+                / 1E6
+                - closestEdge.getTargetNode().getNodeLocation().getLatitudeE6()
+                / 1E6);
 
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            // TODO Auto-generated method stub
-        }
+        float nodeAtoNodeBY = (float) Math.abs(closestEdge.getSourceNode()
+                .getNodeLocation().getLongitudeE6()
+                / 1E6
+                - closestEdge.getTargetNode().getNodeLocation()
+                        .getLongitudeE6() / 1E6);
+
+        float nodeAtoB = nodeAtoNodeBX * nodeAtoNodeBX + nodeAtoNodeBY
+                * nodeAtoNodeBY;
+
+        float aToPDotAToB = nodeAtoPointX * nodeAtoNodeBX + nodeAtoPointY
+                * nodeAtoNodeBY;
+
+        float t = aToPDotAToB / nodeAtoB;
+
+        float X = (float) (closestEdge.getSourceNode().getNodeLocation()
+                .getLatitudeE6() / 1E6 + nodeAtoNodeBX * t);
+        float Y = (float) (closestEdge.getSourceNode().getNodeLocation()
+                .getLongitudeE6() / 1E6 + nodeAtoNodeBY * t);
+
+        GeoPoint returnPoint = new GeoPoint((int) (X * 1E6), (int) (Y * 1E6));
+        return new Pair<GeoPoint, MapEdge>(returnPoint, closestEdge);
     }
 }
