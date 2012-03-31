@@ -27,10 +27,10 @@ import android.widget.TextView;
 
 public class MainMenuActivity extends Activity implements OnClickListener {
 
-	Button skywayMapButton;
-	Button campusMapButton;
-	Button favoritesButton;
-	Button helpButton;
+	private static Button skywayMapButton;
+	private static Button campusMapButton;
+	private static Button favoritesButton;
+	private static Button helpButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -39,15 +39,15 @@ public class MainMenuActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 
-		this.skywayMapButton = (Button) this.findViewById(R.id.skywayMapMenuButton);
-		this.campusMapButton = (Button) this.findViewById(R.id.campusMapMenuButton);
-		this.favoritesButton = (Button) this.findViewById(R.id.favoritesMenuButton);
-		this.helpButton = (Button) this.findViewById(R.id.helpMenuButton);
+		skywayMapButton = (Button) this.findViewById(R.id.skywayMapMenuButton);
+		campusMapButton = (Button) this.findViewById(R.id.campusMapMenuButton);
+		favoritesButton = (Button) this.findViewById(R.id.favoritesMenuButton);
+		helpButton = (Button) this.findViewById(R.id.helpMenuButton);
 
-		this.skywayMapButton.setOnClickListener(this);
-		this.campusMapButton.setOnClickListener(this);
-		this.favoritesButton.setOnClickListener(this);
-		this.helpButton.setOnClickListener(this);
+		skywayMapButton.setOnClickListener(this);
+		campusMapButton.setOnClickListener(this);
+		favoritesButton.setOnClickListener(this);
+		helpButton.setOnClickListener(this);
 	}
 
 	@Override
@@ -71,6 +71,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
 			myIntent = new Intent(view.getContext(), HelpActivity.class);
 		}
 
+		myIntent.putExtra("selection", 0);
 		startActivity(myIntent);
 	}
 }

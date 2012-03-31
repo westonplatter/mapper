@@ -46,16 +46,19 @@ public class SearchableActivity extends ListActivity
         String query = intent.getStringExtra(SearchManager.QUERY);
 
         // Perform search
-        yelpQueryManager = new YelpQueryManager();
+        yelpQueryManager    = new YelpQueryManager();
         yelpResultsResponse = yelpQueryManager.search(query);
 
         // Check result count
-        if (yelpResultsResponse.getBusinesses().size() > 0) {
+        if (yelpResultsResponse.getBusinesses().size() > 0) 
+        {
             // Create list of business names
             setListAdapter((ListAdapter) new ArrayAdapter<String>(this, R.layout.results_list_layout, yelpResultsResponse.businessNames));
 
             ListView lv = getListView();
             lv.setTextFilterEnabled(true);
+            lv.setClickable(true);
+            
             lv.setOnItemClickListener(new OnItemClickListener() 
             {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id)
@@ -79,7 +82,6 @@ public class SearchableActivity extends ListActivity
                     return false; 
                 } 
             }; 
-
             setListAdapter(adapter);
         }
     }

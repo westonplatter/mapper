@@ -47,7 +47,6 @@ import android.view.Window;
 import android.widget.Button;
 
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -59,13 +58,11 @@ import com.mapper.map.MapItemizedOverlay;
 import com.mapper.map.MapNode;
 import com.mapper.map.MapOverlay;
 import com.mapper.map.MapOverlayItem;
-
 import com.mapper.map.NodeDB;
-import com.mapper.yelp.YelpQueryManager;
+import com.mapper.util.MapperConstants;
 
 public class MplsSkywayMapActivity extends MapActivity
 {
-
     private static NodeDB skywayDB;
     private MapController mc;
     private LocationManager lm;
@@ -76,11 +73,9 @@ public class MplsSkywayMapActivity extends MapActivity
     Location loc;
     MyLocationOverlay myLocationOverlay;
     MapView mapView;
+    List<Overlay> mapOverlays;
 
     public static boolean followLocation = false;
-
-    private static double MapCenterLatitude = 44.975667;
-    private static double MapCenterLongitude = -93.270793;
 
     @Override
     protected boolean isRouteDisplayed()
@@ -103,7 +98,7 @@ public class MplsSkywayMapActivity extends MapActivity
         mapView.setSatellite(false);
 
         // get MapOverlap Object List
-        List<Overlay> mapOverlays = mapView.getOverlays();
+        mapOverlays = mapView.getOverlays();
 
         // get skyway from adaptation
         skywayDB = new NodeDB(readSkywayAdaptation());
@@ -123,38 +118,13 @@ public class MplsSkywayMapActivity extends MapActivity
                 }
             }
         }
-
-        // /////////////////////////////////////////////////////////////////////
-
-        // Manual Insertion of Pin
-
-        // instantiate the picture for the location
-        Drawable marker = getResources().getDrawable(R.drawable.pin);
-        int markerHeight = marker.getIntrinsicHeight();
-        int markerWidth = marker.getIntrinsicWidth();
-        marker.setBounds(0, markerHeight, markerWidth, 0);
-
-        // instantiate the ItemizedOverlay (collection of items within connected
-        // to overaly)
-        MapItemizedOverlay itemizedOverlay = new MapItemizedOverlay(marker);
-        mapOverlays.add(itemizedOverlay);
-
-        // instantiate OverlayItem
-        GeoPoint point_1 = new GeoPoint((int) (MapCenterLatitude * 1000000),
-                (int) (MapCenterLongitude * 1000000));
-        MapOverlayItem item = new MapOverlayItem(point_1, "title", "snippet");
-
-        // add pin to the map
-        itemizedOverlay.addItem(item);
-
-        // /////////////////////////////////////////////////////////////////////
-
+        
         // get Map Controller to set location and zoom
         mc = mapView.getController();
 
         // Center Map
-        p = new GeoPoint((int) (MapCenterLatitude * 1000000),
-                (int) (MapCenterLongitude * 1000000));
+        p = new GeoPoint((int) (MapperConstants.SKYWAY_MAP_CENTER_LATITUDE  * 1000000), 
+                         (int) (MapperConstants.SKYWAY_MAP_CENTER_LONGITUDE * 1000000));
         mc.animateTo(p);
         mc.setZoom(15);
 
@@ -177,12 +147,9 @@ public class MplsSkywayMapActivity extends MapActivity
 
             public boolean onTouch(View v, MotionEvent event)
             {
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-                        ll);
-                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
-                        0, ll);
-                lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0,
-                        0, ll);
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ll);
+                lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, ll);
 
                 followLocation = true;
                 centerOnLocation();
@@ -202,6 +169,16 @@ public class MplsSkywayMapActivity extends MapActivity
                 return false;
             }
         });
+        
+        // Determine whether this is processing a user-selection
+        int inputCode = 0;
+        inputCode = getIntent().getIntExtra("selection", 0);
+        
+        if (inputCode == MapperConstants.MAP_IT_SELECTION) {
+            double latitude = getIntent().getDoubleExtra("latitude", 0);
+            double longitude = getIntent().getDoubleExtra("longitude", 0);
+            dropPin(latitude, longitude);
+        }
     }
 
     @Override
@@ -213,23 +190,50 @@ public class MplsSkywayMapActivity extends MapActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        switch(item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.search:
                 onSearchRequested();
                 return true;
-            case R.id.quit:
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
+            case R.id.view_favorites:
+                Intent intent = new Intent(this, FavoritesActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                return true;
+            case R.id.main_menu:
+                Intent mainIntent = new Intent(this, MainMenuActivity.class);
+                mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(mainIntent);
+                return true;    
+            case R.id.quit:
+                Intent quitIntent = new Intent(Intent.ACTION_MAIN);
+                quitIntent.addCategory(Intent.CATEGORY_HOME);
+                quitIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(quitIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    
+    public void dropPin(double latitude, double longitude) {
+        // instantiate the picture for the location
+        Drawable marker = getResources().getDrawable(R.drawable.pin);
+        int markerHeight = marker.getIntrinsicHeight();
+        int markerWidth = marker.getIntrinsicWidth();
+        marker.setBounds(0, markerHeight, markerWidth, 0);
+        
+        // instantiate the ItemizedOverlay (collection of items within connected to overlay)
+        MapItemizedOverlay itemizedOverlay = new MapItemizedOverlay(marker);
+        mapOverlays.add(itemizedOverlay);
+        
+        // instantiate OverlayItem
+        GeoPoint point = new GeoPoint((int) (latitude*1000000), (int) (longitude*1000000));
+        MapOverlayItem item = new MapOverlayItem(point, "title", "snippet");
+        
+        // add pin to the map
+        itemizedOverlay.addItem(item);
     }
 
     private ArrayList<Pair<GeoPoint, GeoPoint>> readSkywayAdaptation()
@@ -397,12 +401,9 @@ public class MplsSkywayMapActivity extends MapActivity
         int i;
         for(i = 0; i < path.size() - 1; ++i)
         {
-
-            mo = new MapOverlay(path.get(i).getNodeLocation(), path.get(i + 1)
-                    .getNodeLocation());
+            mo = new MapOverlay(path.get(i).getNodeLocation(), path.get(i + 1).getNodeLocation());
 
             mo.setLineColor(Color.DKGRAY);
-
             mo.setLineWidth(5);
             mapOverlays.add(mo);
         }
@@ -431,23 +432,17 @@ public class MplsSkywayMapActivity extends MapActivity
         mapView.invalidate();
     }
 
-    public MapNode getClosestNode(double latitude, double longitude,
-            MapEdge edge)
+    public MapNode getClosestNode(double latitude, double longitude, MapEdge edge)
     {
-
         // get the closest node based on a location on the line
         double distanceToNode1 = Math.sqrt(Math.pow(latitude
-                - edge.getSourceNode().getNodeLocation().getLatitudeE6() / 1E6,
-                2)
+                - edge.getSourceNode().getNodeLocation().getLatitudeE6() / 1E6, 2)
                 + Math.pow(longitude
-                        - edge.getSourceNode().getNodeLocation()
-                                .getLongitudeE6() / 1E6, 2));
+                        - edge.getSourceNode().getNodeLocation().getLongitudeE6() / 1E6, 2));
         double distanceToNode2 = Math.sqrt(Math.pow(latitude
-                - edge.getTargetNode().getNodeLocation().getLatitudeE6() / 1E6,
-                2)
+                - edge.getTargetNode().getNodeLocation().getLatitudeE6() / 1E6, 2)
                 + Math.pow(longitude
-                        - edge.getTargetNode().getNodeLocation()
-                                .getLongitudeE6() / 1E6, 2));
+                        - edge.getTargetNode().getNodeLocation().getLongitudeE6() / 1E6, 2));
 
         return (distanceToNode1 < distanceToNode2) ? edge.getSourceNode()
                 : edge.getTargetNode();
@@ -456,13 +451,11 @@ public class MplsSkywayMapActivity extends MapActivity
     public Pair<GeoPoint, MapEdge> getClosestPointOnLineSegment(
             double latitude, double longitude)
     {
-
         // gets the closest point on a line segment
         MapEdge closestEdge = null;
         double closestDistance = Double.POSITIVE_INFINITY;
         for(MapEdge e : skywayDB.getEdgeList())
         {
-
             float x = (float) latitude;
             float y = (float) longitude;
             float edgeX1 = (float) ((float) e.getSourceNode().getNodeLocation()

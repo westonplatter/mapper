@@ -16,12 +16,22 @@
  */
 package com.mapper.activities;
 
+import com.mapper.util.MapperConstants;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class SingleSearchResultView extends Activity
+public class SingleSearchResultView extends Activity implements OnClickListener
 {
+    private static Button mapItButton;
+    private static Button getDirectionsButton;
+    private static Button saveFavoritesButton;
+    
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -45,5 +55,36 @@ public class SingleSearchResultView extends Activity
         // Set the phone number
         TextView businessPhone = (TextView)findViewById(R.id.business_phone);
         businessPhone.setText(SearchableActivity.userSelection.getPhoneNumber());
+        
+        mapItButton = (Button) this.findViewById(R.id.map_it_button);
+        getDirectionsButton = (Button) this.findViewById(R.id.get_directions_button);
+        saveFavoritesButton = (Button) this.findViewById(R.id.save_button);
+
+        mapItButton.setOnClickListener(this);
+        getDirectionsButton.setOnClickListener(this);
+        saveFavoritesButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) 
+    {
+        if (((TextView) view).getText().equals("Map It")) 
+        {
+            double latitude = SearchableActivity.userSelection.getLatitude();
+            double longitude = SearchableActivity.userSelection.getLongitude();
+
+            Intent newActivity = new Intent(this, MplsSkywayMapActivity.class);
+            newActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            newActivity.putExtra("selection", MapperConstants.MAP_IT_SELECTION);
+            newActivity.putExtra("latitude", latitude);
+            newActivity.putExtra("longitude", longitude);
+            startActivity(newActivity);
+        }
+
+        else if (((TextView) view).getText().equals("Get Directions")) {
+        }
+
+        else if (((TextView) view).getText().equals("Add To Favorites")) {
+        }
     }
 }

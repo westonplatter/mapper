@@ -24,16 +24,14 @@ import java.util.Map.Entry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.mapper.util.MapperConstants;
 
 public class YelpQueryManager
 {
-    static private double MapCenterLatitude  = 44.975667;
-    static private double MapCenterLongitude = -93.270793;
-
-    static private final String ConsumerKey    = "7vt3-VYr6iTT2h8UP1I_TQ";
-    static private final String ConsumerSecret = "0NE2zJcCekassEx8vneMqPHCGrE";
-    static private final String Token          = "8FbokVwPFOOn5UmnvZXe1ZQgPLJAxYAg";
-    static private final String TokenSecret    = "6t3zlSabL5VkVIN9CNEDkbD_vNc";
+    static private final String ConsumerKey    = "xaVLKjZkOpss5JM4Byw73A";           // <--Kristin's Key     Jon's Key-> "7vt3-VYr6iTT2h8UP1I_TQ";
+    static private final String ConsumerSecret = "b1i9CWU8mA1FVV6IPEQUDlokx0E";      // <--Kristin's Key     Jon's Key-> "0NE2zJcCekassEx8vneMqPHCGrE";
+    static private final String Token          = "DnXUntkK-8tfi1kj1HUokevP8p6DASkN"; // <--Kristin's Key     Jon's Key-> "8FbokVwPFOOn5UmnvZXe1ZQgPLJAxYAg";
+    static private final String TokenSecret    = "QVbCX0Uy4K0atlHzCAvrblKy7Yk";      // <--Kristin's Key     Jon's Key->"6t3zlSabL5VkVIN9CNEDkbD_vNc";          //rmwoYnZExDlwH-v5fRn_GA
 
     static private final String REGION_TAG        = "region";
     static private final String CENTER_TAG        = "center";
@@ -59,7 +57,7 @@ public class YelpQueryManager
     public YelpQueryManager()
     {
         // Connect to yelp and create a response object
-        yelpService = new YelpService(ConsumerKey, ConsumerSecret, Token, TokenSecret);
+        yelpService    = new YelpService(ConsumerKey, ConsumerSecret, Token, TokenSecret);
         responseObject = new YelpResultsResponse(); 
     }
 
@@ -69,7 +67,8 @@ public class YelpQueryManager
         responseObject.getBusinesses().clear();
 
         // Parse the results
-        String responseString = yelpService.search(currentQuery, MapCenterLatitude, MapCenterLongitude);
+        String responseString = yelpService.search(currentQuery, MapperConstants.SKYWAY_MAP_CENTER_LATITUDE, 
+                                                                 MapperConstants.SKYWAY_MAP_CENTER_LONGITUDE);
         parseResults(responseString);
         return responseObject;
     }

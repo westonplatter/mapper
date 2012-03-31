@@ -34,34 +34,34 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
-        android:id="@+id/map_it"
+        android:id="@+id/map_it_button"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/business_phone"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="70dp"
-        android:text="Map It" />
+        android:text="@string/map_it" />
 
     <Button
-        android:id="@+id/get_directions"
+        android:id="@+id/get_directions_button"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/map_it"
-        android:layout_alignBottom="@+id/map_it"
+        android:layout_alignBaseline="@+id/map_it_button"
+        android:layout_alignBottom="@+id/map_it_button"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/map_it"
-        android:layout_below="@+id/business_phone"
+        android:layout_alignTop="@+id/map_it_button"
+        android:layout_below="@id/business_phone"
         android:layout_marginRight="25dp"
-        android:text="Get Directions" />
+        android:text="@string/get_directions" />
 
     <Button
-        android:id="@+id/save"
+        android:id="@+id/save_button"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/map_it"
-        android:layout_alignRight="@+id/get_directions"
-        android:layout_below="@+id/get_directions"
+        android:layout_alignLeft="@+id/map_it_button"
+        android:layout_alignRight="@+id/get_directions_button"
+        android:layout_below="@+id/get_directions_button"
         android:layout_marginTop="10dp"
-        android:text="Add To Favorites" />
+        android:text="@string/add_to_favorites" />
 
 </RelativeLayout>

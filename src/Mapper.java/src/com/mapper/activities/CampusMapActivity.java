@@ -51,6 +51,7 @@ import com.mapper.map.MapEdge;
 import com.mapper.map.MapNode;
 import com.mapper.map.MapOverlay;
 import com.mapper.map.NodeDB;
+import com.mapper.util.MapperConstants;
 
 public class CampusMapActivity extends MapActivity
 {
@@ -59,9 +60,6 @@ public class CampusMapActivity extends MapActivity
     private LocationManager lm;
     private LocationListener ll;
     GeoPoint p = null;
-
-    private static double MapCenterLatitude = 44.973785;
-    private static double MapCenterLongitude = -93.232191;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -99,7 +97,8 @@ public class CampusMapActivity extends MapActivity
         mc = mapView.getController();
 
         // Center Map
-        p = new GeoPoint((int) (MapCenterLatitude * 1000000), (int) (MapCenterLongitude * 1000000));
+        p = new GeoPoint((int) (MapperConstants.CAMPUS_MAP_CENTER_LATITUDE  * 1000000), 
+                         (int) (MapperConstants.CAMPUS_MAP_CENTER_LONGITUDE * 1000000));
         mc.animateTo(p);
         mc.setZoom(17);
 
@@ -129,11 +128,21 @@ public class CampusMapActivity extends MapActivity
             case R.id.search:
                 onSearchRequested();
                 return true;
-            case R.id.quit:
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
+            case R.id.view_favorites:
+                Intent intent = new Intent(this, FavoritesActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                return true;
+            case R.id.main_menu:
+                Intent mainIntent = new Intent(this, MainMenuActivity.class);
+                mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(mainIntent);
+                return true;
+            case R.id.quit:
+                Intent quitIntent = new Intent(Intent.ACTION_MAIN);
+                quitIntent.addCategory(Intent.CATEGORY_HOME);
+                quitIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(quitIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
