@@ -19,6 +19,7 @@ package com.mapper.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -27,10 +28,10 @@ import android.widget.TextView;
 
 public class MainMenuActivity extends Activity implements OnClickListener {
 
-	private static Button skywayMapButton;
-	private static Button campusMapButton;
-	private static Button favoritesButton;
-	private static Button helpButton;
+	Button skywayMapButton;
+	Button campusMapButton;
+	Button favoritesButton;
+	Button helpButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -39,15 +40,15 @@ public class MainMenuActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 
-		skywayMapButton = (Button) this.findViewById(R.id.skywayMapMenuButton);
-		campusMapButton = (Button) this.findViewById(R.id.campusMapMenuButton);
-		favoritesButton = (Button) this.findViewById(R.id.favoritesMenuButton);
-		helpButton = (Button) this.findViewById(R.id.helpMenuButton);
+		this.skywayMapButton = (Button) this.findViewById(R.id.skywayMapMenuButton);
+		this.campusMapButton = (Button) this.findViewById(R.id.campusMapMenuButton);
+		this.favoritesButton = (Button) this.findViewById(R.id.favoritesMenuButton);
+		this.helpButton = (Button) this.findViewById(R.id.helpMenuButton);
 
-		skywayMapButton.setOnClickListener(this);
-		campusMapButton.setOnClickListener(this);
-		favoritesButton.setOnClickListener(this);
-		helpButton.setOnClickListener(this);
+		this.skywayMapButton.setOnClickListener(this);
+		this.campusMapButton.setOnClickListener(this);
+		this.favoritesButton.setOnClickListener(this);
+		this.helpButton.setOnClickListener(this);
 	}
 
 	@Override
@@ -70,8 +71,14 @@ public class MainMenuActivity extends Activity implements OnClickListener {
 		if (((TextView) view).getText().equals("Help")) {
 			myIntent = new Intent(view.getContext(), HelpActivity.class);
 		}
+		
+		if (((TextView) view).getText().equals("Add To Favorites")) {
+            myIntent = new Intent(view.getContext(), FavoritesActivity.class);
+        }  
 
-		myIntent.putExtra("selection", 0);
 		startActivity(myIntent);
 	}
+	public void selfDestruct(View view) {     
+        Log.v("info", "In favorite button");
+    }
 }
