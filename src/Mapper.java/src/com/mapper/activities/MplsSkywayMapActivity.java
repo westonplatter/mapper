@@ -359,33 +359,33 @@ public class MplsSkywayMapActivity extends MapActivity
 
         // get shortest path from 0 to 7
         MapDirections directions = new MapDirections(skywayDB);
-        System.out.println("Break1");
+
         // clear the overlays
         mapOverlays.clear();
-        System.out.println("Break2");
+
         // get the Start edge and start lat long point
         Pair<GeoPoint, MapEdge> startEdge = getClosestPointOnLineSegment(
                 latitude1, longitude1);
-        System.out.println("Break3");
+
         // get the End edge and end lat long point
         Pair<GeoPoint, MapEdge> endEdge = getClosestPointOnLineSegment(
                 latitude2, longitude2);
-        System.out.println("Break4");
+
         // get the closest node on the edge from where you are
         MapNode startNode = getClosestNode(
                 startEdge.first.getLatitudeE6() / 1E6,
                 startEdge.first.getLongitudeE6() / 1E6, startEdge.second);
-        System.out.println("Break5");
+
         // get the closest node on the edge from the destination is
         MapNode endNode = getClosestNode(endEdge.first.getLatitudeE6() / 1E6,
                 endEdge.first.getLongitudeE6() / 1E6, endEdge.second);
-        System.out.println("Break6");
+
         // initiate the graph with closest paths from current location
         directions.execute(startNode);
-        System.out.println("Break7");
+
         // get the shortest path
         LinkedList<MapNode> path = directions.getPath(endNode);
-        System.out.println("Break8");
+
         // Draw path. connect current location to starting node then append the
         // end location to the finish location
         MapOverlay mo = new MapOverlay(startEdge.first,
@@ -393,9 +393,6 @@ public class MplsSkywayMapActivity extends MapActivity
         mo.setLineColor(Color.DKGRAY);
         mo.setLineWidth(5);
         mapOverlays.add(mo);
-        System.out.println("Break9 ");
-        System.out.println("Break  .   " + (path == null) + " " + (skywayDB == null));
-        System.out.println("Break  .   " + path.size());
 
         int i;
         for(i = 0; i < path.size() - 1; ++i)
@@ -403,24 +400,18 @@ public class MplsSkywayMapActivity extends MapActivity
 
             mo = new MapOverlay(path.get(i).getNodeLocation(), path.get(i + 1)
                     .getNodeLocation());
-            System.out.println("Break9.1" + i + " " + path.size());
 
             mo.setLineColor(Color.DKGRAY);
 
             mo.setLineWidth(5);
-            System.out.println("Break9.2");
             mapOverlays.add(mo);
-            System.out.println("Break9.3");
         }
 
-        System.out.println("Break9.4");
         mo = new MapOverlay(path.get(i).getNodeLocation(), endEdge.first);
         mo.setLineColor(Color.DKGRAY);
-        System.out.println("Break9.5");
         mo.setLineWidth(5);
-        System.out.println("Break9.6");
         mapOverlays.add(mo);
-        System.out.println("Break10");
+
         // Redraw the skyways
         ArrayList<Integer> alreadyDrawnSkyways = new ArrayList<Integer>();
 
@@ -437,9 +428,7 @@ public class MplsSkywayMapActivity extends MapActivity
                 }
             }
         }
-        System.out.println("Break111");
         mapView.invalidate();
-        System.out.println("Break12");
     }
 
     public MapNode getClosestNode(double latitude, double longitude,
@@ -447,7 +436,6 @@ public class MplsSkywayMapActivity extends MapActivity
     {
 
         // get the closest node based on a location on the line
-
         double distanceToNode1 = Math.sqrt(Math.pow(latitude
                 - edge.getSourceNode().getNodeLocation().getLatitudeE6() / 1E6,
                 2)
