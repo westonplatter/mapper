@@ -16,37 +16,48 @@
  */
 package com.mapper.activities;
 
-import com.mapper.util.MapperConstants;
+import com.mapper.yelp.YelpBusiness;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 
 public class SingleSearchResultView extends Activity implements OnClickListener
 {
-    private static Button mapItButton;
-    private static Button getDirectionsButton;
-    private static Button saveFavoritesButton;
-    
+    public  static YelpBusiness currentSelection;
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.single_result_layout);
-
+        setContentView(R.layout.single_result_layout);        
+        Bundle extra = getIntent().getExtras();
+        int caller = -1;
+        if (extra != null)
+           caller = extra.getInt("callerId");
         // Set the business name
+        if (caller == R.id.save)
+        {          
+            currentSelection = FavoritesActivity.userSelection;            
+            Log.v("INFO", "Received query from favorite");                
+        }
+        else
+        {
+            currentSelection = SearchableActivity.userSelection;
+            Log.v("INFO", "Received query from search");
+        }  
+        
         TextView businessName = (TextView)findViewById(R.id.business_name);
-        businessName.setText(SearchableActivity.userSelection.getName());
-
+        businessName.setText(currentSelection.getName());
+       
         // Build and set the address
-        String streetAddress = SearchableActivity.userSelection.getAddress();
-        String city  = SearchableActivity.userSelection.getCity();
-        String state = SearchableActivity.userSelection.getState();
-        int zip = SearchableActivity.userSelection.getPostalCode();
+        String streetAddress = currentSelection.getAddress();
+        String city  = currentSelection.getCity();
+        String state = currentSelection.getState();
+        int zip = currentSelection.getPostalCode();
         String address = streetAddress + '\n' + city + ", " + state + ' ' + zip;
 
         TextView businessAddress = (TextView)findViewById(R.id.business_address);
@@ -54,47 +65,26 @@ public class SingleSearchResultView extends Activity implements OnClickListener
 
         // Set the phone number
         TextView businessPhone = (TextView)findViewById(R.id.business_phone);
-        businessPhone.setText(SearchableActivity.userSelection.getPhoneNumber());
-        
-        mapItButton = (Button) this.findViewById(R.id.map_it_button);
-        getDirectionsButton = (Button) this.findViewById(R.id.get_directions_button);
-        saveFavoritesButton = (Button) this.findViewById(R.id.save_button);
-
-        mapItButton.setOnClickListener(this);
-        getDirectionsButton.setOnClickListener(this);
-        saveFavoritesButton.setOnClickListener(this);
+        businessPhone.setText(currentSelection.getPhoneNumber());
     }
-
+    
+    public void saveToFavorites(View view)
+    {
+        // "Add To Favorites" clicked.
+        Intent myIntent = new Intent(view.getContext(), FavoritesActivity.class);
+        myIntent.putExtra("myAction",R.id.save); 
+        myIntent.putExtra("myFavorite", currentSelection.getName());
+        startActivity(myIntent);        
+    }
+    
     @Override
     public void onClick(View view) 
-    {
-        if (((TextView) view).getText().equals("Map It")) 
-        {
-            double latitude = SearchableActivity.userSelection.getLatitude();
-            double longitude = SearchableActivity.userSelection.getLongitude();
+    {        
+        Intent myIntent = null;
 
-            Intent newActivity = new Intent(this, MplsSkywayMapActivity.class);
-            newActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            newActivity.putExtra("selection", MapperConstants.MAP_IT_SELECTION);
-            newActivity.putExtra("latitude", latitude);
-            newActivity.putExtra("longitude", longitude);
-            startActivity(newActivity);
-        }
-
-        else if (((TextView) view).getText().equals("Get Directions")) 
-        {
-            double latitude = SearchableActivity.userSelection.getLatitude();
-            double longitude = SearchableActivity.userSelection.getLongitude();
-
-            Intent newActivity = new Intent(this, MplsSkywayMapActivity.class);
-            newActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            newActivity.putExtra("selection", MapperConstants.GET_DIRECTIONS_SELECTION);
-            newActivity.putExtra("latitude", latitude);
-            newActivity.putExtra("longitude", longitude);
-            startActivity(newActivity);
-        }
-
-        else if (((TextView) view).getText().equals("Add To Favorites")) {
-        }
+        if (((TextView) view).getText().equals("Add To Favorites")) {
+            myIntent = new Intent(view.getContext(), FavoritesActivity.class);
+        }   
+        startActivity(myIntent);
     }
 }
