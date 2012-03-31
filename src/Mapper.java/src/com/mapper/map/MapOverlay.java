@@ -39,6 +39,8 @@ public class MapOverlay extends Overlay implements Overlay.Snappable
 
     private GeoPoint point1;
     private GeoPoint point2;
+    private int lineColor = Color.GRAY;
+    private int lineWidth = 9;
 
     /**
      * 
@@ -72,13 +74,13 @@ public class MapOverlay extends Overlay implements Overlay.Snappable
 
         Paint mPaint = new Paint();
         mPaint = new Paint();
-        mPaint.setStrokeWidth(9);
+        mPaint.setStrokeWidth(lineWidth);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DARKEN));
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.RED);
+        mPaint.setColor(lineColor);
         canvas.drawPath(p, mPaint);
         super.draw(canvas, mv, shadow);
     }
@@ -91,6 +93,26 @@ public class MapOverlay extends Overlay implements Overlay.Snappable
     {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    public int getLineWidth()
+    {
+        return lineWidth;
+    }
+
+    public void setLineWidth(int lineWidth)
+    {
+        this.lineWidth = lineWidth;
+    }
+
+    public int getLineColor()
+    {
+        return lineColor;
+    }
+
+    public void setLineColor(int lineColor)
+    {
+        this.lineColor = lineColor;
     }
 
 }

@@ -24,43 +24,25 @@ import com.google.android.maps.GeoPoint;
  * Edge in the skyway graph.
  * 
  * @author jonlee
- *
+ * 
  */
 public class MapEdge
 {
     private int uniqueID;
     private GeoPoint point1;
     private GeoPoint point2;
+    private MapNode node1;
+    private MapNode node2;
     private double distanceInMeters;
-
-//    /**
-//     * Constructor
-//     * @param lat1  latitude for point 1
-//     * @param lon1  longitude for point 1
-//     * @param lat2  latitude for point 2
-//     * @param lon2  longitude for point 2
-//     */
-//    public MapEdge(int lat1, int lon1, int lat2, int lon2)
-//    {
-//        point1 = new GeoPoint(lat1 * 1000000, lon1 * 1000000);
-//        point2 = new GeoPoint(lat2 * 1000000, lon2 * 1000000);
-//
-////        Location location = new Location("");
-////        location.setLatitude(lat1);
-////        location.setLongitude(lon1);
-////
-////        Location location2 = new Location("");
-////        location2.setLatitude(lat2);
-////        location2.setLongitude(lon2);
-//
-//        distanceInMeters = this.calculateLength();
-//    }
 
     /**
      * Constructor
+     * 
      * @param uniqueId
-     * @param point1  the first point on the map making the edge
-     * @param point2  the second point making up the edge.
+     * @param point1
+     *            the first point on the map making the edge
+     * @param point2
+     *            the second point making up the edge.
      */
     public MapEdge(int uniqueId, GeoPoint point1, GeoPoint point2)
     {
@@ -70,25 +52,31 @@ public class MapEdge
 
         distanceInMeters = this.calculateLength();
     }
-    
+
     /**
      * Constructor (used for testing)
+     * 
      * @param uniqueId
-     * @param point1  the first node on the map making the edge
-     * @param point2  the second node making up the edge.
+     * @param point1
+     *            the first node on the map making the edge
+     * @param point2
+     *            the second node making up the edge.
      */
     public MapEdge(int uniqueId, MapNode point1, MapNode point2)
     {
         this.uniqueID = uniqueId;
         this.point1 = point1.getNodeLocation();
         this.point2 = point2.getNodeLocation();
-
+        this.node1 = point1;
+        this.node2 = point2;
         distanceInMeters = this.calculateLength();
     }
-    
+
     /**
      * Copy constructor
-     * @param that  the {@link MapEdge} object to copy.
+     * 
+     * @param that
+     *            the {@link MapEdge} object to copy.
      */
     public MapEdge(MapEdge that)
     {
@@ -100,6 +88,7 @@ public class MapEdge
 
     /**
      * Gets the first node of the edge
+     * 
      * @return
      */
     public GeoPoint getFirstNode()
@@ -109,6 +98,7 @@ public class MapEdge
 
     /**
      * Gets the second node of the edge
+     * 
      * @return
      */
     public GeoPoint getSecondNode()
@@ -117,7 +107,27 @@ public class MapEdge
     }
 
     /**
+     * Gets the first node of the edge
+     * 
+     * @return
+     */
+    public MapNode getSourceNode()
+    {
+        return node1;
+    }
+
+    /**
+     * Gets the second node of the edge
+     * 
+     * @return
+     */
+    public MapNode getTargetNode()
+    {
+        return node2;
+    }
+    /**
      * Get the distance between the two points making up this edge.
+     * 
      * @return
      */
     public double getDistance()
@@ -127,6 +137,7 @@ public class MapEdge
 
     /**
      * Gets the unique identifier.
+     * 
      * @return
      */
     public int getUniqueID()
@@ -136,23 +147,24 @@ public class MapEdge
 
     /**
      * Sets the unique identifier.
+     * 
      * @param uniqueID
      */
     public void setUniqueID(int uniqueID)
     {
         this.uniqueID = uniqueID;
     }
-    
+
     @Override
     public boolean equals(Object anObject)
     {
-        //Is this slower than getting the class and comparing those (using 
-        //  reflection)?
+        // Is this slower than getting the class and comparing those (using
+        // reflection)?
         if(!(anObject instanceof MapEdge))
             return false;
-        
+
         MapEdge that = (MapEdge) anObject;
-        
+
         if(!this.point1.equals(that.point1))
             return false;
         if(!this.point2.equals(that.point2))
@@ -161,25 +173,28 @@ public class MapEdge
             return false;
         if(this.distanceInMeters != that.distanceInMeters)
             return false;
-        
+
         return true;
-        
+
     }
-    
-    //Private methods.
+
+    // Private methods.
     /**
      * Calculates the distance between the nodes at either end of the edge.
-     * @return  the length of the edge.
+     * 
+     * @return the length of the edge.
      */
     private double calculateLength()
     {
         Location location = new Location("");
-        location.setLatitude(this.point1.getLatitudeE6() / 1000000);
-        location.setLongitude(this.point1.getLongitudeE6() / 1000000);
+        location.setLatitude((double) node1.getNodeLocation().getLatitudeE6() / 1E6);
+        location.setLongitude((double) node1.getNodeLocation().getLongitudeE6() / 1E6);
 
         Location location2 = new Location("");
-        location2.setLatitude(this.point2.getLatitudeE6() / 1000000);
-        location2.setLongitude(this.point2.getLongitudeE6() / 1000000);
+        location2
+                .setLatitude((double) node2.getNodeLocation().getLatitudeE6() / 1E6);
+        location2.setLongitude((double) node2.getNodeLocation()
+                .getLongitudeE6() / 1E6);
 
         return location.distanceTo(location2);
     }
