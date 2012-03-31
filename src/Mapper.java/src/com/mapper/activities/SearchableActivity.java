@@ -20,18 +20,22 @@ import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mapper.yelp.YelpBusiness;
 import com.mapper.yelp.YelpQueryManager;
 import com.mapper.yelp.YelpResultsResponse;
 
-public class SearchableActivity extends ListActivity
+public class SearchableActivity extends ListActivity 
 {
     public  static YelpBusiness userSelection;
     private static YelpQueryManager yelpQueryManager;
@@ -46,27 +50,26 @@ public class SearchableActivity extends ListActivity
         String query = intent.getStringExtra(SearchManager.QUERY);
 
         // Perform search
-        yelpQueryManager    = new YelpQueryManager();
+        yelpQueryManager = new YelpQueryManager();
         yelpResultsResponse = yelpQueryManager.search(query);
 
         // Check result count
-        if (yelpResultsResponse.getBusinesses().size() > 0) 
-        {
+        if (yelpResultsResponse.getBusinesses().size() > 0) {
             // Create list of business names
             setListAdapter((ListAdapter) new ArrayAdapter<String>(this, R.layout.results_list_layout, yelpResultsResponse.businessNames));
 
             ListView lv = getListView();
             lv.setTextFilterEnabled(true);
-            lv.setClickable(true);
-            
             lv.setOnItemClickListener(new OnItemClickListener() 
             {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id)
                 {
                     userSelection = yelpResultsResponse.getBusinesses().get(position);
                     Intent myIntent = new Intent(view.getContext(), SingleSearchResultView.class);
+                    myIntent.putExtra("callerId", R.id.search);
                     startActivity(myIntent);
                 }
+                
             });
         }
         else {
@@ -83,6 +86,7 @@ public class SearchableActivity extends ListActivity
                 } 
             }; 
             setListAdapter(adapter);
-        }
+        }        
     }
+    
 }
