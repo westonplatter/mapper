@@ -66,8 +66,8 @@ public class FavoritesActivity extends PreferenceActivity
 
             PreferenceManager.setDefaultValues(this, PREFERENCES_NAME, PREFERENCES_MODE, R.xml.settings, false);
             m_pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()); 
-            ArrayList<String> pref_list = getPreferences();
-            if (pref_list.isEmpty())
+            ArrayList<String> pref_list = getPreferences();            
+            if (pref_list == null)
             {
                 Log.v("INFO:", "No Preferences available");
                 return;
@@ -79,6 +79,7 @@ public class FavoritesActivity extends PreferenceActivity
             // Create the list view
             ListView lv = getListView();
             lv.setTextFilterEnabled(true);
+            
     
             // Add a click listener
             lv.setOnItemClickListener(new OnItemClickListener()
@@ -88,19 +89,25 @@ public class FavoritesActivity extends PreferenceActivity
                     // When clicked, show a toast with the TextView text
                     Toast.makeText(getApplicationContext(),
                                     ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
+                    // Add code to call yelp, so we can precisely locate the favorite.
                 }
-            });              
+            });            
+            
+
         }
         catch (Exception e)
         {       
             Log.v("Error:Exception caught", e.getMessage());
         }
     }
+    public void selfDestruct(View view) {     
+        Log.v("info", "In favorite activity");
+    }
     
     public ArrayList<String> getPreferences()
     {
         // Read all the preferences from the file       
-        ArrayList<String> fav_list= null;        
+        ArrayList<String> fav_list= new ArrayList<String>();        
         Map<String, String> str_map = (Map<String, String>) m_pref.getAll(); 
         Set s=str_map.entrySet();
         Iterator it=s.iterator();        
