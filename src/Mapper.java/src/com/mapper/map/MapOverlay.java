@@ -23,11 +23,13 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.view.MotionEvent;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
+import com.mapper.activities.MplsSkywayMapActivity;
 
 /**
  * 
@@ -92,6 +94,16 @@ public class MapOverlay extends Overlay implements Overlay.Snappable
     public boolean onSnapToItem(int x, int y, Point snapPoint, MapView mapView)
     {
         // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event, MapView mapView) {
+        // ---when user lifts his finger---
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            MplsSkywayMapActivity.followLocation = false;
+        }
+        
         return false;
     }
 
