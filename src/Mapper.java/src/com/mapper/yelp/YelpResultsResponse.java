@@ -1,4 +1,4 @@
-//YelpResultsResponse.java
+// YelpResultsResponse.java
 /**
  * Copyright 2012 Jon Lee
  * 
@@ -16,33 +16,19 @@
  */
 package com.mapper.yelp;
 
-//TODO -- Vector is deprecated.  Should fix this.
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * 
- * @author jonlee
- *
- */
 public class YelpResultsResponse
 {
-
-    private double totalResults;
-
     private double latitudeCenter;
-
     private double longitudeCenter;
-
-    private Vector<YelpBusiness> businesses = new Vector<YelpBusiness>();
+    public List<String> businessNames = new ArrayList<String>();
+    public List<YelpBusiness> businesses = new ArrayList<YelpBusiness>();
 
     public double getTotalResults()
     {
-        return totalResults;
-    }
-
-    public void setTotalResults(double total)
-    {
-        this.totalResults = total;
+        return businesses.size();
     }
 
     public double getLatitude()
@@ -65,13 +51,14 @@ public class YelpResultsResponse
         this.longitudeCenter = longitude;
     }
 
-    public Vector<YelpBusiness> getBusinesses()
+    public List<YelpBusiness> getBusinesses()
     {
         return businesses;
     }
 
     public void addBusinesses(YelpBusiness business)
     {
+        this.businessNames.add(business.getName());
         this.businesses.add(business);
     }
 }

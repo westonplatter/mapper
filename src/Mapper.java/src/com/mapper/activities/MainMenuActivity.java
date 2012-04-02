@@ -19,6 +19,7 @@ package com.mapper.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -70,7 +71,14 @@ public class MainMenuActivity extends Activity implements OnClickListener {
 		if (((TextView) view).getText().equals("Help")) {
 			myIntent = new Intent(view.getContext(), HelpActivity.class);
 		}
+		
+		if (((TextView) view).getText().equals("Add To Favorites")) {
+            myIntent = new Intent(view.getContext(), FavoritesActivity.class);
+        }  
 
 		startActivity(myIntent);
 	}
+	public void selfDestruct(View view) {     
+        Log.v("info", "In favorite button");
+    }
 }

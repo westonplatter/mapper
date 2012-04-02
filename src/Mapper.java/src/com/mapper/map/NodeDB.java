@@ -27,7 +27,7 @@ import com.google.android.maps.GeoPoint;
  * 
  * 
  * @author jonlee
- *
+ * 
  */
 public class NodeDB
 {
@@ -38,49 +38,51 @@ public class NodeDB
     private static final String LOG_TAG = "JonLee";
 
     private ArrayList<MapNode> nodeList = new ArrayList<MapNode>();
+    private ArrayList<MapEdge> edgeList = new ArrayList<MapEdge>();
 
     /**
      * Constructor
+     * 
      * @param arrayList
      */
     public NodeDB(ArrayList<Pair<GeoPoint, GeoPoint>> arrayList)
     {
         for(Pair<GeoPoint, GeoPoint> pair : arrayList)
         {
+            GeoPoint point1 = pair.first;
+            GeoPoint point2 = pair.second;
 
-            GeoPoint point1 = (GeoPoint) pair.first;
-            GeoPoint point2 = (GeoPoint) pair.second;
-
-            MapEdge mapEdge = new MapEdge(currentEdgeCount, point1,
-                    point2);
-
-            MapNode mapNode = null;
+            MapNode mapNode1 = null;
+            MapNode mapNode2 = null;
 
             if(nodeList.contains(point1))
             {
-                mapNode = nodeList.get(nodeList.indexOf(point1));
-                mapNode.addAdjacentSkywayEdge(mapEdge);
+                mapNode1 = nodeList.get(nodeList.indexOf(point1));
             }
             else
             {
-                mapNode = new MapNode(currentNodeCount, point1);
-                mapNode.addAdjacentSkywayEdge(mapEdge);
-                nodeList.add(mapNode);
+                mapNode1 = new MapNode(currentNodeCount, point1);
+                nodeList.add(mapNode1);
                 ++currentNodeCount;
             }
 
             if(nodeList.contains(point2))
             {
-                mapNode = nodeList.get(nodeList.indexOf(point2));
-                mapNode.addAdjacentSkywayEdge(mapEdge);
+                mapNode2 = nodeList.get(nodeList.indexOf(point2));
             }
             else
             {
-                mapNode = new MapNode(currentNodeCount, point2);
-                mapNode.addAdjacentSkywayEdge(mapEdge);
-                nodeList.add(mapNode);
+                mapNode2 = new MapNode(currentNodeCount, point2);
+                nodeList.add(mapNode2);
                 ++currentNodeCount;
             }
+
+            MapEdge mapEdge = new MapEdge(currentEdgeCount, mapNode1, mapNode2);
+
+            mapNode1.addAdjacentSkywayEdge(mapEdge);
+            mapNode2.addAdjacentSkywayEdge(mapEdge);
+
+            edgeList.add(mapEdge);
 
             ++currentEdgeCount;
         }
@@ -88,13 +90,23 @@ public class NodeDB
 
     /**
      * Gets the list of nodes.
-     * @return  the list of nodes
+     * 
+     * @return the list of nodes
      */
     public ArrayList<MapNode> getNodeList()
     {
         return this.nodeList;
     }
 
+    /**
+     * Gets the list of nodes.
+     * 
+     * @return the list of nodes
+     */
+    public ArrayList<MapEdge> getEdgeList() {
+        return this.edgeList;
+    }
+    
     /**
      * Prints out a list of all nodes in this database to the log file.
      */

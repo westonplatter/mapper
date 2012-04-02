@@ -1,4 +1,4 @@
-//YelpService.java
+// YelpService.java
 /**
  * Copyright 2012 Jon Lee
  * 
@@ -23,43 +23,20 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
-/**
- * 
- * @author jonlee
- *
- */
 public class YelpService
 {
+    private OAuthService service;
+    private Token accessToken;
 
-    OAuthService service;
-    Token accessToken;
-
-    /**
-     * 
-     * @param consumerKey
-     * @param consumerSecret
-     * @param token
-     * @param tokenSecret
-     */
-    public YelpService(String consumerKey, String consumerSecret, String token,
-            String tokenSecret)
+    public YelpService(String consumerKey, String consumerSecret, String token, String tokenSecret)
     {
-        this.service = new ServiceBuilder().provider(YelpApi.class)
-                .apiKey(consumerKey).apiSecret(consumerSecret).build();
+        this.service = new ServiceBuilder().provider(YelpApi.class).apiKey(consumerKey).apiSecret(consumerSecret).build();
         this.accessToken = new Token(token, tokenSecret);
     }
 
-    /**
-     * 
-     * @param term
-     * @param latitude
-     * @param longitude
-     * @return
-     */
     public String search(String term, double latitude, double longitude)
     {
-        OAuthRequest request = new OAuthRequest(Verb.GET,
-                "http://api.yelp.com/v2/search");
+        OAuthRequest request = new OAuthRequest(Verb.GET, "http://api.yelp.com/v2/search");
         request.addQuerystringParameter("term", term);
         request.addQuerystringParameter("ll", latitude + "," + longitude);
         this.service.signRequest(this.accessToken, request);
