@@ -16,25 +16,77 @@
  */
 package com.mapper.activities;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
-public class SearchableActivity extends Activity
+import com.mapper.yelp.YelpBusiness;
+import com.mapper.yelp.YelpQueryManager;
+import com.mapper.yelp.YelpResultsResponse;
+
+public class SearchableActivity extends ListActivity 
 {
+    public  static YelpBusiness userSelection;
+    private static YelpQueryManager yelpQueryManager;
+    private static YelpResultsResponse yelpResultsResponse;
 
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) 
+    {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.search);
 
-        // Get the intent, verify the action and get the query
+        // Get the intent and the query
         Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-          // Get search query
-          String query = intent.getStringExtra(SearchManager.QUERY);
-          
-          // Perform search
+        String query = intent.getStringExtra(SearchManager.QUERY);
+
+        // Perform search
+        yelpQueryManager = new YelpQueryManager();
+        yelpResultsResponse = yelpQueryManager.search(query);
+
+        // Check result count
+        if (yelpResultsResponse.getBusinesses().size() > 0) {
+            // Create list of business names
+            setListAdapter((ListAdapter) new ArrayAdapter<String>(this, R.layout.results_list_layout, yelpResultsResponse.businessNames));
+
+            ListView lv = getListView();
+            lv.setTextFilterEnabled(true);
+            lv.setOnItemClickListener(new OnItemClickListener() 
+            {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                {
+                    userSelection = yelpResultsResponse.getBusinesses().get(position);
+                    Intent myIntent = new Intent(view.getContext(), SingleSearchResultView.class);
+                    myIntent.putExtra("callerId", R.id.search);
+                    startActivity(myIntent);
+                }
+                
+            });
         }
+        else {
+            // Override ListAdapter so that we can display a message
+            ListAdapter adapter = new ArrayAdapter<String>(this, R.layout.empty_results_layout, new String[] { "", "No Results" }) 
+            { 
+                public boolean areAllItemsEnabled() 
+                { 
+                    return false; 
+                } 
+                public boolean isEnabled(int position) 
+                { 
+                    return false; 
+                } 
+            }; 
+            setListAdapter(adapter);
+        }        
     }
+    
 }

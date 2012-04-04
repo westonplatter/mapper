@@ -1,4 +1,4 @@
-//YelpBusiness.java
+// YelpBusiness.java
 /**
  * Copyright 2012 Jon Lee
  * 
@@ -18,34 +18,20 @@ package com.mapper.yelp;
 
 public class YelpBusiness
 {
-
-    private String name = "";
-
-    private String imageUrl = "";
-
+    private String name        = "";
+    private String imageUrl    = "";
     private String phoneNumber = "";
+    private String address     = "";
+    private String city        = "";
+    private String state       = "";
+    private String url         = "";
+    private String ratingUrl   = "";
+    private double latitude    = 0.0;
+    private double longitude   = 0.0;
+    private int postalCode     = 0;
+    private int reviewCount    = 0;
 
-    private String address = "";
-
-    private String city = "";
-
-    private double latitude = 0.0;
-
-    private double longitude = 0.0;
-
-    private int postalCode = 0;
-
-    private String state = "";
-
-    private String url = "";
-
-    private String ratingUrl = "";
-
-    private int reviewCount = 0;
-
-    public YelpBusiness()
-    {
-    }
+    public YelpBusiness() {}
 
     public int getReviewCount()
     {

@@ -1,4 +1,4 @@
-//MapItemizedOverlay.java
+// MapItemizedOverlay.java
 /**
  * Copyright 2012 Weston Platter
  * 
@@ -22,21 +22,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
 
-/**
- * @author Weston Platter
- *
- */
 public class MapItemizedOverlay extends ItemizedOverlay<OverlayItem>
 {
-
     private Context context;
     private ArrayList<OverlayItem> myOverlays = new ArrayList<OverlayItem>();
-    
     
     /**
      * Default super class constructor
@@ -47,7 +40,6 @@ public class MapItemizedOverlay extends ItemizedOverlay<OverlayItem>
         super(boundCenterBottom(marker));
         populate();
     }
-    
     
     /**
      * Adds item to this overlay.
@@ -89,5 +81,4 @@ public class MapItemizedOverlay extends ItemizedOverlay<OverlayItem>
     {
         super.draw(canvas, mapView, shadow);
     }
-
 }

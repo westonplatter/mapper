@@ -23,7 +23,7 @@ import com.google.android.maps.GeoPoint;
 /**
  * 
  * @author jonlee
- *
+ * 
  */
 public class MapNode
 {
@@ -34,8 +34,11 @@ public class MapNode
 
     private ArrayList<MapEdge> adjacentSkywayEdges = new ArrayList<MapEdge>();
 
+    private double minDistance;
+
     /**
      * Constructs a node
+     * 
      * @param nodeId
      * @param nodeLocation
      */
@@ -47,6 +50,7 @@ public class MapNode
 
     /**
      * Gets the identifier of the node.
+     * 
      * @return
      */
     public int getNodeId()
@@ -56,6 +60,7 @@ public class MapNode
 
     /**
      * Sets the node identifier
+     * 
      * @param nodeId
      */
     public void setNodeId(int nodeId)
@@ -65,6 +70,7 @@ public class MapNode
 
     /**
      * Gets the skyway edges that connect to this node.
+     * 
      * @return
      */
     public ArrayList<MapEdge> getAdjacentEdges()
@@ -74,6 +80,7 @@ public class MapNode
 
     /**
      * Adds an edge that connects to this node.
+     * 
      * @param adjacentEdge
      */
     public void addAdjacentSkywayEdge(MapEdge adjacentEdge)
@@ -83,6 +90,7 @@ public class MapNode
 
     /**
      * Gets the location of this node on the map.
+     * 
      * @return
      */
     public GeoPoint getNodeLocation()
@@ -92,6 +100,7 @@ public class MapNode
 
     /**
      * Gets the location of this node on the map.
+     * 
      * @param nodeLocation
      */
     public void setNodeLocation(GeoPoint nodeLocation)
@@ -99,25 +108,26 @@ public class MapNode
         this.nodeLocation = nodeLocation;
     }
 
-    //This could be an issue in the future since this is the method name used by
-    //      Comparable.  I don't see where it is used, so commented it out for
-    //      now.
-//    /**
-//     * Compares this skyway node with another.
-//     * @param node  the other skyway node to compare with.
-//     * @return
-//     */
-//    public boolean compareTo(SkywayNode node)
-//    {
-//        if(this.getNodeLocation().equals(node.getNodeLocation()))
-//            return true;
-//        else
-//            return false;
-//    }
+    // This could be an issue in the future since this is the method name used
+    // by
+    // Comparable. I don't see where it is used, so commented it out for
+    // now.
+    // /**
+    // * Compares this skyway node with another.
+    // * @param node the other skyway node to compare with.
+    // * @return
+    // */
+    // public boolean compareTo(SkywayNode node)
+    // {
+    // if(this.getNodeLocation().equals(node.getNodeLocation()))
+    // return true;
+    // else
+    // return false;
+    // }
 
     /**
-     * Compares this node with another to determine if the locations of 
-     * the nodes are the same.
+     * Compares this node with another to determine if the locations of the
+     * nodes are the same.
      */
     @Override
     public boolean equals(Object other)
@@ -129,8 +139,26 @@ public class MapNode
             {
                 return true;
             }
+            else if(this.getNodeId() == otherNode.getNodeId())
+            {
+                return true;
+            }
         }
 
         return false;
+    }
+
+    public String toString()
+    {
+        return (double) nodeLocation.getLatitudeE6() / 1000000 + " "
+                + (double) nodeLocation.getLongitudeE6() / 1000000;
+        // return String.valueOf(nodeId);
+    }
+
+    public int compareTo(MapNode other)
+    {
+        // TODO Auto-generated method stub
+        return Double.compare(minDistance, other.minDistance);
+
     }
 }

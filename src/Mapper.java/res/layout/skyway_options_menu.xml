@@ -3,12 +3,16 @@
     <item 
         android:id="@+id/search"
         android:title="@string/search"/>
-
-    <item
-        android:id="@+id/business_directory"
-        android:title="@string/business_directory"/>
+    
+    <item 
+        android:id="@+id/view_favorites"
+        android:title="@string/view_favorites"/>
 
     <item
         android:id="@+id/quit"
         android:title="@string/quit"/>
+        
+    <item
+        android:id="@+id/main_menu"
+        android:title="@string/main_menu"/>
 </menu>
