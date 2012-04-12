@@ -112,18 +112,20 @@ public class MplsSkywayMapActivity extends MapActivity
             {
                 if(!alreadyDrawnSkyways.contains(edge.getUniqueID()))
                 {
-                    mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge.getSecondNode()));
+                    mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge
+                            .getSecondNode()));
                     alreadyDrawnSkyways.add(edge.getUniqueID());
                 }
             }
         }
-        
+
         // get Map Controller to set location and zoom
         mc = mapView.getController();
 
         // Center Map
-        p = new GeoPoint((int) (MapperConstants.SKYWAY_MAP_CENTER_LATITUDE  * 1000000), 
-                         (int) (MapperConstants.SKYWAY_MAP_CENTER_LONGITUDE * 1000000));
+        p = new GeoPoint(
+                (int) (MapperConstants.SKYWAY_MAP_CENTER_LATITUDE * 1000000),
+                (int) (MapperConstants.SKYWAY_MAP_CENTER_LONGITUDE * 1000000));
         mc.animateTo(p);
         mc.setZoom(16);
 
@@ -146,9 +148,12 @@ public class MplsSkywayMapActivity extends MapActivity
 
             public boolean onTouch(View v, MotionEvent event)
             {
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
-                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ll);
-                lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, ll);
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+                        ll);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
+                        0, ll);
+                lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0,
+                        0, ll);
 
                 followLocation = true;
                 centerOnLocation();
@@ -168,23 +173,25 @@ public class MplsSkywayMapActivity extends MapActivity
                 return false;
             }
         });
-        
+
         // Determine whether this is processing a user-selection
         int inputCode = 0;
         inputCode = getIntent().getIntExtra("selection", 0);
-        
-        if (inputCode == MapperConstants.MAP_IT_SELECTION) {
+
+        if(inputCode == MapperConstants.MAP_IT_SELECTION)
+        {
             double latitude = getIntent().getDoubleExtra("latitude", 0);
             double longitude = getIntent().getDoubleExtra("longitude", 0);
             dropPin(latitude, longitude);
         }
-        else if (inputCode == MapperConstants.GET_DIRECTIONS_SELECTION) {
+        else if(inputCode == MapperConstants.GET_DIRECTIONS_SELECTION)
+        {
             double end_latitude = getIntent().getDoubleExtra("latitude", 0);
             double end_longitude = getIntent().getDoubleExtra("longitude", 0);
-            
+
             double start_latitude = MapperConstants.SKYWAY_MAP_CENTER_LATITUDE;
             double start_longitude = MapperConstants.SKYWAY_MAP_CENTER_LONGITUDE;
-            
+
             if(loc != null)
             {
                 start_latitude = loc.getLatitude();
@@ -195,8 +202,9 @@ public class MplsSkywayMapActivity extends MapActivity
                 start_latitude = loc.getLatitude();
                 start_longitude = loc.getLongitude();
             }
-            
-            DrawDirections(start_latitude, start_longitude, end_latitude, end_longitude);
+
+            DrawDirections(start_latitude, start_longitude, end_latitude,
+                    end_longitude);
         }
     }
 
@@ -209,9 +217,11 @@ public class MplsSkywayMapActivity extends MapActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle item selection
-        switch (item.getItemId()) {
+        switch(item.getItemId())
+        {
             case R.id.search:
                 onSearchRequested();
                 return true;
@@ -224,7 +234,7 @@ public class MplsSkywayMapActivity extends MapActivity
                 Intent mainIntent = new Intent(this, MainMenuActivity.class);
                 mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(mainIntent);
-                return true;    
+                return true;
             case R.id.quit:
                 Intent quitIntent = new Intent(Intent.ACTION_MAIN);
                 quitIntent.addCategory(Intent.CATEGORY_HOME);
@@ -235,22 +245,25 @@ public class MplsSkywayMapActivity extends MapActivity
                 return super.onOptionsItemSelected(item);
         }
     }
-    
-    public void dropPin(double latitude, double longitude) {
+
+    public void dropPin(double latitude, double longitude)
+    {
         // instantiate the picture for the location
         Drawable marker = getResources().getDrawable(R.drawable.pin);
         int markerHeight = marker.getIntrinsicHeight();
         int markerWidth = marker.getIntrinsicWidth();
         marker.setBounds(0, markerHeight, markerWidth, 0);
-        
-        // instantiate the ItemizedOverlay (collection of items within connected to overlay)
+
+        // instantiate the ItemizedOverlay (collection of items within connected
+        // to overlay)
         MapItemizedOverlay itemizedOverlay = new MapItemizedOverlay(marker);
         mapOverlays.add(itemizedOverlay);
-        
+
         // instantiate OverlayItem
-        GeoPoint point = new GeoPoint((int) (latitude*1000000), (int) (longitude*1000000));
+        GeoPoint point = new GeoPoint((int) (latitude * 1000000),
+                (int) (longitude * 1000000));
         MapOverlayItem item = new MapOverlayItem(point, "title", "snippet");
-        
+
         // add pin to the map
         itemizedOverlay.addItem(item);
     }
@@ -411,26 +424,18 @@ public class MplsSkywayMapActivity extends MapActivity
 
         // Draw path. connect current location to starting node then append the
         // end location to the finish location
-        MapOverlay mo = new MapOverlay(startEdge.first,
-                startNode.getNodeLocation());
-        mo.setLineColor(Color.DKGRAY);
-        mo.setLineWidth(5);
-        mapOverlays.add(mo);
+        MapOverlay mo;
 
         int i;
         for(i = 0; i < path.size() - 1; ++i)
         {
-            mo = new MapOverlay(path.get(i).getNodeLocation(), path.get(i + 1).getNodeLocation());
+            mo = new MapOverlay(path.get(i).getNodeLocation(), path.get(i + 1)
+                    .getNodeLocation());
 
             mo.setLineColor(Color.DKGRAY);
             mo.setLineWidth(5);
             mapOverlays.add(mo);
         }
-
-        mo = new MapOverlay(path.get(i).getNodeLocation(), endEdge.first);
-        mo.setLineColor(Color.DKGRAY);
-        mo.setLineWidth(5);
-        mapOverlays.add(mo);
 
         // Redraw the skyways
         ArrayList<Integer> alreadyDrawnSkyways = new ArrayList<Integer>();
@@ -451,17 +456,22 @@ public class MplsSkywayMapActivity extends MapActivity
         mapView.invalidate();
     }
 
-    public MapNode getClosestNode(double latitude, double longitude, MapEdge edge)
+    public MapNode getClosestNode(double latitude, double longitude,
+            MapEdge edge)
     {
         // get the closest node based on a location on the line
         double distanceToNode1 = Math.sqrt(Math.pow(latitude
-                - edge.getSourceNode().getNodeLocation().getLatitudeE6() / 1E6, 2)
+                - edge.getSourceNode().getNodeLocation().getLatitudeE6() / 1E6,
+                2)
                 + Math.pow(longitude
-                        - edge.getSourceNode().getNodeLocation().getLongitudeE6() / 1E6, 2));
+                        - edge.getSourceNode().getNodeLocation()
+                                .getLongitudeE6() / 1E6, 2));
         double distanceToNode2 = Math.sqrt(Math.pow(latitude
-                - edge.getTargetNode().getNodeLocation().getLatitudeE6() / 1E6, 2)
+                - edge.getTargetNode().getNodeLocation().getLatitudeE6() / 1E6,
+                2)
                 + Math.pow(longitude
-                        - edge.getTargetNode().getNodeLocation().getLongitudeE6() / 1E6, 2));
+                        - edge.getTargetNode().getNodeLocation()
+                                .getLongitudeE6() / 1E6, 2));
 
         return (distanceToNode1 < distanceToNode2) ? edge.getSourceNode()
                 : edge.getTargetNode();
