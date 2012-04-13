@@ -19,6 +19,7 @@ package com.mapper.map;
 import android.location.Location;
 
 import com.google.android.maps.GeoPoint;
+import com.mapper.util.MapUtilities;
 
 /**
  * Edge in the skyway graph.
@@ -29,32 +30,32 @@ import com.google.android.maps.GeoPoint;
 public class MapEdge
 {
     private int uniqueID;
-    private GeoPoint point1;
-    private GeoPoint point2;
+//    private GeoPoint point1;
+//    private GeoPoint point2;
     private MapNode node1;
     private MapNode node2;
     private double distanceInMeters;
 
+//    /**
+//     * Constructor
+//     * 
+//     * @param uniqueId
+//     * @param point1
+//     *            the first point on the map making the edge
+//     * @param point2
+//     *            the second point making up the edge.
+//     */
+//    public MapEdge(int uniqueId, GeoPoint point1, GeoPoint point2)
+//    {
+//        this.uniqueID = uniqueId;
+//        this.point1 = point1;
+//        this.point2 = point2;
+//
+//        distanceInMeters = this.calculateLength();
+//    }
+
     /**
      * Constructor
-     * 
-     * @param uniqueId
-     * @param point1
-     *            the first point on the map making the edge
-     * @param point2
-     *            the second point making up the edge.
-     */
-    public MapEdge(int uniqueId, GeoPoint point1, GeoPoint point2)
-    {
-        this.uniqueID = uniqueId;
-        this.point1 = point1;
-        this.point2 = point2;
-
-        distanceInMeters = this.calculateLength();
-    }
-
-    /**
-     * Constructor (used for testing)
      * 
      * @param uniqueId
      * @param point1
@@ -65,8 +66,8 @@ public class MapEdge
     public MapEdge(int uniqueId, MapNode point1, MapNode point2)
     {
         this.uniqueID = uniqueId;
-        this.point1 = point1.getNodeLocation();
-        this.point2 = point2.getNodeLocation();
+//        this.point1 = point1.getNodeLocation();
+//        this.point2 = point2.getNodeLocation();
         this.node1 = point1;
         this.node2 = point2;
         distanceInMeters = this.calculateLength();
@@ -81,8 +82,10 @@ public class MapEdge
     public MapEdge(MapEdge that)
     {
         this.uniqueID = that.uniqueID;
-        this.point1 = that.point1;
-        this.point2 = that.point2;
+//        this.point1 = that.point1;
+//        this.point2 = that.point2;
+        this.node1 = that.node1;
+        this.node2 = that.node2;
         this.distanceInMeters = that.distanceInMeters;
     }
 
@@ -93,7 +96,7 @@ public class MapEdge
      */
     public GeoPoint getFirstNode()
     {
-        return point1;
+        return this.node1.getNodeLocation();
     }
 
     /**
@@ -103,7 +106,7 @@ public class MapEdge
      */
     public GeoPoint getSecondNode()
     {
-        return point2;
+        return this.node2.getNodeLocation();
     }
 
     /**
@@ -165,9 +168,9 @@ public class MapEdge
 
         MapEdge that = (MapEdge) anObject;
 
-        if(!this.point1.equals(that.point1))
+        if(!this.node1.equals(that.node1))
             return false;
-        if(!this.point2.equals(that.point2))
+        if(!this.node2.equals(that.node2))
             return false;
         if(this.uniqueID != that.uniqueID)
             return false;
@@ -187,14 +190,20 @@ public class MapEdge
     private double calculateLength()
     {
         Location location = new Location("");
-        location.setLatitude((double) node1.getNodeLocation().getLatitudeE6() / 1E6);
-        location.setLongitude((double) node1.getNodeLocation().getLongitudeE6() / 1E6);
+
+        GeoPoint node1Location = node1.getNodeLocation();
+
+        location.setLatitude(MapUtilities.convertToStdCoordinate(node1Location
+                .getLatitudeE6()));
+        location.setLongitude(MapUtilities.convertToStdCoordinate(node1Location
+                .getLongitudeE6()));
 
         Location location2 = new Location("");
-        location2
-                .setLatitude((double) node2.getNodeLocation().getLatitudeE6() / 1E6);
-        location2.setLongitude((double) node2.getNodeLocation()
-                .getLongitudeE6() / 1E6);
+        GeoPoint node2Location = node2.getNodeLocation();
+        location.setLatitude(MapUtilities.convertToStdCoordinate(node2Location
+                .getLatitudeE6()));
+        location.setLongitude(MapUtilities.convertToStdCoordinate(node2Location
+                .getLongitudeE6()));
 
         return location.distanceTo(location2);
     }

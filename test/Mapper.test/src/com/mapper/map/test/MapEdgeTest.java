@@ -18,6 +18,7 @@ package com.mapper.map.test;
 
 import com.google.android.maps.GeoPoint;
 import com.mapper.map.MapEdge;
+import com.mapper.map.MapNode;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -30,35 +31,60 @@ public abstract class MapEdgeTest extends TestCase
 {
     protected MapEdge edgeUnderTest;
 
-    protected GeoPoint edgePoint1;
-    protected GeoPoint edgePoint2;
+    protected MapNode mapNode1;
+    protected MapNode mapNode2;
+    
+//    protected GeoPoint edgePoint1;
+//    protected GeoPoint edgePoint2;
 
     protected double edgeLength;
     protected int edgeUniqueId;
 
-    // /* (non-Javadoc)
-    // * @see junit.framework.TestCase#setUp()
-    // */
-    // protected void setUp() throws Exception
-    // {
-    // super.setUp();
-    // }
-    //
-    // /* (non-Javadoc)
-    // * @see junit.framework.TestCase#tearDown()
-    // */
-    // protected void tearDown() throws Exception
-    // {
-    // super.tearDown();
-    // }
-
+    
+    /* (non-Javadoc)
+    * @see junit.framework.TestCase#setUp()
+    */
+    protected void setUp() throws Exception
+    {
+        super.setUp();
+        
+        GeoPoint edgePoint1 = new GeoPoint(MapNodeTest.KELLER_LAT, 
+                                           MapNodeTest.KELLER_LONG);
+        
+        this.mapNode1 = new MapNode(0, edgePoint1);
+        
+        GeoPoint edgePoint2 = new GeoPoint(MapNodeTest.ARCH_LAT, 
+                                           MapNodeTest.ARCH_LONG);
+        this.mapNode2 = new MapNode(1, edgePoint2);
+        
+        this.edgeUniqueId = 10;
+        
+        this.edgeUnderTest = new MapEdge(this.edgeUniqueId, 
+                                            this.mapNode1, 
+                                            this.mapNode2);
+    }
+   
+    /* (non-Javadoc)
+    * @see junit.framework.TestCase#tearDown()
+    */
+    protected void tearDown() throws Exception
+    {
+        super.tearDown();
+        
+        this.edgeUnderTest = null;
+        this.mapNode1 = null;
+        this.mapNode2 = null;
+//        this.edgePoint1 = null;
+//        this.edgePoint2 = null;
+    }
+    
     /**
      * Test method for {@link com.mapper.map.MapEdge#getFirstNode()}.
      */
     public void testGetFirstNode()
     {
         GeoPoint firstNode = edgeUnderTest.getFirstNode();
-        Assert.assertEquals(this.edgePoint1, firstNode);
+        Assert.assertEquals(this.mapNode1.getNodeLocation(), firstNode);
     }
 
     /**
@@ -67,7 +93,7 @@ public abstract class MapEdgeTest extends TestCase
     public void testGetSecondNode()
     {
         GeoPoint secondNode = edgeUnderTest.getSecondNode();
-        Assert.assertEquals(this.edgePoint2, secondNode);
+        Assert.assertEquals(this.mapNode2.getNodeLocation(), secondNode);
     }
 
 //    /**
@@ -154,11 +180,12 @@ public abstract class MapEdgeTest extends TestCase
     public void testEqualsObject_DiffGeoPoint1()
     {
         int uniqueId = this.edgeUnderTest.getUniqueID();
-        GeoPoint node1 = this.edgeUnderTest.getFirstNode();
-        GeoPoint node2 = this.edgeUnderTest.getSecondNode();
+        GeoPoint point1 = this.edgeUnderTest.getFirstNode();
+        MapNode node2 = this.edgeUnderTest.getTargetNode();
 
-        GeoPoint newNode1 = new GeoPoint(node1.getLatitudeE6() + 1,
-                node1.getLongitudeE6());
+        GeoPoint newPoint1 = new GeoPoint(point1.getLatitudeE6() + 1,
+                point1.getLongitudeE6());
+        MapNode newNode1 = new MapNode(50, newPoint1);
         MapEdge edgeCopy = new MapEdge(uniqueId, newNode1, node2);
         Assert.assertFalse(this.edgeUnderTest.equals(edgeCopy));
     }
@@ -172,11 +199,12 @@ public abstract class MapEdgeTest extends TestCase
     public void testEqualsObject_DiffGeoPoint2()
     {
         int uniqueId = this.edgeUnderTest.getUniqueID();
-        GeoPoint node1 = this.edgeUnderTest.getFirstNode();
-        GeoPoint node2 = this.edgeUnderTest.getSecondNode();
+        MapNode node1 = this.edgeUnderTest.getSourceNode();
+        GeoPoint point2 = this.edgeUnderTest.getSecondNode();
 
-        GeoPoint newNode2 = new GeoPoint(node2.getLatitudeE6() + 1,
-                node2.getLongitudeE6());
+        GeoPoint newPoint2 = new GeoPoint(point2.getLatitudeE6() + 1,
+                point2.getLongitudeE6());
+        MapNode newNode2 = new MapNode(51, newPoint2);
         MapEdge edgeCopy = new MapEdge(uniqueId, node1, newNode2);
         Assert.assertFalse(this.edgeUnderTest.equals(edgeCopy));
     }

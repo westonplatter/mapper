@@ -119,7 +119,9 @@ public class MapNodeTest extends AndroidTestCase
     public void testAddAdjacentEdge()
     {
         GeoPoint rapsonHall = new GeoPoint(ARCH_LAT, ARCH_LONG);
-        MapEdge gopherEdge = new MapEdge(5, this.nodePoint, rapsonHall);
+        MapNode rapsonHallNode = new MapNode(51,rapsonHall);
+        
+        MapEdge gopherEdge = new MapEdge(5, this.node, rapsonHallNode);
         node.addAdjacentSkywayEdge(gopherEdge);
 
         List<MapEdge> edges = node.getAdjacentEdges();

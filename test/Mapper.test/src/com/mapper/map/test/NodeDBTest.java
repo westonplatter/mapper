@@ -18,10 +18,13 @@ package com.mapper.map.test;
 
 import java.util.ArrayList;
 
+import com.google.android.maps.GeoPoint;
+import com.mapper.exceptions.MapperInvalidArgumentException;
 import com.mapper.map.MapNode;
 import com.mapper.map.NodeDB;
 
 import android.test.AndroidTestCase;
+import android.util.Pair;
 
 /**
  * @author Jared
@@ -48,15 +51,95 @@ public class NodeDBTest extends AndroidTestCase
 
     /**
      * Test method for {@link com.mapper.map.NodeDB#NodeDB(java.util.ArrayList)}.
+     * Ensures that it detects when the passed in ArrayList is not null.
      */
-    public void testNodeDB()
+    public void testNodeDB_argNotNull()
     {
         
-        NodeDB nodeDbTest = new NodeDB(null);
+        try
+        {
+            @SuppressWarnings("unused")
+            NodeDB nodeDbTest = new NodeDB(null);
+        }
+        catch (MapperInvalidArgumentException e) 
+        {
+            return;
+        }
+        fail("NodeDB(): Expected exception for null arrayList.  None thrown.");
+    }
+    
+    /**
+     * Test method for {@link com.mapper.map.NodeDB#NodeDB(java.util.ArrayList)}.  
+     * Checks if, when a non-null list is passed to NodeDB's constructor, that
+     * it works correctly. 
+     * @throws MapperInvalidArgumentException 
+     */
+    public void testNodeDB_listEmpty() throws MapperInvalidArgumentException
+    {
+        //Initialize NodeDB with an empty list.
+        NodeDB nodeDbTest = new NodeDB(new ArrayList<Pair<GeoPoint, GeoPoint>>());
         ArrayList<MapNode> nodeList = nodeDbTest.getNodeList();
         
         assertNotNull(nodeList);
         assertEquals(0, nodeList.size());
+    }
+    
+    /**
+     * Test method for {@link com.mapper.map.NodeDB#NodeDB(java.util.ArrayList)}.  
+     * Checks if, when a non-null list is passed to NodeDB's constructor, that
+     * it works correctly. 
+     * @throws MapperInvalidArgumentException 
+     */
+    public void testNodeDB_pointListContainsNull() throws MapperInvalidArgumentException
+    {
+        ArrayList<Pair<GeoPoint, GeoPoint>> pointList = 
+                    new ArrayList<Pair<GeoPoint, GeoPoint>>();
+        pointList.add(null);
+        NodeDB nodeDbTest = new NodeDB(pointList);
+        ArrayList<MapNode> nodeList = nodeDbTest.getNodeList();
         
+        assertNotNull(nodeList);
+        assertEquals(0, nodeList.size());
+    }
+    
+    /**
+     * Test method for {@link com.mapper.map.NodeDB#NodeDB(java.util.ArrayList)}.  
+     * Checks if, when a non-null list is passed to NodeDB's constructor, that
+     * it works correctly. 
+     * @throws MapperInvalidArgumentException 
+     */
+    public void testNodeDB_pointListPoint1IsNull() throws MapperInvalidArgumentException
+    {
+        ArrayList<Pair<GeoPoint, GeoPoint>> pointList = 
+                    new ArrayList<Pair<GeoPoint, GeoPoint>>();
+        GeoPoint kellerHall = new GeoPoint(MapNodeTest.KELLER_LAT, 
+                                           MapNodeTest.KELLER_LONG);
+        pointList.add(new Pair<GeoPoint, GeoPoint>(null, kellerHall));
+        NodeDB nodeDbTest = new NodeDB(pointList);
+        ArrayList<MapNode> nodeList = nodeDbTest.getNodeList();
+        
+        assertNotNull(nodeList);
+        assertEquals(0, nodeList.size());
+    }
+    
+    
+    /**
+     * Test method for {@link com.mapper.map.NodeDB#NodeDB(java.util.ArrayList)}.  
+     * Checks if, when a non-null list is passed to NodeDB's constructor, that
+     * it works correctly. 
+     * @throws MapperInvalidArgumentException 
+     */
+    public void testNodeDB_pointListPoint2IsNull() throws MapperInvalidArgumentException
+    {
+        ArrayList<Pair<GeoPoint, GeoPoint>> pointList = 
+                    new ArrayList<Pair<GeoPoint, GeoPoint>>();
+        GeoPoint kellerHall = new GeoPoint(MapNodeTest.KELLER_LAT, 
+                                           MapNodeTest.KELLER_LONG);
+        pointList.add(new Pair<GeoPoint, GeoPoint>(kellerHall, null));
+        NodeDB nodeDbTest = new NodeDB(pointList);
+        ArrayList<MapNode> nodeList = nodeDbTest.getNodeList();
+        
+        assertNotNull(nodeList);
+        assertEquals(0, nodeList.size());
     }
 }

@@ -22,6 +22,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.google.android.maps.GeoPoint;
+import com.mapper.exceptions.MapperInvalidArgumentException;
 
 /**
  * 
@@ -44,11 +45,21 @@ public class NodeDB
      * Constructor
      * 
      * @param arrayList
+     * @throws MapperInvalidArgumentException 
      */
-    public NodeDB(ArrayList<Pair<GeoPoint, GeoPoint>> arrayList)
+    public NodeDB(ArrayList<Pair<GeoPoint, GeoPoint>> arrayList) throws MapperInvalidArgumentException
     {
+        if(arrayList == null)
+        {
+            throw new MapperInvalidArgumentException("NodeDB(arrayList : " +
+            		"ArrayList<Pair<GeoPoint, GeoPoint>>): arrayList is null.");
+        }
         for(Pair<GeoPoint, GeoPoint> pair : arrayList)
         {
+            //Skip ill-formed pairs in the list.
+            if(pair == null || pair.first == null || pair.second == null)
+                continue;
+            
             GeoPoint point1 = pair.first;
             GeoPoint point2 = pair.second;
 

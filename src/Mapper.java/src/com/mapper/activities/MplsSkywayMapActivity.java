@@ -52,6 +52,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
+import com.mapper.exceptions.MapperInvalidArgumentException;
 import com.mapper.map.MapDirections;
 import com.mapper.map.MapEdge;
 import com.mapper.map.MapItemizedOverlay;
@@ -101,7 +102,14 @@ public class MplsSkywayMapActivity extends MapActivity
         mapOverlays = mapView.getOverlays();
 
         // get skyway from adaptation
-        skywayDB = new NodeDB(readSkywayAdaptation());
+        try
+        {
+            skywayDB = new NodeDB(readSkywayAdaptation());
+        }
+        catch(MapperInvalidArgumentException e)
+        {
+            throw new RuntimeException(e);
+        }
 
         ArrayList<MapNode> skyway = skywayDB.getNodeList();
         ArrayList<Integer> alreadyDrawnSkyways = new ArrayList<Integer>();

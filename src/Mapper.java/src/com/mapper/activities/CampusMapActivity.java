@@ -57,6 +57,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
+import com.mapper.exceptions.MapperInvalidArgumentException;
 import com.mapper.map.MapDirections;
 import com.mapper.map.MapEdge;
 import com.mapper.map.MapItemizedOverlay;
@@ -97,7 +98,14 @@ public class CampusMapActivity extends MapActivity
         mapOverlays = mapView.getOverlays();
 
         // Get campus from adaptation
-        campusDB = new NodeDB(readCampusAdaptation());
+        try
+        {
+            campusDB = new NodeDB(readCampusAdaptation());
+        }
+        catch(MapperInvalidArgumentException e)
+        {
+            throw new RuntimeException(e);
+        }
 
         ArrayList<MapNode> campusNodeList = campusDB.getNodeList();
         ArrayList<Integer> alreadyDrawnEdge = new ArrayList<Integer>();
