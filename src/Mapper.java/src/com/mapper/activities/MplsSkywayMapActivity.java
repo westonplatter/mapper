@@ -52,6 +52,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
 import com.mapper.exceptions.MapperInvalidArgumentException;
 import com.mapper.map.MapDirections;
 import com.mapper.map.MapEdge;
@@ -89,7 +90,7 @@ public class MplsSkywayMapActivity extends MapActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
+        
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.map);
 
