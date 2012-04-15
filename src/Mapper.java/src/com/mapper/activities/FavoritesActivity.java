@@ -60,7 +60,7 @@ public class FavoritesActivity extends PreferenceActivity
     TextView displayText;
     public static final String PREFERENCES_NAME = "MyFavorites";    
     public static final int PREFERENCES_MODE = MODE_PRIVATE; 
-    public static final int MAX_ITEMS=5;
+    public static final int MAX_ITEMS=50;
     private static final int DIALOG_YES_NO_MESSAGE = 1;
     public static final int SAVE = 1;
     public static final int LIST = 2;
