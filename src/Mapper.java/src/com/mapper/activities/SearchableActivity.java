@@ -68,8 +68,7 @@ public class SearchableActivity extends ListActivity
                     Intent myIntent = new Intent(view.getContext(), SingleSearchResultView.class);
                     myIntent.putExtra("callerId", R.id.search);
                     startActivity(myIntent);
-                }
-                
+                }                
             });
         }
         else {
