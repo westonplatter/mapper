@@ -63,6 +63,7 @@
         android:layout_below="@+id/get_directions"
         android:layout_marginTop="10dp" 
         android:onClick="saveToFavorites" />       
-        android:text="Add To Favorites" />
+        android:text="Add To Favorites" />       
+   
 
 </RelativeLayout>
