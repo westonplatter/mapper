@@ -28,10 +28,10 @@ import com.mapper.util.MapperConstants;
 
 public class YelpQueryManager
 {
-    static private final String ConsumerKey    = "xaVLKjZkOpss5JM4Byw73A";           // <--Kristin's Key     Jon's Key-> "7vt3-VYr6iTT2h8UP1I_TQ";
-    static private final String ConsumerSecret = "b1i9CWU8mA1FVV6IPEQUDlokx0E";      // <--Kristin's Key     Jon's Key-> "0NE2zJcCekassEx8vneMqPHCGrE";
-    static private final String Token          = "DnXUntkK-8tfi1kj1HUokevP8p6DASkN"; // <--Kristin's Key     Jon's Key-> "8FbokVwPFOOn5UmnvZXe1ZQgPLJAxYAg";
-    static private final String TokenSecret    = "QVbCX0Uy4K0atlHzCAvrblKy7Yk";      // <--Kristin's Key     Jon's Key->"6t3zlSabL5VkVIN9CNEDkbD_vNc";          //rmwoYnZExDlwH-v5fRn_GA
+    static private final String ConsumerKey    = "kcu63x6WWi0OKDTdi4zJ0w";           // <--Kristin's Key     Jon's Key-> "7vt3-VYr6iTT2h8UP1I_TQ";
+    static private final String ConsumerSecret = "KjxZytxsm3jdY5ME9RToYvXpjA8";      // <--Kristin's Key     Jon's Key-> "0NE2zJcCekassEx8vneMqPHCGrE";
+    static private final String Token          = "UDpPU7j4c5xP0AfzynIgdLDx58j66Xba"; // <--Kristin's Key     Jon's Key-> "8FbokVwPFOOn5UmnvZXe1ZQgPLJAxYAg";
+    static private final String TokenSecret    = "p4ijo5ydfKVuXsIPFIUoBxp9sF0";      // <--Kristin's Key     Jon's Key->"6t3zlSabL5VkVIN9CNEDkbD_vNc";          //rmwoYnZExDlwH-v5fRn_GA
 
     static private final String REGION_TAG        = "region";
     static private final String CENTER_TAG        = "center";
