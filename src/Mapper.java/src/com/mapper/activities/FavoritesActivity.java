@@ -16,27 +16,18 @@
  */
 package com.mapper.activities;
 
-import java.io.FileInputStream;
 import java.util.UUID;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import com.google.android.maps.GeoPoint;
 import com.mapper.yelp.YelpBusiness;
 import com.mapper.yelp.YelpQueryManager;
 import com.mapper.yelp.YelpResultsResponse;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
-import android.app.SearchManager;
-
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,7 +35,6 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -52,7 +42,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class FavoritesActivity extends PreferenceActivity
 {
@@ -66,11 +55,8 @@ public class FavoritesActivity extends PreferenceActivity
     public static final int LIST = 2;
     public static final int REMOVE = 3;
     
-    private static int incrementedValue = 0;
     private SharedPreferences m_pref;
     public  static YelpBusiness userSelection;
-    private static YelpQueryManager yelpQueryManager;
-    private static YelpResultsResponse yelpResultsResponse;
     private static ArrayList<String> pref_list;
     private int nItems =0;
 
