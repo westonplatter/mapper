@@ -1,6 +1,6 @@
 // SearchActivity.java
 /**
- * Copyright 2012 Kristin Mead
+ * Copyright 2012 Kristin Mead, Usha Kumar
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,21 +19,21 @@ package com.mapper.activities;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.SearchRecentSuggestionsProvider;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.provider.*;
 
 import com.mapper.yelp.YelpBusiness;
 import com.mapper.yelp.YelpQueryManager;
 import com.mapper.yelp.YelpResultsResponse;
+
 
 public class SearchableActivity extends ListActivity 
 {
@@ -48,7 +48,12 @@ public class SearchableActivity extends ListActivity
         // Get the intent and the query
         Intent intent = getIntent();
         String query = intent.getStringExtra(SearchManager.QUERY);
-
+        // record the queries automatically
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, 
+                SimpleSuggestionProvider.AUTHORITY, SimpleSuggestionProvider.MODE);
+        suggestions.saveRecentQuery(query, null);
+        Log.i ("INFO", "query moved to suggestion");
+        
         // Perform search
         yelpQueryManager = new YelpQueryManager();
         yelpResultsResponse = yelpQueryManager.search(query);
