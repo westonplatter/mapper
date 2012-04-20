@@ -1,6 +1,6 @@
 // ListingView.java
 /**
- * Copyright 2012 Kristin Mead, Usha Kumar
+ * Copyright 2012 Kristin Mead
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,125 +16,155 @@
  */
 package com.mapper.activities;
 
+import com.mapper.util.MapperConstants;
+import com.mapper.util.MapperConstants.MAP_LOCATION;
 import com.mapper.yelp.YelpBusiness;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class SingleSearchResultView extends Activity implements OnClickListener
-{
-    public  static YelpBusiness currentSelection;
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        try
-        {
-        super.onCreate(savedInstanceState);
-               
-        Bundle extra = getIntent().getExtras();
-        int caller = -1;
-        if (extra != null)
-           caller = extra.getInt("callerId");
-        // Set the business name
-        if (caller == R.id.save)
-        {   
-            setContentView(R.layout.single_result_layout); 
-            currentSelection = FavoritesActivity.userSelection;            
-            Log.v("INFO", "Received save action from favorite");                
-        }
-        else if (caller == R.id.remove)
-        {
-            setContentView(R.layout.remove_favorite_layout);
-            currentSelection = FavoritesActivity.userSelection;            
-            Log.v("INFO", "Received remove action from favorite");
-        }
-        else
-        {
-            setContentView(R.layout.single_result_layout);
-            currentSelection = SearchableActivity.userSelection;
-            Log.v("INFO", "Received query from search");
-        }  
-        
-        
-        TextView businessName = (TextView)findViewById(R.id.business_name);
-        businessName.setText(currentSelection.getName());
-        Log.i ("INFO", "got business name");
-        // Build and set the address
-        String streetAddress = currentSelection.getAddress();
-        String city  = currentSelection.getCity();
-        String state = currentSelection.getState();
-        int zip = currentSelection.getPostalCode();
-        String address = streetAddress + '\n' + city + ", " + state + ' ' + zip;        
+public class SingleSearchResultView extends Activity implements OnClickListener {
+	public static YelpBusiness currentSelection;
 
-        TextView businessAddress = (TextView)findViewById(R.id.business_address);
-        businessAddress.setText(address);
-       
-        // Set the phone number
-        TextView businessPhone = (TextView)findViewById(R.id.business_phone);
-        businessPhone.setText(currentSelection.getPhoneNumber());
-        
-        }
-        catch (Exception e)
-        {
-            Log.v ("Caught exception:", e.getMessage(), e.fillInStackTrace());
-        }
-    }
-    
-    public void saveToFavorites(View view)
-    {
-        // "Add To Favorites" clicked.
-        Log.i("INFO", "Add to Favorites button pressed");
-        TextView tv = (TextView) findViewById(R.id.save);
-        Intent myIntent = new Intent(view.getContext(), FavoritesActivity.class);
-        myIntent.putExtra("myAction",R.id.save); 
-        currentSelection = SearchableActivity.userSelection; //String) ((TextView) view).getText();
-        myIntent.putExtra("myFavorite", currentSelection.getName());//(String)((TextView)tv).getText());
-        
-        
-        startActivity(myIntent);        
-    }
-    
-    public void removeFavorites(View view)
-    {
-        Log.i ("INFO", "Remove Favorites button pressed");
-        // "Add To Favorites" clicked.
-        TextView tv = (TextView) findViewById(R.id.remove);
-        Intent myIntent = new Intent(view.getContext(), FavoritesActivity.class);
-        currentSelection = FavoritesActivity.userSelection; 
-        myIntent.putExtra("myAction",R.id.remove); 
-        myIntent.putExtra("myFavorite", currentSelection.getName());
-               
-        startActivity(myIntent);        
-    }
-    
-    @Override
-    public void onClick(View view) 
-    {        
-        Intent myIntent = null;
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.single_result_layout);
+		Bundle extra = getIntent().getExtras();
+		int caller = -1;
+		if (extra != null)
+			caller = extra.getInt("callerId");
+		// Set the business name
+		if (caller == R.id.save) {
+			currentSelection = FavoritesActivity.userSelection;
+			Log.v("INFO", "Received query from favorite");
+		} else {
+			currentSelection = SearchableActivity.userSelection;
+			Log.v("INFO", "Received query from search");
+		}
 
-        if (((TextView) view).getText().equals("Add To Favorites")) {
-            TextView tv = (TextView) findViewById(R.id.save);
-            
-            myIntent = new Intent(view.getContext(), FavoritesActivity.class);
-            myIntent.putExtra("myAction",R.id.save); 
-           // myIntent.putExtra("myFavorite", currentSelection.getName());
-            myIntent.putExtra("myFavorite", (String)((TextView)tv).getText());
-        }   
-        if (((TextView) view).getText().equals("Remove Favorites")) {
-            TextView tv = (TextView) findViewById(R.id.remove);
-            myIntent = new Intent(view.getContext(), FavoritesActivity.class);
-            myIntent.putExtra("myAction",R.id.remove); 
-            //myIntent.putExtra("myFavorite", currentSelection.getName());
-            
-            myIntent.putExtra("myFavorite", (String)((TextView)tv).getText());
-        }
-        startActivity(myIntent);
-    }   
-    
+		TextView businessName = (TextView) findViewById(R.id.business_name);
+		businessName.setText(currentSelection.getName());
+
+		// Build and set the address
+		String streetAddress = currentSelection.getAddress();
+		String city = currentSelection.getCity();
+		String state = currentSelection.getState();
+		int zip = currentSelection.getPostalCode();
+		String address = streetAddress + '\n' + city + ", " + state + ' ' + zip;
+
+		TextView businessAddress = (TextView) findViewById(R.id.business_address);
+		businessAddress.setText(address);
+
+		// Set the phone number
+		TextView businessPhone = (TextView) findViewById(R.id.business_phone);
+		businessPhone.setText(currentSelection.getPhoneNumber());
+
+		Button currentlocationButton = (Button) findViewById(R.id.get_directions);
+		currentlocationButton.setOnTouchListener(new OnTouchListener() {
+
+			public boolean onTouch(View v, MotionEvent event) {
+
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					System.out.println("Get Directions Button Pressed "
+							+ currentSelection.getName() + " "
+							+ currentSelection.getLatitude() + " "
+							+ currentSelection.getLongitude());
+
+					Class intentClass = null;
+
+					if (MapperConstants.currentMap == MAP_LOCATION.DOWNTOWN) {
+						intentClass = MplsSkywayMapActivity.class;
+					} else if (MapperConstants.currentMap == MAP_LOCATION.CAMPUS) {
+						intentClass = CampusMapActivity.class;
+					}
+
+					// "GetDirections" clicked.
+					Intent myIntent = new Intent(v.getContext(), intentClass);
+					// myIntent.putExtra("businessName",
+					// currentSelection.getName());
+					// myIntent.putExtra("businessLat",
+					// String.valueOf(currentSelection.getLatitude()));
+					// myIntent.putExtra("businessLong",
+					// String.valueOf(currentSelection.getLongitude()));
+
+					myIntent.putExtra("selection",
+							MapperConstants.GET_DIRECTIONS_SELECTION);
+					myIntent.putExtra("businessName",
+							currentSelection.getName());
+					myIntent.putExtra("latitude",
+							currentSelection.getLatitude());
+					myIntent.putExtra("longitude",
+							currentSelection.getLongitude());
+
+					startActivity(myIntent);
+				}
+				return true;
+			}
+		});
+
+		Button mapItButton = (Button) findViewById(R.id.map_it);
+		mapItButton.setOnTouchListener(new OnTouchListener() {
+
+			public boolean onTouch(View v, MotionEvent event) {
+
+				if (event.getAction() == MotionEvent.ACTION_UP) {
+					System.out.println("Map it Button Pressed "
+							+ currentSelection.getName() + " "
+							+ currentSelection.getLatitude() + " "
+							+ currentSelection.getLongitude());
+
+					Class intentClass = null;
+
+					if (MapperConstants.currentMap == MAP_LOCATION.DOWNTOWN) {
+						intentClass = MplsSkywayMapActivity.class;
+					} else if (MapperConstants.currentMap == MAP_LOCATION.CAMPUS) {
+						intentClass = CampusMapActivity.class;
+					}
+
+					// "GetDirections" clicked.
+					Intent myIntent = new Intent(v.getContext(), intentClass);
+
+					myIntent.putExtra("selection",
+							MapperConstants.MAP_IT_SELECTION);
+					myIntent.putExtra("businessName",
+							currentSelection.getName());
+					myIntent.putExtra("latitude",
+							currentSelection.getLatitude());
+					myIntent.putExtra("longitude",
+							currentSelection.getLongitude());
+
+					startActivity(myIntent);
+				}
+				return true;
+			}
+		});
+	}
+
+	public void saveToFavorites(View view) {
+		// "Add To Favorites" clicked.
+		Intent myIntent = new Intent(view.getContext(), FavoritesActivity.class);
+		myIntent.putExtra("myAction", R.id.save);
+		myIntent.putExtra("myFavorite", currentSelection.getName());
+		startActivity(myIntent);
+	}
+
+	@Override
+	public void onClick(View view) {
+		Intent myIntent = null;
+
+		if (((TextView) view).getText().equals("Add To Favorites")) {
+			myIntent = new Intent(view.getContext(), FavoritesActivity.class);
+		}
+		startActivity(myIntent);
+	}
 }
