@@ -18,6 +18,18 @@ package com.mapper.util;
 
 public class MapperConstants
 {
+    public enum MAP_LOCATION
+    {
+        DOWNTOWN,
+        CAMPUS
+    };
+    
+    
+    public static final int SKYWAY = 0;
+    public static final int TUNNEL = 1;
+    public static final int OUTSIDE = 2;
+    
+    
     // Probably not the best place to declare these, but it works for now.
     public static final int MAP_IT_SELECTION            = 100;
     public static final int GET_DIRECTIONS_SELECTION    = 200;
@@ -28,4 +40,6 @@ public class MapperConstants
     
     public static final double CAMPUS_MAP_CENTER_LATITUDE  = 44.973785;
     public static final double CAMPUS_MAP_CENTER_LONGITUDE = -93.232191;
+    
+    public static MAP_LOCATION currentMap = MAP_LOCATION.DOWNTOWN;
 }
