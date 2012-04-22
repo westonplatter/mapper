@@ -62,7 +62,7 @@
         android:layout_alignRight="@+id/get_directions"
         android:layout_below="@+id/get_directions"
         android:layout_marginTop="10dp" 
-        android:onClick="removeFavorites" />       
+        android:onClick="removeFavorites"      
         android:text="Remove Favorites" />       
    
 
