@@ -35,6 +35,8 @@ public class MapEdge
     private MapNode node1;
     private MapNode node2;
     private double distanceInMeters;
+    private boolean isTunnel;
+    private boolean isOutside;
 
 //    /**
 //     * Constructor
@@ -207,4 +209,20 @@ public class MapEdge
 
         return location.distanceTo(location2);
     }
+
+	public boolean isOutside() {
+		return isOutside;
+	}
+
+	public void setOutside(boolean isOutside) {
+		this.isOutside = isOutside;
+	}
+
+	public boolean isTunnel() {
+		return isTunnel;
+	}
+
+	public void setTunnel(boolean isTunnel) {
+		this.isTunnel = isTunnel;
+	}
 }

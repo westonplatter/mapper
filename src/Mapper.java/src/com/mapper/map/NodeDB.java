@@ -18,11 +18,13 @@ package com.mapper.map;
 
 import java.util.ArrayList;
 
+
 import android.util.Log;
 import android.util.Pair;
 
 import com.google.android.maps.GeoPoint;
 import com.mapper.exceptions.MapperInvalidArgumentException;
+import com.mapper.util.MapperConstants;
 
 /**
  * 
@@ -30,120 +32,115 @@ import com.mapper.exceptions.MapperInvalidArgumentException;
  * @author jonlee
  * 
  */
-public class NodeDB
-{
+public class NodeDB {
 
-    private int currentNodeCount = 0;
-    private int currentEdgeCount = 0;
+	private int currentNodeCount = 0;
+	private int currentEdgeCount = 0;
 
-    private static final String LOG_TAG = "JonLee";
+	private static final String LOG_TAG = "JonLee";
 
-    private ArrayList<MapNode> nodeList = new ArrayList<MapNode>();
-    private ArrayList<MapEdge> edgeList = new ArrayList<MapEdge>();
+	private ArrayList<MapNode> nodeList = new ArrayList<MapNode>();
+	private ArrayList<MapEdge> edgeList = new ArrayList<MapEdge>();
 
-    /**
-     * Constructor
-     * 
-     * @param arrayList
-     * @throws MapperInvalidArgumentException 
-     */
-    public NodeDB(ArrayList<Pair<GeoPoint, GeoPoint>> arrayList) throws MapperInvalidArgumentException
-    {
-        if(arrayList == null)
-        {
-            throw new MapperInvalidArgumentException("NodeDB(arrayList : " +
-            		"ArrayList<Pair<GeoPoint, GeoPoint>>): arrayList is null.");
-        }
-        for(Pair<GeoPoint, GeoPoint> pair : arrayList)
-        {
-            //Skip ill-formed pairs in the list.
-            if(pair == null || pair.first == null || pair.second == null)
-                continue;
-            
-            GeoPoint point1 = pair.first;
-            GeoPoint point2 = pair.second;
+	/**
+	 * Constructor
+	 * 
+	 * @param arrayList
+	 * @throws MapperInvalidArgumentException
+	 */
+	public NodeDB(ArrayList<Pair<Pair<GeoPoint, GeoPoint>, Integer>> arrayList
+			) throws MapperInvalidArgumentException {
+		if (arrayList == null) {
+			throw new MapperInvalidArgumentException(
+					"NodeDB(arrayList : "
+							+ "ArrayList<Pair<GeoPoint, GeoPoint>>): arrayList is null.");
+		}
 
-            MapNode mapNode1 = null;
-            MapNode mapNode2 = null;
+		for (Pair<Pair<GeoPoint, GeoPoint>,Integer> pair : arrayList) {
+			// Skip ill-formed pairs in the list.
+			if (pair == null || pair.first == null || pair.second == null)
+				continue;
 
-            if(nodeList.contains(point1))
-            {
-                mapNode1 = nodeList.get(nodeList.indexOf(point1));
-            }
-            else
-            {
-                mapNode1 = new MapNode(currentNodeCount, point1);
-                nodeList.add(mapNode1);
-                ++currentNodeCount;
-            }
+			GeoPoint point1 = pair.first.first;
+			GeoPoint point2 = pair.first.second;
 
-            if(nodeList.contains(point2))
-            {
-                mapNode2 = nodeList.get(nodeList.indexOf(point2));
-            }
-            else
-            {
-                mapNode2 = new MapNode(currentNodeCount, point2);
-                nodeList.add(mapNode2);
-                ++currentNodeCount;
-            }
+			MapNode mapNode1 = null;
+			MapNode mapNode2 = null;
 
-            MapEdge mapEdge = new MapEdge(currentEdgeCount, mapNode1, mapNode2);
+			if (nodeList.contains(point1)) {
+				mapNode1 = nodeList.get(nodeList.indexOf(point1));
+			} else {
+				mapNode1 = new MapNode(currentNodeCount, point1);
+				nodeList.add(mapNode1);
+				++currentNodeCount;
+			}
 
-            mapNode1.addAdjacentSkywayEdge(mapEdge);
-            mapNode2.addAdjacentSkywayEdge(mapEdge);
+			if (nodeList.contains(point2)) {
+				mapNode2 = nodeList.get(nodeList.indexOf(point2));
+			} else {
+				mapNode2 = new MapNode(currentNodeCount, point2);
+				nodeList.add(mapNode2);
+				++currentNodeCount;
+			}
 
-            edgeList.add(mapEdge);
+			MapEdge mapEdge = new MapEdge(currentEdgeCount, mapNode1, mapNode2);
 
-            ++currentEdgeCount;
-        }
-    }
+			if (pair.second == MapperConstants.TUNNEL) {
+				mapEdge.setTunnel(true);
+			}
+			if (pair.second == MapperConstants.OUTSIDE) {
+				mapEdge.setOutside(true);
+			}
+			mapNode1.addAdjacentSkywayEdge(mapEdge);
+			mapNode2.addAdjacentSkywayEdge(mapEdge);
 
-    /**
-     * Gets the list of nodes.
-     * 
-     * @return the list of nodes
-     */
-    public ArrayList<MapNode> getNodeList()
-    {
-        return this.nodeList;
-    }
+			edgeList.add(mapEdge);
 
-    /**
-     * Gets the list of nodes.
-     * 
-     * @return the list of nodes
-     */
-    public ArrayList<MapEdge> getEdgeList() {
-        return this.edgeList;
-    }
-    
-    /**
-     * Prints out a list of all nodes in this database to the log file.
-     */
-    public void printNodeDB()
-    {
-        for(MapNode node : nodeList)
-        {
-            Log.v(LOG_TAG, String.valueOf(node.getNodeId()));
-            for(MapEdge edge : node.getAdjacentEdges())
-            {
-                Log.v(LOG_TAG,
-                        "  "
-                                + String.valueOf((double) edge.getFirstNode()
-                                        .getLatitudeE6() / 1000000)
-                                + " "
-                                + String.valueOf((double) edge.getFirstNode()
-                                        .getLongitudeE6() / 1000000));
-                Log.v(LOG_TAG,
-                        "  "
-                                + String.valueOf((double) edge.getSecondNode()
-                                        .getLatitudeE6() / 1000000)
-                                + " "
-                                + String.valueOf((double) edge.getSecondNode()
-                                        .getLongitudeE6() / 1000000));
+			++currentEdgeCount;
+		}
+	}
 
-            }
-        }
-    }
+	/**
+	 * Gets the list of nodes.
+	 * 
+	 * @return the list of nodes
+	 */
+	public ArrayList<MapNode> getNodeList() {
+		return this.nodeList;
+	}
+
+	/**
+	 * Gets the list of nodes.
+	 * 
+	 * @return the list of nodes
+	 */
+	public ArrayList<MapEdge> getEdgeList() {
+		return this.edgeList;
+	}
+
+	/**
+	 * Prints out a list of all nodes in this database to the log file.
+	 */
+	public void printNodeDB() {
+		for (MapNode node : nodeList) {
+			Log.v(LOG_TAG, String.valueOf(node.getNodeId()));
+			for (MapEdge edge : node.getAdjacentEdges()) {
+				Log.v(LOG_TAG,
+						"  "
+								+ String.valueOf((double) edge.getFirstNode()
+										.getLatitudeE6() / 1000000)
+								+ " "
+								+ String.valueOf((double) edge.getFirstNode()
+										.getLongitudeE6() / 1000000));
+				Log.v(LOG_TAG,
+						"  "
+								+ String.valueOf((double) edge.getSecondNode()
+										.getLatitudeE6() / 1000000)
+								+ " "
+								+ String.valueOf((double) edge.getSecondNode()
+										.getLongitudeE6() / 1000000));
+
+			}
+		}
+	}
 }
