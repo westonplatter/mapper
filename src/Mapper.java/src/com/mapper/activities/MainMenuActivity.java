@@ -75,7 +75,7 @@ public class MainMenuActivity extends Activity implements OnClickListener {
 		if (((TextView) view).getText().equals("Add To Favorites")) {
             myIntent = new Intent(view.getContext(), FavoritesActivity.class);
         }  
-
+		
 		startActivity(myIntent);
 	}
 	public void selfDestruct(View view) {     

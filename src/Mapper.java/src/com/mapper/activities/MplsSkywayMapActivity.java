@@ -265,9 +265,9 @@ public class MplsSkywayMapActivity extends MapActivity {
 		itemizedOverlay.addItem(item);
 	}
 
-	private ArrayList<Pair<GeoPoint, GeoPoint>> readSkywayAdaptation() {
+	private ArrayList<Pair<Pair<GeoPoint, GeoPoint>,Integer>> readSkywayAdaptation() {
 		ArrayList<String> stringXmlContent = null;
-		ArrayList<Pair<GeoPoint, GeoPoint>> returnList = new ArrayList<Pair<GeoPoint, GeoPoint>>();
+		ArrayList<Pair<Pair<GeoPoint, GeoPoint>,Integer>> returnList = new ArrayList<Pair<Pair<GeoPoint, GeoPoint>,Integer>>();
 
 		try {
 			stringXmlContent = getEventsFromAnXML(this);
@@ -281,13 +281,17 @@ public class MplsSkywayMapActivity extends MapActivity {
 			String coordinate = line.replaceAll("\n", ",");
 			coordinate = coordinate.replaceAll(" ", "");
 			String[] coordinates = coordinate.split(",");
-
-			returnList.add(new Pair<GeoPoint, GeoPoint>(new GeoPoint(
-					(int) (Double.valueOf(coordinates[1]) * 1000000),
-					(int) (Double.valueOf(coordinates[0]) * 1000000)),
-					new GeoPoint(
-							(int) (Double.valueOf(coordinates[4]) * 1000000),
-							(int) (Double.valueOf(coordinates[3]) * 1000000))));
+			
+			Pair<Pair<GeoPoint, GeoPoint>, Integer> pair = new Pair<Pair<GeoPoint, GeoPoint>, Integer>(
+					new Pair(
+							new GeoPoint(
+									(int) (Double.valueOf(coordinates[1]) * 1000000),
+									(int) (Double.valueOf(coordinates[0]) * 1000000)),
+							new GeoPoint(
+									(int) (Double.valueOf(coordinates[4]) * 1000000),
+									(int) (Double.valueOf(coordinates[3]) * 1000000))),
+					MapperConstants.SKYWAY);
+			returnList.add(pair);
 		}
 		return returnList;
 	}

@@ -81,11 +81,13 @@ public class CampusMapActivity extends MapActivity {
 	Location loc;
 	String gps_provider = LocationManager.GPS_PROVIDER;
 	String network_provider = LocationManager.NETWORK_PROVIDER;
+	ArrayList skywayList = new ArrayList();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		System.out.println("CampusMap On Create");
 		MapperConstants.currentMap = MAP_LOCATION.CAMPUS;
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -112,8 +114,15 @@ public class CampusMapActivity extends MapActivity {
 		for (MapNode node : campusNodeList) {
 			for (MapEdge edge : node.getAdjacentEdges()) {
 				if (!alreadyDrawnEdge.contains(edge.getUniqueID())) {
-					mapOverlays.add(new MapOverlay(edge.getFirstNode(), edge
-							.getSecondNode()));
+					MapOverlay mo = new MapOverlay(edge.getFirstNode(),
+							edge.getSecondNode());
+					if (edge.isTunnel()) {
+						mo.setLineColor(Color.rgb(139, 0, 0));
+					}
+					if (edge.isOutside()) {
+						mo.setLineColor(Color.rgb(218, 154, 32));
+					}
+					mapOverlays.add(mo);
 					alreadyDrawnEdge.add(edge.getUniqueID());
 				}
 			}
@@ -129,17 +138,21 @@ public class CampusMapActivity extends MapActivity {
 		mc.setZoom(16);
 
 		myLocationOverlay = new MyLocationOverlay(this, mapView);
-		myLocationOverlay.enableMyLocation();
-		myLocationOverlay.enableCompass();
+//		myLocationOverlay.enableMyLocation();
+//		myLocationOverlay.enableCompass();
 
 		List<Overlay> list = mapView.getOverlays();
 		list.add(myLocationOverlay);
 
-		ll = new MyLocationListener();
-		lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
-		lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, ll);
-		lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, ll);
+		if (ll == null) {
+			ll = new MyLocationListener();
+			lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+			lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
+					ll);
+			lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0,
+					ll);
+		}
 
 		Button currentlocationButton = (Button) findViewById(R.id.curLoc);
 		currentlocationButton.setOnTouchListener(new OnTouchListener() {
@@ -155,11 +168,6 @@ public class CampusMapActivity extends MapActivity {
 				MplsSkywayMapActivity.followLocation = true;
 				centerOnLocation();
 
-				double lat = loc.getLatitude();
-				double lon = loc.getLongitude();
-				System.out.println("Lat:" + lat + " lon" + lon);
-
-				DrawDirections(lat, lon, 44.971409, -93.2447);
 				return true;
 			}
 		});
@@ -183,7 +191,7 @@ public class CampusMapActivity extends MapActivity {
 			double latitude = getIntent().getExtras().getDouble("latitude");
 			double longitude = getIntent().getExtras().getDouble("longitude");
 			dropPin(latitude, longitude, businessName);
-			
+
 		} else if (inputCode == MapperConstants.GET_DIRECTIONS_SELECTION) {
 			String businessName = getIntent().getExtras().getString(
 					"businessName");
@@ -208,8 +216,9 @@ public class CampusMapActivity extends MapActivity {
 			DrawDirections(start_latitude, start_longitude, end_latitude,
 					end_longitude);
 			dropPin(end_latitude, end_longitude, businessName);
-
 		}
+		
+		mapView.postInvalidate();
 	}
 
 	public void dropPin(double latitude, double longitude, String Label) {
@@ -289,9 +298,9 @@ public class CampusMapActivity extends MapActivity {
 		}
 	}
 
-	private ArrayList<Pair<GeoPoint, GeoPoint>> readCampusAdaptation() {
+	private ArrayList<Pair<Pair<GeoPoint, GeoPoint>, Integer>> readCampusAdaptation() {
 		ArrayList<String> stringXmlContent = null;
-		ArrayList<Pair<GeoPoint, GeoPoint>> returnList = new ArrayList<Pair<GeoPoint, GeoPoint>>();
+		ArrayList<Pair<Pair<GeoPoint, GeoPoint>, Integer>> returnList = new ArrayList<Pair<Pair<GeoPoint, GeoPoint>, Integer>>();
 		try {
 			stringXmlContent = getEventsFromAnXML(this);
 		} catch (XmlPullParserException e) {
@@ -299,18 +308,49 @@ public class CampusMapActivity extends MapActivity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		boolean tunnel = false;
+		boolean outside = false;
 
 		for (String line : stringXmlContent) {
+			if (line == null) {
+				continue;
+			}
+
 			String coordinate = line.replaceAll("\n", ",");
 			coordinate = coordinate.replaceAll(" ", "");
 			String[] coordinates = coordinate.split(",");
 
-			returnList.add(new Pair<GeoPoint, GeoPoint>(new GeoPoint(
-					(int) (Double.valueOf(coordinates[1]) * 1000000),
-					(int) (Double.valueOf(coordinates[0]) * 1000000)),
-					new GeoPoint(
-							(int) (Double.valueOf(coordinates[4]) * 1000000),
-							(int) (Double.valueOf(coordinates[3]) * 1000000))));
+			if (line.contains("TUNNEL")) {
+				tunnel = true;
+				continue;
+			}
+			if (line.contains("OUTSIDE")) {
+				outside = true;
+				continue;
+			}
+
+			int lineType = MapperConstants.SKYWAY;
+
+			if (tunnel) {
+				lineType = MapperConstants.TUNNEL;
+			} else if (outside) {
+				lineType = MapperConstants.OUTSIDE;
+			}
+
+			Pair<Pair<GeoPoint, GeoPoint>, Integer> pair = new Pair<Pair<GeoPoint, GeoPoint>, Integer>(
+					new Pair(
+							new GeoPoint(
+									(int) (Double.valueOf(coordinates[1]) * 1000000),
+									(int) (Double.valueOf(coordinates[0]) * 1000000)),
+							new GeoPoint(
+									(int) (Double.valueOf(coordinates[4]) * 1000000),
+									(int) (Double.valueOf(coordinates[3]) * 1000000))),
+					lineType);
+
+			returnList.add(pair);
+
+			tunnel = false;
+			outside = false;
 		}
 
 		return returnList;
@@ -320,7 +360,7 @@ public class CampusMapActivity extends MapActivity {
 			throws XmlPullParserException, IOException {
 		ArrayList<String> coordinateList = new ArrayList<String>();
 		Resources res = activity.getResources();
-		XmlResourceParser xpp = res.getXml(R.xml.campusxml);
+		XmlResourceParser xpp = res.getXml(R.xml.campus423);
 		xpp.next();
 
 		int eventType = xpp.getEventType();
@@ -328,6 +368,12 @@ public class CampusMapActivity extends MapActivity {
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 			if (eventType == XmlPullParser.TEXT) {
 				coordinateList.add(xpp.getText());
+			} else if (eventType == XmlPullParser.START_TAG
+					|| eventType == XmlPullParser.END_TAG) {
+				System.out.println("NAME:" + xpp.getName());
+				if (xpp.getName().contains("LineType")) {
+					coordinateList.add(xpp.getText());
+				}
 			}
 			eventType = xpp.next();
 		}
@@ -370,7 +416,7 @@ public class CampusMapActivity extends MapActivity {
 		MapDirections directions = new MapDirections(campusDB);
 
 		// clear the overlays
-		mapOverlays.clear();
+		//mapOverlays.clear();
 
 		// get the Start edge and start lat long point
 		Pair<GeoPoint, MapEdge> startEdge = getClosestPointOnLineSegment(
@@ -415,13 +461,26 @@ public class CampusMapActivity extends MapActivity {
 		for (MapNode node : skyway) {
 			for (MapEdge edge : node.getAdjacentEdges()) {
 				if (!alreadyDrawnSkyways.contains(edge.getUniqueID())) {
-					mapOverlays.add(new MapOverlay(edge.getSourceNode()
+					MapOverlay mapOverlay = new MapOverlay(edge.getSourceNode()
 							.getNodeLocation(), edge.getTargetNode()
-							.getNodeLocation()));
+							.getNodeLocation());
+
+					if (edge.isTunnel()) {
+						mapOverlay.setLineColor(Color.rgb(139, 0, 0));
+					}
+					if (edge.isOutside()) {
+						mapOverlay.setLineColor(Color.rgb(218, 154, 32));
+					}
+
+					mapOverlays.add(mapOverlay);
 					alreadyDrawnSkyways.add(edge.getUniqueID());
 				}
 			}
 		}
+
+		List<Overlay> list = mapView.getOverlays();
+		list.add(myLocationOverlay);
+
 		mapView.invalidate();
 	}
 
@@ -540,4 +599,21 @@ public class CampusMapActivity extends MapActivity {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+//		myLocationOverlay.enableCompass();
+		myLocationOverlay.enableMyLocation();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+		//myLocationOverlay.disableCompass();
+		myLocationOverlay.disableMyLocation();
+	}
+
 }

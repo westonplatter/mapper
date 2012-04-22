@@ -23,6 +23,7 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -90,6 +91,13 @@ public class SearchableActivity extends ListActivity {
 				}
 			};
 			setListAdapter(adapter);
+		}
+
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			SearchRecentSuggestions suggestions = new SearchRecentSuggestions(
+					this, SimpleSuggestionProvider.AUTHORITY,
+					SimpleSuggestionProvider.MODE);
+			suggestions.saveRecentQuery(query, null);
 		}
 	}
 

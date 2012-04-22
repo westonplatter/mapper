@@ -90,12 +90,6 @@ public class SingleSearchResultView extends Activity implements OnClickListener 
 
 					// "GetDirections" clicked.
 					Intent myIntent = new Intent(v.getContext(), intentClass);
-					// myIntent.putExtra("businessName",
-					// currentSelection.getName());
-					// myIntent.putExtra("businessLat",
-					// String.valueOf(currentSelection.getLatitude()));
-					// myIntent.putExtra("businessLong",
-					// String.valueOf(currentSelection.getLongitude()));
 
 					myIntent.putExtra("selection",
 							MapperConstants.GET_DIRECTIONS_SELECTION);

@@ -22,6 +22,7 @@ import android.util.Log;
 public class SimpleSuggestionProvider extends SearchRecentSuggestionsProvider {
     final static String AUTHORITY = "com.mapper.activities.SimpleSuggestionProvider";
     final static int MODE = DATABASE_MODE_2LINES | DATABASE_MODE_QUERIES;
+    
     public SimpleSuggestionProvider() {
         
         super();
